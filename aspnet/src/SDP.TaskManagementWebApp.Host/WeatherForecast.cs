@@ -1,4 +1,4 @@
-namespace SDP.TaskManagementWebApp.WebHost
+namespace SDP.TaskManagementWebApp.Host
 {
     public class WeatherForecast
     {

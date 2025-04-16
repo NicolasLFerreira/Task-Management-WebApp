@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace SDP.TaskManagementWebApp.WebHost.Controllers
+namespace SDP.TaskManagementWebApp.Host.Controllers
 {
     [ApiController]
     [Route("[controller]")]
