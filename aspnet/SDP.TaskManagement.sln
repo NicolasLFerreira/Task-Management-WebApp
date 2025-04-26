@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost", "src\SDP.TaskManagement.WebHost\SDP.TaskManagement.WebHost.csproj", "{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF328905-2DD9-4520-AE37-658A8E4ABEC0}
+	EndGlobalSection
+EndGlobal
