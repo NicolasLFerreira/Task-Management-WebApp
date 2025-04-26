@@ -1,0 +1,6 @@
+@SDP.TaskManagement.WebHost_HostAddress = http://localhost:5043
+
+GET {{SDP.TaskManagement.WebHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

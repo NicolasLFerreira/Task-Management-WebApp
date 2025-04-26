@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost", "src\SDP.TaskManagement.WebHost\SDP.TaskManagement.WebHost.csproj", "{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2BD14508-7022-41B4-B443-4EA74D618A48} = {2BD14508-7022-41B4-B443-4EA74D618A48}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Domain", "src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj", "{C676DEF4-AD43-420F-A56E-24A269A69E7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastructure", "SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj", "{2BD14508-7022-41B4-B443-4EA74D618A48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E} = {C676DEF4-AD43-420F-A56E-24A269A69E7E}
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F} = {E058D6D5-8B4F-46FE-89A9-69870EE91F8F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BD14508-7022-41B4-B443-4EA74D618A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD14508-7022-41B4-B443-4EA74D618A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD14508-7022-41B4-B443-4EA74D618A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD14508-7022-41B4-B443-4EA74D618A48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF328905-2DD9-4520-AE37-658A8E4ABEC0}
+	EndGlobalSection
+EndGlobal
