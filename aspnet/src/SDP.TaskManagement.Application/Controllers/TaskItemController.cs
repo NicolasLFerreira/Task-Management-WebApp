@@ -17,11 +17,12 @@ public class TaskItemController : ControllerBase
     }
 
     [HttpGet(Name = "GetTaskItem")]
-    public TaskItem GetTaskItem()
+    public TaskItem GetTaskItem(Guid id)
     {
-        return new TaskItem
+        return new()
         {
-            Title = "Task n1",
+            Id = id,
+            Title = "task1"
         };
     }
 }
