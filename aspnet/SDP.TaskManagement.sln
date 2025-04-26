@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost", "src\SDP.TaskManagement.WebHost\SDP.TaskManagement.WebHost.csproj", "{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
