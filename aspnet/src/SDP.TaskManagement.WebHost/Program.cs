@@ -43,7 +43,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        // Development Swagger settings
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
