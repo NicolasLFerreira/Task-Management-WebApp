@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost", "src\SDP.TaskManagement.WebHost\SDP.TaskManagement.WebHost.csproj", "{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

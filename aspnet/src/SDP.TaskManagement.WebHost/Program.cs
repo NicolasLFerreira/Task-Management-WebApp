@@ -1,5 +1,7 @@
 using Microsoft.OpenApi.Models;
 
+using SDP.TaskManagement.Application.Controllers;
+
 using System.Reflection;
 
 namespace SDP.TaskManagement.WebHost;
