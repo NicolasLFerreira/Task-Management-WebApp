@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Domain", "src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj", "{C676DEF4-AD43-420F-A56E-24A269A69E7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastructure", "SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj", "{2BD14508-7022-41B4-B443-4EA74D618A48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastructure", "src\SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj", "{2BD14508-7022-41B4-B443-4EA74D618A48}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C676DEF4-AD43-420F-A56E-24A269A69E7E} = {C676DEF4-AD43-420F-A56E-24A269A69E7E}
 		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F} = {E058D6D5-8B4F-46FE-89A9-69870EE91F8F}
