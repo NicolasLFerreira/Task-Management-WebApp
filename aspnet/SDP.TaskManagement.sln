@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Domain", "src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj", "{C676DEF4-AD43-420F-A56E-24A269A69E7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-namespace SDP.TaskManagement.Application.Models;
+namespace SDP.TaskManagement.Domain.Models;
 
 public class WeatherForecast
 {
