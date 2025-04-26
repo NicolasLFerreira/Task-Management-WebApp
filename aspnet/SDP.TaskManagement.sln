@@ -4,12 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.WebHost", "src\SDP.TaskManagement.WebHost\SDP.TaskManagement.WebHost.csproj", "{DA0C4C47-65C1-4795-A3A4-0C73ED6CB532}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2BD14508-7022-41B4-B443-4EA74D618A48} = {2BD14508-7022-41B4-B443-4EA74D618A48}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Application", "src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj", "{E058D6D5-8B4F-46FE-89A9-69870EE91F8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Domain", "src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj", "{C676DEF4-AD43-420F-A56E-24A269A69E7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastructure", "SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj", "{2BD14508-7022-41B4-B443-4EA74D618A48}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E} = {C676DEF4-AD43-420F-A56E-24A269A69E7E}
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F} = {E058D6D5-8B4F-46FE-89A9-69870EE91F8F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
