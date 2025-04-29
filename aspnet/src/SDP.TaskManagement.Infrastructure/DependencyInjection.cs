@@ -8,16 +8,12 @@ using SDP.TaskManagement.Infrastructure.Repository;
 namespace SDP.TaskManagement.Infrastructure;
 
 /// <summary>
-/// Adds services and handles dependency injection of business classes.
+/// Handles dependency injection of business classes.
 /// </summary>
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection RegisterInfrastructureDependencyInjection(this IServiceCollection services)
     {
-        // Db configuration
-        services.AddDbContext<AppDbContext>(options => options.UseNpgsql("DefaultConnection"));
-
-        // Dependency Injection
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 
         return services;
