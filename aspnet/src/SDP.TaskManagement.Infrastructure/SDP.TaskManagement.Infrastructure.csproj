@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj" />
+    <ProjectReference Include="..\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj" />
   </ItemGroup>
 
 </Project>

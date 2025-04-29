@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
+using SDP.TaskManagement.Infrastructure;
 using SDP.TaskManagement.Infrastructure.Persistence;
 
 using System.Reflection;
@@ -16,6 +17,9 @@ public class Program
         // Db
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Add services from the SDP.TaskManagement.Infrastructure
+        builder.Services.AddInfrastructure();
 
         // Add services to the container.
         builder.Services.AddControllers();
