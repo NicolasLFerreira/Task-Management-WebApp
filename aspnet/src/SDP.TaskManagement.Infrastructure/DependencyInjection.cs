@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         // Db configuration
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer("DefaultConnection"));
+        services.AddDbContext<AppDbContext>(options => options.UseNpgsql("DefaultConnection"));
 
         // Dependency Injection
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
