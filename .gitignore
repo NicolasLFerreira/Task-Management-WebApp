@@ -870,3 +870,6 @@ sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,csharp,visualstudio,visualstudiocode,node,react
 
+# Appsettings for local development
+
+/aspnet/src/SDP.TaskManagement.WebHost/appsettings.Development.json
