@@ -19,24 +19,19 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
 
         // Properties
 
-        builder.Property(t => t.Title).IsRequired().HasMaxLength(200);
+        builder.Property(t => t.Title).HasMaxLength(200).IsRequired();
         builder.Property(t => t.Description).HasMaxLength(2000);
-
-        builder.Property(t => t.Priority).HasConversion<int>();
-        builder.Property(t => t.ProgressStatus).HasConversion<int>();
 
         builder.Property(t => t.CreationTime).IsRequired();
 
+        builder.Property(t => t.Priority).HasConversion<int>().IsRequired();
+        builder.Property(t => t.ProgressStatus).HasConversion<int>().IsRequired();
+
         // Relationships
 
-        builder.HasOne(t => t.CreatedByUser)
-               .WithMany(t => t.CreatedTaskItems)
-               .HasForeignKey(t => t.CreatedByUserId)
-               .IsRequired();
-
-        builder.HasOne(t => t.AssignedToUser)
-               .WithMany(t => t.AssignedTaskItems)
-               .HasForeignKey(t => t.AssignedToUserId)
+        builder.HasOne(t => t.OwnerUser)
+               .WithMany(t => t.OwnedTaskItems)
+               .HasForeignKey(t => t.OwnerUserId)
                .IsRequired();
     }
 }

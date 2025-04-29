@@ -1,6 +1,4 @@
-﻿using SDP.TaskManagement.Domain.Enums;
-
-namespace SDP.TaskManagement.Domain.Entities;
+﻿namespace SDP.TaskManagement.Domain.Entities;
 
 public class User
 {
@@ -12,9 +10,5 @@ public class User
 
     public string PasswordHash { get; set; }
 
-    public UserRoles Role { get; set; }
-
-    public List<TaskItem> CreatedTaskItems { get; set; }
-
-    public List<TaskItem> AssignedTaskItems { get; set; }
+    public List<TaskItem>? OwnedTaskItems { get; set; }
 }
