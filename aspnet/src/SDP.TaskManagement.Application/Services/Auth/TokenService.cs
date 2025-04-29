@@ -9,7 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SDP.TaskManagement.Infrastructure.Auth;
+namespace SDP.TaskManagement.Application.Services.Auth;
 
 public class TokenService : ITokenService
 {
