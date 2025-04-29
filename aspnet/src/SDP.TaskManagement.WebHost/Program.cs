@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
-using SDP.TaskManagement.Infrastructure;
 using SDP.TaskManagement.Infrastructure.Persistence;
 
 using System.Reflection;
