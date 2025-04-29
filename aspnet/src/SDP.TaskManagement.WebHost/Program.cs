@@ -39,7 +39,6 @@ public class Program
                 };
             });
 
-
         // SDP.TaskManagement.Infrastructure DI
         builder.Services.RegisterInfrastructureDependencyInjection();
 
