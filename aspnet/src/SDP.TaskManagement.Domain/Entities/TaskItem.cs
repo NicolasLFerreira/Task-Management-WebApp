@@ -1,5 +1,3 @@
-using SDP.TaskManagement.Domain.Enums;
-
 namespace SDP.TaskManagement.Domain.Entities;
 
 public class TaskItem
@@ -23,4 +21,18 @@ public class TaskItem
 
     public User AssignedToUser { get; set; }
     public Guid AssignedToUserId { get; set; }
+}
+
+public enum TaskItemPriority
+{
+    Low = 0,
+    Medium,
+    High
+}
+
+public enum TaskItemStatus
+{
+    Todo,
+    InProgress,
+    Completed
 }
