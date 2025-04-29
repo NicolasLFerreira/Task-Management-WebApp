@@ -6,7 +6,7 @@ public class TaskItem
 {
     public Guid Id { get; set; }
 
-    public required string Title { get; set; }
+    public string Title { get; set; }
 
     public string? Description { get; set; }
 
@@ -18,7 +18,9 @@ public class TaskItem
 
     public TaskItemStatus ProgressStatus { get; set; }
 
-    public Guid CreatedByUser { get; set; }
+    public User CreatedByUser { get; set; }
+    public Guid CreatedByUserId { get; set; }
 
-    public Guid AssignedToUser { get; set; }
+    public User AssignedToUser { get; set; }
+    public Guid AssignedToUserId { get; set; }
 }

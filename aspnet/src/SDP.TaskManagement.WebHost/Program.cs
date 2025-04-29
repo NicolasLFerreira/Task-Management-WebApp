@@ -14,12 +14,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Db
+        // Db context
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        // Add services from the SDP.TaskManagement.Infrastructure
-        builder.Services.AddInfrastructure();
+        // SDP.TaskManagement.Infrastructure DI
+        builder.Services.RegisterInfrastructureDependencyInjection();
 
         // Add services to the container.
         builder.Services.AddControllers();
@@ -52,7 +52,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Development Swagger settings
+        // Development settings
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -61,6 +61,13 @@ public class Program
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskManagement API");
                 options.RoutePrefix = string.Empty;
             });
+
+            // For local database creation.
+            using (var serviceScope = app.Services.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                context.Database.Migrate();
+            }
         }
 
         app.UseHttpsRedirection();
@@ -71,5 +78,7 @@ public class Program
         app.MapControllers();
 
         app.Run();
+
+        // docker run -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=devlocal123 -e POSTGRES_DB=taskmanagementdb -p 5432:5432 -d postgres:latest
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace SDP.TaskManagement.Application.Abstractions;
 
 /// <summary>
-/// Database access abstraction.
+/// Interface for database access abstraction. Should be used when performing CRUD operations on tables.
 /// </summary>
 public interface IRepository<TEntity, TId> where TEntity : class
 {

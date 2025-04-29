@@ -1,14 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using SDP.TaskManagement.Domain.Entities;
-
 namespace SDP.TaskManagement.Infrastructure.Persistence;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext : DbContext
 {
-    // Tables
-    public DbSet<User> Tasks { get; set; }
-    public DbSet<TaskItem> TaskItems { get; set; }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
