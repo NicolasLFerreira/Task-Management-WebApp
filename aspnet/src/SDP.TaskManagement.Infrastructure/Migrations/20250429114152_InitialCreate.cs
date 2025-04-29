@@ -17,9 +17,8 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false)
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,35 +36,23 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     CreationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Priority = table.Column<int>(type: "integer", nullable: false),
                     ProgressStatus = table.Column<int>(type: "integer", nullable: false),
-                    CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AssignedToUserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    OwnerUserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TaskItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TaskItems_Users_AssignedToUserId",
-                        column: x => x.AssignedToUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TaskItems_Users_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
+                        name: "FK_TaskItems_Users_OwnerUserId",
+                        column: x => x.OwnerUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_TaskItems_AssignedToUserId",
+                name: "IX_TaskItems_OwnerUserId",
                 table: "TaskItems",
-                column: "AssignedToUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskItems_CreatedByUserId",
-                table: "TaskItems",
-                column: "CreatedByUserId");
+                column: "OwnerUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

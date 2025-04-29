@@ -10,7 +10,5 @@ public class User
 
     public string PasswordHash { get; set; }
 
-    public List<TaskItem> CreatedTaskItems { get; set; }
-
-    public List<TaskItem> AssignedTaskItems { get; set; }
+    public List<TaskItem>? OwnedTaskItems { get; set; }
 }

@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429082949_InitialCreate")]
+    [Migration("20250429114152_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,12 +31,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AssignedToUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -46,6 +40,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("OwnerUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Priority")
                         .HasColumnType("integer");
@@ -60,9 +57,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedToUserId");
-
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("TaskItems", (string)null);
                 });
@@ -75,8 +70,8 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -86,9 +81,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -100,28 +92,18 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.TaskItem", b =>
                 {
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "AssignedToUser")
-                        .WithMany("AssignedTaskItems")
-                        .HasForeignKey("AssignedToUserId")
+                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "OwnerUser")
+                        .WithMany("OwnedTaskItems")
+                        .HasForeignKey("OwnerUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "CreatedByUser")
-                        .WithMany("CreatedTaskItems")
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssignedToUser");
-
-                    b.Navigation("CreatedByUser");
+                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.User", b =>
                 {
-                    b.Navigation("AssignedTaskItems");
-
-                    b.Navigation("CreatedTaskItems");
+                    b.Navigation("OwnedTaskItems");
                 });
 #pragma warning restore 612, 618
         }

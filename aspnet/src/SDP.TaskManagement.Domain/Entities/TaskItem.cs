@@ -16,11 +16,8 @@ public class TaskItem
 
     public TaskItemStatus ProgressStatus { get; set; }
 
-    public User CreatedByUser { get; set; }
-    public Guid CreatedByUserId { get; set; }
-
-    public User AssignedToUser { get; set; }
-    public Guid AssignedToUserId { get; set; }
+    public User? OwnerUser { get; set; }
+    public Guid OwnerUserId { get; set; }
 }
 
 public enum TaskItemPriority
