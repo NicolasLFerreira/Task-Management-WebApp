@@ -1,0 +1,14 @@
+version: '3.8'
+
+# FROM: docker run -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=devlocal123 -e POSTGRES_DB=taskmanagementdb -p 5432:5432 -d postgres:latest
+
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: devlocal123
+      POSTGRES_DB: taskmanagementdb
+    restart: unless-stopped
