@@ -18,8 +18,8 @@ public class SampleRepository : ControllerBase
     }
 
     [HttpGet(Name = "GetUsers")]
-    public List<User> GetUsers()
+    public ActionResult<List<User>> GetUsers()
     {
-        return [.. _userRepository.GetQueryable()];
+        return Ok(_userRepository.GetQueryable().ToList());
     }
 }
