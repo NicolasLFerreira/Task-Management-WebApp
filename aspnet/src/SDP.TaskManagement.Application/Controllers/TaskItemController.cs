@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using SDP.TaskManagement.Application.Abstractions;
+using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Controllers;
@@ -18,22 +19,25 @@ public class TaskItemController : ControllerBase
     }
 
     [HttpGet(Name = "GetTaskItem")]
-    public async Task<ActionResult<TaskItem?>> GetTaskItem(Guid id)
+    public async Task<ActionResult<TaskItemDto?>> GetTaskItem(Guid id)
     {
         var result = await _repository.GetByIdAsync(id);
 
         if (result == null)
             return NotFound("The given id does not match any existing entry.");
 
-        return Ok(result);
+        var dto = TaskItemMapper.ToDto(result);
+
+        return Ok(dto);
     }
 
     [HttpPost(Name = "PostTaskItem")]
-    public async Task<IActionResult> PostTaskItem(TaskItem taskItem)
+    public async Task<IActionResult> PostTaskItem(TaskItemDto taskItemDto)
     {
+        var taskItem = TaskItemMapper.ToEntity(taskItemDto);
+
         await _repository.AddAsync(taskItem);
 
-        // Optionally return the location of the new resource
-        return CreatedAtRoute("GetTaskItem", new { id = taskItem.Id }, taskItem);
+        return Ok();
     }
 }
