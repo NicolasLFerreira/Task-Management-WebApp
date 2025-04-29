@@ -92,8 +92,8 @@ public class Program
             }
         }
 
+        // Middleware
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
 
 
