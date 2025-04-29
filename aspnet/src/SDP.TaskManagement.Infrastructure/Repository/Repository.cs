@@ -15,11 +15,13 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId> where TEntity 
     public async Task AddAsync(TEntity entity)
     {
         await _dbContext.Set<TEntity>().AddAsync(entity);
+        _dbContext.SaveChanges();
     }
 
     public async Task AddRangeAsync(IEnumerable<TEntity> entities)
     {
         await _dbContext.Set<TEntity>().AddRangeAsync(entities);
+        _dbContext.SaveChanges();
     }
 
     public async Task<TEntity?> GetByIdAsync(TId id)
