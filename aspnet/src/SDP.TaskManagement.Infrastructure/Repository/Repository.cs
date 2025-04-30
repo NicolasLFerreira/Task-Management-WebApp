@@ -1,9 +1,14 @@
-﻿using SDP.TaskManagement.Infrastructure.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+
 using SDP.TaskManagement.Application.Abstractions;
+using SDP.TaskManagement.Domain.Base;
+using SDP.TaskManagement.Infrastructure.Persistence;
 
 namespace SDP.TaskManagement.Infrastructure.Repository;
 
-public class Repository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class
+public class Repository<TEntity, TId> : IRepository<TEntity, TId>
+    where TEntity : Entity<TId>
+    where TId : IComparable<TId>
 {
     private readonly AppDbContext _dbContext;
 
@@ -32,5 +37,10 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId> where TEntity 
     public IQueryable<TEntity> GetQueryable()
     {
         return _dbContext.Set<TEntity>().AsQueryable();
+    }
+
+    public async Task DeleteAsync(TId id)
+    {
+        await _dbContext.Set<TEntity>().Where(user => user.Id.Equals(id)).ExecuteDeleteAsync();
     }
 }

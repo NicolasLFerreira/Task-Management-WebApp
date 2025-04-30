@@ -1,9 +1,9 @@
-﻿namespace SDP.TaskManagement.Domain.Entities;
+﻿using SDP.TaskManagement.Domain.Base;
 
-public class User
+namespace SDP.TaskManagement.Domain.Entities;
+
+public class User : Entity
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; }
 
     public string Email { get; set; }
