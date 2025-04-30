@@ -27,11 +27,11 @@ public class Program
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidIssuer = builder.Configuration[Configurations.Jwt.Issuer],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidAudience = builder.Configuration[Configurations.Jwt.Audience],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidConfigurationException("Jwt key not present."))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[Configurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
@@ -68,7 +68,6 @@ public class Program
         // Middleware
         app.UseHttpsRedirection();
         app.UseAuthorization();
-
 
         app.MapControllers();
 
