@@ -46,30 +46,7 @@ public class Program
         builder.Services.AddControllers();
 
         // Swagger setup
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Version = "v1",
-                Title = "TaskManagementWebApp API",
-                Description = "API for our SDP project.",
-                Contact = new OpenApiContact
-                {
-                    Name = "Nicolas Limbeger Ferreira",
-                    Url = new Uri("https://github.com/NicolasLFerreira")
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "MIT",
-                    Url = new Uri("https://opensource.org/licenses/MIT")
-                }
-            });
-
-            // XML comments
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);
-        });
+        builder.Services.SwaggerHandler();
 
         var app = builder.Build();
 
