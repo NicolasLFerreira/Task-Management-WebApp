@@ -10,14 +10,14 @@ using System.Reflection;
 namespace SDP.TaskManagement.WebHost;
 
 /// <summary>
-/// Extensions for WebApplicationBuilder.Services
+/// Extensions for WebApplicationBuilder.Services to be used in Program.cs
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Handles dependency injection registration.
+    /// Handles dependency injection registration for the application.
     /// </summary>
-    public static IServiceCollection RegisterInfrastructureDependencyInjection(this IServiceCollection services)
+    public static IServiceCollection AddDependencyInjection(this IServiceCollection services)
     {
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<ITokenService, TokenService>();
@@ -28,9 +28,9 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Handles the Swagger setup.
+    /// Custom handler for swagger configuration.
     /// </summary>
-    public static void SwaggerHandler(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
@@ -56,5 +56,7 @@ public static class ServiceCollectionExtensions
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);
         });
+
+        return services;
     }
 }

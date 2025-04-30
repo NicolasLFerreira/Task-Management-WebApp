@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
 
-using System.Reflection;
 using System.Text;
 
 namespace SDP.TaskManagement.WebHost;
@@ -39,14 +37,13 @@ public class Program
                 };
             });
 
-        // SDP.TaskManagement.Infrastructure DI
-        builder.Services.RegisterInfrastructureDependencyInjection();
-
         // Add services to the container.
         builder.Services.AddControllers();
 
-        // Swagger setup
-        builder.Services.SwaggerHandler();
+        // Extensions
+        builder.Services
+            .AddDependencyInjection()
+            .AddSwaggerConfiguration();
 
         var app = builder.Build();
 
