@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
 
-using System.Reflection;
 using System.Text;
 
 namespace SDP.TaskManagement.WebHost;
@@ -29,47 +27,23 @@ public class Program
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidIssuer = builder.Configuration[Configurations.Jwt.Issuer],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidAudience = builder.Configuration[Configurations.Jwt.Audience],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidConfigurationException("Jwt key not present."))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[Configurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
-        // SDP.TaskManagement.Infrastructure DI
-        builder.Services.RegisterInfrastructureDependencyInjection();
-
         // Add services to the container.
         builder.Services.AddControllers();
 
-        // Swagger setup
-        builder.Services.AddSwaggerGen(options =>
-        {
-            options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Version = "v1",
-                Title = "TaskManagementWebApp API",
-                Description = "API for our SDP project.",
-                Contact = new OpenApiContact
-                {
-                    Name = "Nicolas Limbeger Ferreira",
-                    Url = new Uri("https://github.com/NicolasLFerreira")
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "MIT",
-                    Url = new Uri("https://opensource.org/licenses/MIT")
-                }
-            });
-
-            // XML comments
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);
-        });
+        // Extensions
+        builder.Services
+            .AddDependencyInjection()
+            .AddSwaggerConfiguration();
 
         var app = builder.Build();
 
@@ -94,7 +68,6 @@ public class Program
         // Middleware
         app.UseHttpsRedirection();
         app.UseAuthorization();
-
 
         app.MapControllers();
 

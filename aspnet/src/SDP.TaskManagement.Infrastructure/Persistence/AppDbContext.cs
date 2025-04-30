@@ -2,10 +2,11 @@
 
 namespace SDP.TaskManagement.Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+/// <summary>
+/// Access point for the database.
+/// </summary>
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
     // create migration: dotnet ef migrations add {MigrationName} --startup-project ..\SDP.TaskManagement.WebHost\
     // run migrations: dotnet ef database update
     protected override void OnModelCreating(ModelBuilder modelBuilder)
