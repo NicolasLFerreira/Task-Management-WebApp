@@ -1,9 +1,9 @@
+using SDP.TaskManagement.Domain.Base;
+
 namespace SDP.TaskManagement.Domain.Entities;
 
-public class TaskItem
+public class TaskItem : Entity
 {
-    public Guid Id { get; set; }
-
     public string Title { get; set; }
 
     public string? Description { get; set; }

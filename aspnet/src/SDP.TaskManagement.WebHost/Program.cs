@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Protocols.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-using SDP.TaskManagement.Infrastructure;
 using SDP.TaskManagement.Infrastructure.Persistence;
 
 using System.Reflection;
+using System.Text;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -17,6 +20,24 @@ public class Program
         // Db context
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        // Jwt auth
+        // Sets the configuration for Jwt validation.
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidConfigurationException("Jwt key not present."))),
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
         // SDP.TaskManagement.Infrastructure DI
         builder.Services.RegisterInfrastructureDependencyInjection();
@@ -70,8 +91,8 @@ public class Program
             }
         }
 
+        // Middleware
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
 
 
