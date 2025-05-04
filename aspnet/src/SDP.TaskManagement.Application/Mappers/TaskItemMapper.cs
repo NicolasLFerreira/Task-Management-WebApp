@@ -3,7 +3,7 @@ using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Mappers;
 
-internal static class TaskItemMapper
+public static class TaskItemMapper
 {
     public static TaskItem ToEntity(TaskItemDto dto)
     {
