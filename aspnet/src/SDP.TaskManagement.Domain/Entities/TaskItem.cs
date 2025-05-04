@@ -4,7 +4,7 @@ namespace SDP.TaskManagement.Domain.Entities;
 
 public class TaskItem : Entity
 {
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     public string? Description { get; set; }
 

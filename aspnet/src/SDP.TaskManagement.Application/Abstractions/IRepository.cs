@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Domain.Base;
+using SDP.TaskManagement.Domain.Base;
 
 namespace SDP.TaskManagement.Application.Abstractions;
 
@@ -12,4 +12,5 @@ public interface IRepository<TEntity, TId> where TEntity : Entity<TId>
     Task<TEntity?> GetByIdAsync(TId id);
     IQueryable<TEntity> GetQueryable();
     Task DeleteAsync(TId id);
+    Task UpdateAsync(TEntity entity);
 }

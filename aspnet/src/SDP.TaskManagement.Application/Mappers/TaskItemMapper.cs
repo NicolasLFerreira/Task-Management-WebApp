@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Mappers;
@@ -7,13 +7,22 @@ internal static class TaskItemMapper
 {
     public static TaskItem ToEntity(TaskItemDto dto)
     {
+        // Ensure dates are in UTC format
+        var dueDate = dto.DueDate.Kind != DateTimeKind.Utc 
+            ? DateTime.SpecifyKind(dto.DueDate, DateTimeKind.Utc) 
+            : dto.DueDate;
+            
+        var creationTime = dto.CreationTime.Kind != DateTimeKind.Utc 
+            ? DateTime.SpecifyKind(dto.CreationTime, DateTimeKind.Utc) 
+            : dto.CreationTime;
+            
         return new TaskItem
         {
             Id = dto.Id,
             Title = dto.Title,
             Description = dto.Description,
-            DueDate = dto.DueDate,
-            CreationTime = dto.CreationTime,
+            DueDate = dueDate,
+            CreationTime = creationTime,
             Priority = dto.Priority,
             ProgressStatus = dto.ProgressStatus,
             OwnerUserId = dto.OwnerUserId

@@ -1,4 +1,4 @@
-﻿namespace SDP.TaskManagement.Domain.Base;
+namespace SDP.TaskManagement.Domain.Base;
 
 /// <summary>
 /// Base entity class for normalising the usage of an Id

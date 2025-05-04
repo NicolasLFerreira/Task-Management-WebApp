@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi.Models;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Services.Auth;

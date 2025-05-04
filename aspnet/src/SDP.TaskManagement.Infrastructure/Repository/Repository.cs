@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Base;
@@ -42,5 +42,11 @@ public class Repository<TEntity, TId> : IRepository<TEntity, TId>
     public async Task DeleteAsync(TId id)
     {
         await _dbContext.Set<TEntity>().Where(user => user.Id.Equals(id)).ExecuteDeleteAsync();
+    }
+
+    public async Task UpdateAsync(TEntity entity)
+    {
+        _dbContext.Set<TEntity>().Update(entity);
+        await _dbContext.SaveChangesAsync();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -47,21 +47,18 @@ public class TokenService : ITokenService
         // Jwt duration
         var parseResult = int.TryParse(_configuration["Jwt:TokenLifetimeMinutes"], out var intDuration);
 
-        // Jwt duration must be set to a valid value to properly work. The code should not make assumptions.
-        // If not set, it's an exceptional case.
-        if (!parseResult)
+        // If token lifetime is not set or invalid, default to 60 minutes
+        if (!parseResult || intDuration <= 0)
         {
-            throw new InvalidConfigurationException("Invalid Jwt TokenLifetimeMinutes value.");
+            intDuration = 60; // Default to 60 minutes
         }
-
-        var timeDuration = new DateTime().AddMinutes(intDuration);
 
         // Create the Jwt.
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: timeDuration,
+            expires: DateTime.UtcNow.AddMinutes(intDuration),
             signingCredentials: signingCredentials
         );
 

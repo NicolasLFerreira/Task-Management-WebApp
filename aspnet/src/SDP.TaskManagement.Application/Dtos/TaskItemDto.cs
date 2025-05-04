@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Domain.Entities;
+using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Dtos;
 
