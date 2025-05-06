@@ -43,9 +43,12 @@ public class Program
         // Extensions
         builder.Services
             .AddDependencyInjection()
+            .ConfigureCors()
             .AddSwaggerConfiguration();
 
         var app = builder.Build();
+
+        app.UseCors("AllowAllOrigins");
 
         // Development settings
         if (app.Environment.IsDevelopment())
