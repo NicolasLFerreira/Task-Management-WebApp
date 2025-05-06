@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using SDP.TaskManagement.Infrastructure.Persistence;
 
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -38,9 +39,16 @@ public class Program
             });
 
         // Add services to the container.
-        builder.Services.AddControllers();
 
-        // Extensions
+        builder.Services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Configuration for ensuring enums are represented as strings rather than numbers.
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+        // Services extensions
         builder.Services
             .ConfigureCors()
             .AddSwaggerConfiguration()

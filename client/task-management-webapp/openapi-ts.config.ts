@@ -9,6 +9,8 @@ import { defineConfig } from "@hey-api/openapi-ts";
  *
  */
 
+
+
 export default defineConfig({
 	input: "http://localhost:5200/swagger/v1/swagger.json",
 	output: {
@@ -25,7 +27,7 @@ export default defineConfig({
 			name: "@hey-api/transformers",
 		},
 		{
-			enums: "javascript",
+			enums: "typescript",
 			name: "@hey-api/typescript",
 		},
 		{

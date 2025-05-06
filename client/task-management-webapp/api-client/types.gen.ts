@@ -22,21 +22,17 @@ export type TaskItemDto = {
     ownerUserId?: string;
 };
 
-export type TaskItemPriority = 0 | 1 | 2;
+export enum TaskItemPriority {
+    LOW = 'Low',
+    MEDIUM = 'Medium',
+    HIGH = 'High'
+}
 
-export const TaskItemPriority = {
-    0: 0,
-    1: 1,
-    2: 2
-} as const;
-
-export type TaskItemStatus = 0 | 1 | 2;
-
-export const TaskItemStatus = {
-    0: 0,
-    1: 1,
-    2: 2
-} as const;
+export enum TaskItemStatus {
+    TODO = 'Todo',
+    IN_PROGRESS = 'InProgress',
+    COMPLETED = 'Completed'
+}
 
 export type UserDto = {
     id?: string;

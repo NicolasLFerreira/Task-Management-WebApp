@@ -72,15 +72,13 @@ export const TaskItemDtoSchema = {
 } as const;
 
 export const TaskItemPrioritySchema = {
-    enum: [0, 1, 2],
-    type: 'integer',
-    format: 'int32'
+    enum: ['Low', 'Medium', 'High'],
+    type: 'string'
 } as const;
 
 export const TaskItemStatusSchema = {
-    enum: [0, 1, 2],
-    type: 'integer',
-    format: 'int32'
+    enum: ['Todo', 'InProgress', 'Completed'],
+    type: 'string'
 } as const;
 
 export const UserDtoSchema = {
