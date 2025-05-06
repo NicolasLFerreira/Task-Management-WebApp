@@ -4,8 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "react-router build",
-		"dev": "react-router dev && openapi-ts",
-		"dev-pure": "react-router dev",
+		"dev": "react-router dev",
 		"openapi-ts": "openapi-ts",
 		"typecheck": "react-router typegen && tsc"
 	},
