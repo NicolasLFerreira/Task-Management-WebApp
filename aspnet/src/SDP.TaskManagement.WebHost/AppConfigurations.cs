@@ -5,10 +5,16 @@
 /// </summary>
 public static class AppConfigurations
 {
+    public static class Database
+    {
+        public const string DefaultConnection = "DefaultConnection";
+    }
+
     public static class Cors
     {
         public const string DefaultCorsPolicy = "DefaultCorsPolicy";
     }
+
     public static class Jwt
     {
         public const string Issuer = "Jwt:Issuer";

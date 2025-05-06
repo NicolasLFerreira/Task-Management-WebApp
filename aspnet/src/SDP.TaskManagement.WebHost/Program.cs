@@ -17,7 +17,7 @@ public class Program
 
         // Db context
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Cors.DefaultCorsPolicy)));
+            options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Database.DefaultConnection)));
 
         // Jwt auth
         // Sets the configuration for Jwt validation.
