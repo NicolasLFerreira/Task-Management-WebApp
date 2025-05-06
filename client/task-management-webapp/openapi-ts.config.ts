@@ -13,7 +13,7 @@ export default defineConfig({
 	input: "http://localhost:5200/swagger/v1/swagger.json",
 	output: {
 		format: "prettier",
-		lint: false, // "eslint", <--- to be configured still
+		lint: "eslint",
 		path: "./api-client",
 		clean: true,
 	},
