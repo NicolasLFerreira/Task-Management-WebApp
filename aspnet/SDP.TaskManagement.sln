@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastr
 		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F} = {E058D6D5-8B4F-46FE-89A9-69870EE91F8F}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Web", "SDP.TaskManagement.Web\SDP.TaskManagement.Web.csproj", "{2521250C-D8BB-42D9-8137-86D092137EDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Web", "src\SDP.TaskManagement.Web\SDP.TaskManagement.Web.csproj", "{2521250C-D8BB-42D9-8137-86D092137EDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
