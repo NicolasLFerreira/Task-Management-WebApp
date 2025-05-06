@@ -9,30 +9,33 @@ import { defineConfig } from "@hey-api/openapi-ts";
  *
  */
 
-
-
 export default defineConfig({
 	input: "http://localhost:5200/swagger/v1/swagger.json",
 	output: {
-		format: false, // "prettier",
-		lint: false, // "eslint",
+		format: "prettier",
+		lint: false, // "eslint", <--- to be configured still
 		path: "./api-client",
 		clean: true,
 	},
 	plugins: [
-		"@hey-api/client-axios",
 		"@hey-api/schemas",
 		{
-			dates: true,
-			name: "@hey-api/transformers",
-		},
-		{
-			enums: "typescript",
-			name: "@hey-api/typescript",
+			name: "@hey-api/client-axios",
+			baseUrl: "https://localhost:7200/",
 		},
 		{
 			name: "@hey-api/sdk",
 			transformer: true,
+			asClass: true,
+			client: true,
+		},
+		{
+			name: "@hey-api/typescript",
+			enums: "typescript",
+		},
+		{
+			name: "@hey-api/transformers",
+			dates: true,
 		},
 	],
 });

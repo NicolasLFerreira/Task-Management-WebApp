@@ -19,54 +19,62 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-export const login = <ThrowOnError extends boolean = false>(options?: Options<LoginData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).post<LoginResponse, unknown, ThrowOnError>({
-        responseType: 'text',
-        url: '/api/Account/login',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export class AccountService {
+    public static login<ThrowOnError extends boolean = false>(options?: Options<LoginData, ThrowOnError>) {
+        return (options?.client ?? _heyApiClient).post<LoginResponse, unknown, ThrowOnError>({
+            responseType: 'text',
+            url: '/api/Account/login',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options?.headers
+            }
+        });
+    }
+    
+    public static register<ThrowOnError extends boolean = false>(options?: Options<RegisterData, ThrowOnError>) {
+        return (options?.client ?? _heyApiClient).post<RegisterResponse, unknown, ThrowOnError>({
+            responseType: 'text',
+            url: '/api/Account/register',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options?.headers
+            }
+        });
+    }
+    
+}
 
-export const register = <ThrowOnError extends boolean = false>(options?: Options<RegisterData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).post<RegisterResponse, unknown, ThrowOnError>({
-        responseType: 'text',
-        url: '/api/Account/register',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export class SampleRepositoryService {
+    public static getUsers<ThrowOnError extends boolean = false>(options?: Options<GetUsersData, ThrowOnError>) {
+        return (options?.client ?? _heyApiClient).get<GetUsersResponse, unknown, ThrowOnError>({
+            url: '/api/SampleRepository',
+            ...options
+        });
+    }
+    
+}
 
-export const getUsers = <ThrowOnError extends boolean = false>(options?: Options<GetUsersData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).get<GetUsersResponse, unknown, ThrowOnError>({
-        responseType: 'text',
-        url: '/api/SampleRepository',
-        ...options
-    });
-};
-
-export const getTaskItem = <ThrowOnError extends boolean = false>(options?: Options<GetTaskItemData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).get<GetTaskItemResponse, unknown, ThrowOnError>({
-        responseType: 'text',
-        responseTransformer: getTaskItemResponseTransformer,
-        url: '/api/TaskItem',
-        ...options
-    });
-};
-
-export const postTaskItem = <ThrowOnError extends boolean = false>(options?: Options<PostTaskItemData, ThrowOnError>) => {
-    return (options?.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
-        url: '/api/TaskItem',
-        ...options,
-        headers: {
-            'Content-Type': 'application/json',
-            ...options?.headers
-        }
-    });
-};
+export class TaskItemService {
+    public static getTaskItem<ThrowOnError extends boolean = false>(options?: Options<GetTaskItemData, ThrowOnError>) {
+        return (options?.client ?? _heyApiClient).get<GetTaskItemResponse, unknown, ThrowOnError>({
+            responseType: 'text',
+            responseTransformer: getTaskItemResponseTransformer,
+            url: '/api/TaskItem',
+            ...options
+        });
+    }
+    
+    public static postTaskItem<ThrowOnError extends boolean = false>(options?: Options<PostTaskItemData, ThrowOnError>) {
+        return (options?.client ?? _heyApiClient).post<unknown, unknown, ThrowOnError>({
+            url: '/api/TaskItem',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options?.headers
+            }
+        });
+    }
+    
+}
