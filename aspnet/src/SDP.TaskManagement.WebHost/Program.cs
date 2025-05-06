@@ -17,7 +17,7 @@ public class Program
 
         // Db context
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Cors.DefaultCorsPolicy)));
 
         // Jwt auth
         // Sets the configuration for Jwt validation.
@@ -27,11 +27,11 @@ public class Program
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration[Configurations.Jwt.Issuer],
+                    ValidIssuer = builder.Configuration[AppConfigurations.Jwt.Issuer],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration[Configurations.Jwt.Audience],
+                    ValidAudience = builder.Configuration[AppConfigurations.Jwt.Audience],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[Configurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[AppConfigurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
@@ -42,13 +42,13 @@ public class Program
 
         // Extensions
         builder.Services
-            .AddDependencyInjection()
             .ConfigureCors()
-            .AddSwaggerConfiguration();
+            .AddSwaggerConfiguration()
+            .AddDependencyInjection();
 
         var app = builder.Build();
 
-        app.UseCors("AllowAllOrigins");
+        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
         // Development settings
         if (app.Environment.IsDevelopment())
