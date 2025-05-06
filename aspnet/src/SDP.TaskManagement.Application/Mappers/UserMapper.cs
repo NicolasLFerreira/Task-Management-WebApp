@@ -3,7 +3,7 @@ using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Mappers;
 
-internal static class UserMapper
+public static class UserMapper
 {
     public static UserDto ToDto(User entity)
     {

@@ -3,7 +3,7 @@
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 
-namespace SDP.TaskManagement.Application.Controllers;
+namespace SDP.TaskManagement.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

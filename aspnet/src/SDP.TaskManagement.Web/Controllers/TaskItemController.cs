@@ -5,7 +5,7 @@ using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
 
-namespace SDP.TaskManagement.Application.Controllers;
+namespace SDP.TaskManagement.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
