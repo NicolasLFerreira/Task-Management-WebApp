@@ -45,7 +45,6 @@ export class AccountService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       url: "/api/Account/login",
       ...options,
       headers: {
@@ -63,7 +62,6 @@ export class AccountService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       url: "/api/Account/register",
       ...options,
       headers: {
@@ -83,7 +81,6 @@ export class SampleRepositoryService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       url: "/api/SampleRepository",
       ...options,
     });
@@ -99,7 +96,6 @@ export class TaskItemService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       responseTransformer: getTaskItemResponseTransformer,
       url: "/api/TaskItem",
       ...options,

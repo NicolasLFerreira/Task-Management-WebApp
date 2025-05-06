@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
+using SDP.TaskManagement.WebHost.Swagger;
 
 using System.Text;
 using System.Text.Json.Serialization;
