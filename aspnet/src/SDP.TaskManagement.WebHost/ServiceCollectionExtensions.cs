@@ -31,7 +31,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowAllOrigins", policy =>
+            options.AddPolicy(AppConfigurations.Cors.DefaultCorsPolicy, policy =>
             {
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
