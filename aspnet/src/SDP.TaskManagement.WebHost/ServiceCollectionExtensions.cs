@@ -27,34 +27,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    /// <summary>
-    /// Custom handler for swagger configuration.
-    /// </summary>
-    public static IServiceCollection AddSwaggerConfiguration(this IServiceCollection services)
+    public static IServiceCollection ConfigureCors(this IServiceCollection services)
     {
-        services.AddSwaggerGen(options =>
+        services.AddCors(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo
+            options.AddPolicy(AppConfigurations.Cors.DefaultCorsPolicy, policy =>
             {
-                Version = "v1",
-                Title = "TaskManagementWebApp API",
-                Description = "API for our SDP project.",
-                Contact = new OpenApiContact
-                {
-                    Name = "Nicolas Limbeger Ferreira",
-                    Url = new Uri("https://github.com/NicolasLFerreira")
-                },
-                License = new OpenApiLicense
-                {
-                    Name = "MIT",
-                    Url = new Uri("https://opensource.org/licenses/MIT")
-                }
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
             });
-
-            // XML comments
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);
         });
 
         return services;

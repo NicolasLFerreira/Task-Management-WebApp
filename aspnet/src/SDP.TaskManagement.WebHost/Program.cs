@@ -4,8 +4,10 @@ using Microsoft.IdentityModel.Protocols.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
+using SDP.TaskManagement.WebHost.Swagger;
 
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -17,7 +19,7 @@ public class Program
 
         // Db context
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Database.DefaultConnection)));
 
         // Jwt auth
         // Sets the configuration for Jwt validation.
@@ -27,25 +29,35 @@ public class Program
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration[Configurations.Jwt.Issuer],
+                    ValidIssuer = builder.Configuration[AppConfigurations.Jwt.Issuer],
                     ValidateAudience = true,
-                    ValidAudience = builder.Configuration[Configurations.Jwt.Audience],
+                    ValidAudience = builder.Configuration[AppConfigurations.Jwt.Audience],
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[Configurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[AppConfigurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
         // Add services to the container.
-        builder.Services.AddControllers();
 
-        // Extensions
         builder.Services
-            .AddDependencyInjection()
-            .AddSwaggerConfiguration();
+            .AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Configuration for ensuring enums are represented as strings rather than numbers.
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
+        // Services extensions
+        builder.Services
+            .ConfigureCors()
+            .AddSwaggerConfiguration()
+            .AddDependencyInjection();
 
         var app = builder.Build();
+
+        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
         // Development settings
         if (app.Environment.IsDevelopment())
