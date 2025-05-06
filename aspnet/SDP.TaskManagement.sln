@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Web", "src\SDP.TaskManagement.Web\SDP.TaskManagement.Web.csproj", "{2521250C-D8BB-42D9-8137-86D092137EDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.UnitTests", "tests\SDP.TaskManagement.UnitTests\SDP.TaskManagement.UnitTests.csproj", "{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{2521250C-D8BB-42D9-8137-86D092137EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2521250C-D8BB-42D9-8137-86D092137EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2521250C-D8BB-42D9-8137-86D092137EDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
