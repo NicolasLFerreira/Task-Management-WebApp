@@ -11,9 +11,9 @@ namespace SDP.TaskManagement.Web.Controllers;
 [Route("api/[controller]")]
 public class TaskItemController : ControllerBase
 {
-    private readonly IRepository<TaskItem, Guid> _repository;
+    private readonly IRepository<TaskItem> _repository;
 
-    public TaskItemController(IRepository<TaskItem, Guid> repository)
+    public TaskItemController(IRepository<TaskItem> repository)
     {
         _repository = repository;
     }
@@ -31,13 +31,21 @@ public class TaskItemController : ControllerBase
         return Ok(dto);
     }
 
-    [HttpPost(Name = "PostTaskItem")]
-    public async Task<IActionResult> PostTaskItem(TaskItemDto taskItemDto)
+    [HttpPost(Name = "AddTaskItem")]
+    public async Task<IActionResult> AddTaskItem(TaskItemDto taskItemDto)
     {
         var taskItem = TaskItemMapper.ToEntity(taskItemDto);
 
         await _repository.AddAsync(taskItem);
 
         return Ok();
+    }
+
+    [HttpPut(Name = "UpdateTaskItem")]
+    public async Task<IActionResult> UpdateTaskItem(TaskItemDto taskItemDto)
+    {
+        var taskItem = TaskItemMapper.ToEntity(taskItemDto);
+
+        return null;
     }
 }

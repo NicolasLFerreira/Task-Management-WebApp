@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddDependencyInjection(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IAuthService, AuthService>();

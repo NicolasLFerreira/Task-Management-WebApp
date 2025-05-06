@@ -6,41 +6,72 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 
 namespace SDP.TaskManagement.Infrastructure.Repository;
 
-public class Repository<TEntity, TId> : IRepository<TEntity, TId>
-    where TEntity : Entity<TId>
-    where TId : IComparable<TId>
+public class Repository<TEntity> : IRepository<TEntity>
+    where TEntity : Entity
 {
     private readonly AppDbContext _dbContext;
+
+    private DbSet<TEntity> Set => _dbContext.Set<TEntity>();
 
     public Repository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
+
     }
 
-    public async Task AddAsync(TEntity entity)
+    public async Task<bool> AddAsync(TEntity entity)
     {
-        await _dbContext.Set<TEntity>().AddAsync(entity);
-        _dbContext.SaveChanges();
+        await Set.AnyAsync(e => e.Id == entity.Id);
+
+        await Set
+            .AddAsync(entity);
+
+        await _dbContext
+            .SaveChangesAsync();
+
+        return true;
     }
 
-    public async Task AddRangeAsync(IEnumerable<TEntity> entities)
+    public async Task<bool> AddRangeAsync(IEnumerable<TEntity> entities)
     {
-        await _dbContext.Set<TEntity>().AddRangeAsync(entities);
-        _dbContext.SaveChanges();
+        await Set
+            .AddRangeAsync(entities);
+
+        await _dbContext
+            .SaveChangesAsync();
+         
+        return true;
     }
 
-    public async Task<TEntity?> GetByIdAsync(TId id)
+    public async Task<TEntity?> GetByIdAsync(Guid id)
     {
-        return await _dbContext.Set<TEntity>().FindAsync(id);
+        return await Set
+            .FindAsync(id);
     }
 
     public IQueryable<TEntity> GetQueryable()
     {
-        return _dbContext.Set<TEntity>().AsQueryable();
+        return Set
+            .AsQueryable();
     }
 
-    public async Task DeleteAsync(TId id)
+    public async Task<bool> UpdateAsync(TEntity entity)
     {
-        await _dbContext.Set<TEntity>().Where(user => user.Id.Equals(id)).ExecuteDeleteAsync();
+        Set
+            .Update(entity);
+
+        await _dbContext
+            .SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        await Set
+            .Where(user => user.Id.Equals(id))
+            .ExecuteDeleteAsync();
+
+        return true;
     }
 }

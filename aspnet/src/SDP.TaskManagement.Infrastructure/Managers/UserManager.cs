@@ -7,9 +7,9 @@ namespace SDP.TaskManagement.Infrastructure.Managers;
 
 public class UserManager : IUserManager
 {
-    private readonly IRepository<User, Guid> _userRepository;
+    private readonly IRepository<User> _userRepository;
 
-    public UserManager(IRepository<User, Guid> userRepository)
+    public UserManager(IRepository<User> userRepository)
     {
         _userRepository = userRepository;
     }

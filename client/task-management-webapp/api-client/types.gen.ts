@@ -107,14 +107,14 @@ export type GetTaskItemResponses = {
 export type GetTaskItemResponse =
   GetTaskItemResponses[keyof GetTaskItemResponses];
 
-export type PostTaskItemData = {
+export type AddTaskItemData = {
   body?: TaskItemDto;
   path?: never;
   query?: never;
   url: "/api/TaskItem";
 };
 
-export type PostTaskItemResponses = {
+export type AddTaskItemResponses = {
   /**
    * OK
    */

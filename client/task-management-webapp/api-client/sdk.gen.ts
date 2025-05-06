@@ -14,7 +14,7 @@ import type {
   GetUsersResponse,
   GetTaskItemData,
   GetTaskItemResponse,
-  PostTaskItemData,
+  AddTaskItemData,
 } from "./types.gen";
 import { client as _heyApiClient } from "./client.gen";
 import { getTaskItemResponseTransformer } from "./transformers.gen";
@@ -102,8 +102,8 @@ export class TaskItemService {
     });
   }
 
-  public static postTaskItem<ThrowOnError extends boolean = false>(
-    options?: Options<PostTaskItemData, ThrowOnError>,
+  public static addTaskItem<ThrowOnError extends boolean = false>(
+    options?: Options<AddTaskItemData, ThrowOnError>,
   ) {
     return (options?.client ?? _heyApiClient).post<
       unknown,

@@ -13,11 +13,11 @@ namespace SDP.TaskManagement.Web.Controllers
     /// </summary>
     [ApiController]
     [Route("api/[controller]")]
-    public class SampleRepository : ControllerBase
+    public class SampleController : ControllerBase
     {
-        private readonly IRepository<User, Guid> _userRepository;
+        private readonly IRepository<User> _userRepository;
 
-        public SampleRepository(IRepository<User, Guid> userRepository)
+        public SampleController(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
         }
