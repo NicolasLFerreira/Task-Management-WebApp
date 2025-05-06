@@ -8,7 +8,6 @@ import {
 } from "react-router";
 
 import "./app.css";
-import { SampleRepositoryService, type UserDto } from "api-client";
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,10 +41,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  SampleRepositoryService.getUsers().then((response) => {
-    console.log(response.data);
-  })
-
   return <Outlet />;
 }
 
