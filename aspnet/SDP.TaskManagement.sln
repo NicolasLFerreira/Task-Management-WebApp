@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.Web", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDP.TaskManagement.UnitTests", "tests\SDP.TaskManagement.UnitTests\SDP.TaskManagement.UnitTests.csproj", "{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{12823B7E-1B1C-441C-A2FA-0EDB363D5359}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E058D6D5-8B4F-46FE-89A9-69870EE91F8F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C676DEF4-AD43-420F-A56E-24A269A69E7E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2BD14508-7022-41B4-B443-4EA74D618A48} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{2521250C-D8BB-42D9-8137-86D092137EDB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{D0A14CE9-5615-46EA-95D7-6FD3E16EF4E7} = {12823B7E-1B1C-441C-A2FA-0EDB363D5359}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF328905-2DD9-4520-AE37-658A8E4ABEC0}
