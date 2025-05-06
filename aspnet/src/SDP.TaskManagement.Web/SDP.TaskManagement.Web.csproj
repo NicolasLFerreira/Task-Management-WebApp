@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj" />
-    <ProjectReference Include="..\src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj" />
-    <ProjectReference Include="..\src\SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj" />
+    <ProjectReference Include="..\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj" />
+    <ProjectReference Include="..\SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
