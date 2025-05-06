@@ -7,8 +7,8 @@ import {
   ScrollRestoration,
 } from "react-router";
 
-
 import "./app.css";
+import { OpenAPI } from "api";
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -22,6 +22,8 @@ export const links = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+OpenAPI.BASE = "https://localhost:5200";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
