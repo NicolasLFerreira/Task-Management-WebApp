@@ -24,7 +24,7 @@ public interface IRepository<TEntity> where TEntity : Entity
     /// <summary>
     /// Gets a single entity by its <see cref="Entity.Id"/>.
     /// </summary>
-    Task<TEntity?> GetByIdAsync(Guid id);
+    Task<TEntity?> GetByIdAsync(long id);
     /// <summary>
     /// Retrieves a queryable of the whole database table for the respective <see cref="Entity"/>
     /// </summary>
@@ -42,5 +42,5 @@ public interface IRepository<TEntity> where TEntity : Entity
     /// <returns>
     /// Whether task was successful.
     /// </returns>
-    Task<bool> DeleteAsync(Guid id);
+    Task<bool> DeleteAsync(long id);
 }

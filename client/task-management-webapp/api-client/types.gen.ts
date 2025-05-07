@@ -11,15 +11,27 @@ export type RegisterDto = {
   password?: string | null;
 };
 
-export type TaskItemDto = {
-  id?: string;
+export type TaskItem = {
+  id?: bigint;
   title?: string | null;
   description?: string | null;
   dueDate?: Date;
   creationTime?: Date;
   priority?: TaskItemPriority;
   progressStatus?: TaskItemStatus;
-  ownerUserId?: string;
+  ownerUser?: User;
+  ownerUserId?: bigint;
+};
+
+export type TaskItemDto = {
+  id?: bigint;
+  title?: string | null;
+  description?: string | null;
+  dueDate?: Date;
+  creationTime?: Date;
+  priority?: TaskItemPriority;
+  progressStatus?: TaskItemStatus;
+  ownerUserId?: bigint;
 };
 
 export enum TaskItemPriority {
@@ -34,8 +46,16 @@ export enum TaskItemStatus {
   COMPLETED = "Completed",
 }
 
+export type User = {
+  id?: bigint;
+  name?: string | null;
+  email?: string | null;
+  passwordHash?: string | null;
+  ownedTaskItems?: Array<TaskItem> | null;
+};
+
 export type UserDto = {
-  id?: string;
+  id?: bigint;
   name?: string | null;
   email?: string | null;
 };
@@ -76,7 +96,7 @@ export type GetUsersData = {
   body?: never;
   path?: never;
   query?: never;
-  url: "/api/SampleRepository";
+  url: "/api/Sample";
 };
 
 export type GetUsersResponses = {
@@ -88,33 +108,99 @@ export type GetUsersResponses = {
 
 export type GetUsersResponse = GetUsersResponses[keyof GetUsersResponses];
 
-export type GetTaskItemData = {
-  body?: never;
+export type PostApiTaskItemAddTaskItemData = {
+  body?: TaskItemDto;
   path?: never;
-  query?: {
-    id?: string;
-  };
-  url: "/api/TaskItem";
+  query?: never;
+  url: "/api/TaskItem/AddTaskItem";
 };
 
-export type GetTaskItemResponses = {
+export type PostApiTaskItemAddTaskItemResponses = {
+  /**
+   * OK
+   */
+  200: unknown;
+};
+
+export type GetApiTaskItemGetTaskItemByTaskItemIdData = {
+  body?: never;
+  path: {
+    taskItemId: bigint;
+  };
+  query?: never;
+  url: "/api/TaskItem/GetTaskItem/{taskItemId}";
+};
+
+export type GetApiTaskItemGetTaskItemByTaskItemIdResponses = {
   /**
    * OK
    */
   200: TaskItemDto;
 };
 
-export type GetTaskItemResponse =
-  GetTaskItemResponses[keyof GetTaskItemResponses];
+export type GetApiTaskItemGetTaskItemByTaskItemIdResponse =
+  GetApiTaskItemGetTaskItemByTaskItemIdResponses[keyof GetApiTaskItemGetTaskItemByTaskItemIdResponses];
 
-export type AddTaskItemData = {
+export type GetApiTaskItemGetAllTaskItemsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/api/TaskItem/GetAllTaskItems";
+};
+
+export type GetApiTaskItemGetAllTaskItemsResponses = {
+  /**
+   * OK
+   */
+  200: Array<TaskItem>;
+};
+
+export type GetApiTaskItemGetAllTaskItemsResponse =
+  GetApiTaskItemGetAllTaskItemsResponses[keyof GetApiTaskItemGetAllTaskItemsResponses];
+
+export type GetApiTaskItemGetTaskItemByUserByUserIdData = {
+  body?: never;
+  path: {
+    userId: bigint;
+  };
+  query?: never;
+  url: "/api/TaskItem/GetTaskItemByUser/{userId}";
+};
+
+export type GetApiTaskItemGetTaskItemByUserByUserIdResponses = {
+  /**
+   * OK
+   */
+  200: Array<TaskItem>;
+};
+
+export type GetApiTaskItemGetTaskItemByUserByUserIdResponse =
+  GetApiTaskItemGetTaskItemByUserByUserIdResponses[keyof GetApiTaskItemGetTaskItemByUserByUserIdResponses];
+
+export type PutApiTaskItemUpdateTaskItemData = {
   body?: TaskItemDto;
   path?: never;
   query?: never;
-  url: "/api/TaskItem";
+  url: "/api/TaskItem/UpdateTaskItem";
 };
 
-export type AddTaskItemResponses = {
+export type PutApiTaskItemUpdateTaskItemResponses = {
+  /**
+   * OK
+   */
+  200: unknown;
+};
+
+export type DeleteApiTaskItemDeleteTaskItemByTaskItemIdData = {
+  body?: never;
+  path: {
+    taskItemId: bigint;
+  };
+  query?: never;
+  url: "/api/TaskItem/DeleteTaskItem/{taskItemId}";
+};
+
+export type DeleteApiTaskItemDeleteTaskItemByTaskItemIdResponses = {
   /**
    * OK
    */

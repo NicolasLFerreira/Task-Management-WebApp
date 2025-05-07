@@ -5,5 +5,5 @@
 /// </summary>
 public class Entity
 {
-    public required Guid Id { get; set; }
+    public long Id { get; set; }
 }

@@ -34,7 +34,6 @@ public class AuthService : IAuthService
         // Creates the new user entity with the input.
         var user = new User()
         {
-            Id = Guid.NewGuid(),
             Name = registerDto.Name,
             Email = registerDto.Email,
             PasswordHash = passwordHash

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Application.Mappers;
@@ -18,34 +18,71 @@ public class TaskItemController : ControllerBase
         _repository = repository;
     }
 
-    [HttpGet(Name = "GetTaskItem")]
-    public async Task<ActionResult<TaskItemDto?>> GetTaskItem(Guid id)
+    [HttpPost("AddTaskItem")]
+    public async Task<IActionResult> AddTaskItem(TaskItemDto taskItemDto)
     {
-        var result = await _repository.GetByIdAsync(id);
+        var taskItem = TaskItemMapper.ToEntity(taskItemDto);
+
+        var result = await _repository.AddAsync(taskItem);
+
+        return result
+            ? Ok()
+            : Ok($"Good request, but could not find TaskItem with Id '{taskItem.Id}'");
+    }
+
+    [HttpGet("GetTaskItem/{taskItemId:long}")]
+    public async Task<ActionResult<TaskItemDto?>> GetTaskItem(long taskItemId)
+    {
+        var result = await _repository.GetByIdAsync(taskItemId);
 
         if (result == null)
-            return NotFound("The given id does not match any existing entry.");
+            return Ok($"Good request, but could not find TaskItem with Id '{taskItemId}'");
 
         var dto = TaskItemMapper.ToDto(result);
 
         return Ok(dto);
     }
 
-    [HttpPost(Name = "AddTaskItem")]
-    public async Task<IActionResult> AddTaskItem(TaskItemDto taskItemDto)
+    [HttpGet("GetAllTaskItems")]
+    public async Task<ActionResult<List<TaskItem>>> GetAllTaskItems()
     {
-        var taskItem = TaskItemMapper.ToEntity(taskItemDto);
+        var result = await _repository
+            .GetQueryable()
+            .ToListAsync();
 
-        await _repository.AddAsync(taskItem);
-
-        return Ok();
+        return Ok(result);
     }
 
-    [HttpPut(Name = "UpdateTaskItem")]
+    [HttpGet("GetTaskItemByUser/{userId:long}")]
+    public async Task<ActionResult<List<TaskItem>>> GetTaskItemsByUser(long userId)
+    {
+        var result = await _repository
+            .GetQueryable()
+            .Where(e => e.OwnerUserId == userId)
+            .ToListAsync();
+
+        return Ok(result);
+    }
+
+    [HttpPut("UpdateTaskItem")]
     public async Task<IActionResult> UpdateTaskItem(TaskItemDto taskItemDto)
     {
         var taskItem = TaskItemMapper.ToEntity(taskItemDto);
 
-        return null;
+        var result = await _repository.UpdateAsync(taskItem);
+
+        return result
+            ? Ok()
+            : Ok($"Good request, but could not find TaskItem with Id '{taskItem.Id}'");
+    }
+
+    [HttpDelete("DeleteTaskItem/{taskItemId:long}")]
+    public async Task<IActionResult> DeleteTaskItem(long taskItemId)
+    {
+        var result = await _repository.DeleteAsync(taskItemId);
+
+        return result
+            ? Ok()
+            : Ok($"Good request, but could not find TaskItem with Id '{taskItemId}'");
     }
 }

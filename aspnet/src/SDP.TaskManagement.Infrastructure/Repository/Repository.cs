@@ -49,7 +49,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return true;
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id)
+    public async Task<TEntity?> GetByIdAsync(long id)
     {
         return await Set
             .FindAsync(id);
@@ -81,7 +81,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<bool> DeleteAsync(long id)
     {
         var exists = await Set.AnyAsync(e => e.Id == id);
 

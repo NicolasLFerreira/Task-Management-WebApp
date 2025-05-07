@@ -34,12 +34,52 @@ export const RegisterDtoSchema = {
   additionalProperties: false,
 } as const;
 
+export const TaskItemSchema = {
+  type: "object",
+  properties: {
+    id: {
+      type: "integer",
+      format: "int64",
+    },
+    title: {
+      type: "string",
+      nullable: true,
+    },
+    description: {
+      type: "string",
+      nullable: true,
+    },
+    dueDate: {
+      type: "string",
+      format: "date-time",
+    },
+    creationTime: {
+      type: "string",
+      format: "date-time",
+    },
+    priority: {
+      $ref: "#/components/schemas/TaskItemPriority",
+    },
+    progressStatus: {
+      $ref: "#/components/schemas/TaskItemStatus",
+    },
+    ownerUser: {
+      $ref: "#/components/schemas/User",
+    },
+    ownerUserId: {
+      type: "integer",
+      format: "int64",
+    },
+  },
+  additionalProperties: false,
+} as const;
+
 export const TaskItemDtoSchema = {
   type: "object",
   properties: {
     id: {
-      type: "string",
-      format: "uuid",
+      type: "integer",
+      format: "int64",
     },
     title: {
       type: "string",
@@ -64,8 +104,8 @@ export const TaskItemDtoSchema = {
       $ref: "#/components/schemas/TaskItemStatus",
     },
     ownerUserId: {
-      type: "string",
-      format: "uuid",
+      type: "integer",
+      format: "int64",
     },
   },
   additionalProperties: false,
@@ -81,12 +121,42 @@ export const TaskItemStatusSchema = {
   type: "string",
 } as const;
 
+export const UserSchema = {
+  type: "object",
+  properties: {
+    id: {
+      type: "integer",
+      format: "int64",
+    },
+    name: {
+      type: "string",
+      nullable: true,
+    },
+    email: {
+      type: "string",
+      nullable: true,
+    },
+    passwordHash: {
+      type: "string",
+      nullable: true,
+    },
+    ownedTaskItems: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/TaskItem",
+      },
+      nullable: true,
+    },
+  },
+  additionalProperties: false,
+} as const;
+
 export const UserDtoSchema = {
   type: "object",
   properties: {
     id: {
-      type: "string",
-      format: "uuid",
+      type: "integer",
+      format: "int64",
     },
     name: {
       type: "string",
