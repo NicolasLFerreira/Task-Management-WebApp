@@ -21,15 +21,21 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async Task<bool> AddAsync(TEntity entity)
     {
-        await Set.AnyAsync(e => e.Id == entity.Id);
+        var exists = await Set
+            .AnyAsync(e => e.Id == entity.Id);
 
-        await Set
+        if (exists)
+        {
+            return false;
+        }
+
+        var a = await Set
             .AddAsync(entity);
 
-        await _dbContext
+        var result = await _dbContext
             .SaveChangesAsync();
 
-        return true;
+        return result == 1;
     }
 
     public async Task<bool> AddRangeAsync(IEnumerable<TEntity> entities)
@@ -39,7 +45,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
         await _dbContext
             .SaveChangesAsync();
-         
+
         return true;
     }
 
@@ -55,10 +61,19 @@ public class Repository<TEntity> : IRepository<TEntity>
             .AsQueryable();
     }
 
-    public async Task<bool> UpdateAsync(TEntity entity)
+    public async Task<bool> UpdateAsync(TEntity item)
     {
+        var entity = await Set.FirstOrDefaultAsync(e => e.Id == item.Id);
+
+        if (entity == null)
+        {
+            return false;
+        }
+
         Set
-            .Update(entity);
+            .Entry(entity)
+            .CurrentValues
+            .SetValues(item);
 
         await _dbContext
             .SaveChangesAsync();
@@ -68,8 +83,15 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async Task<bool> DeleteAsync(Guid id)
     {
+        var exists = await Set.AnyAsync(e => e.Id == id);
+
+        if (exists)
+        {
+            return false;
+        }
+
         await Set
-            .Where(user => user.Id.Equals(id))
+            .Where(e => e.Id == id)
             .ExecuteDeleteAsync();
 
         return true;
