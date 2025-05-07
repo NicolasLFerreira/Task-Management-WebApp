@@ -1,22 +1,36 @@
-FROM node:20-alpine AS development-dependencies-env
-COPY . /app
-WORKDIR /app
-RUN npm ci
+# Build stage
+FROM node:20-alpine as build
 
-FROM node:20-alpine AS production-dependencies-env
-COPY ./package.json package-lock.json /app/
 WORKDIR /app
-RUN npm ci --omit=dev
 
-FROM node:20-alpine AS build-env
-COPY . /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
-RUN npm run build
+# Install pnpm
+RUN npm install -g pnpm
 
-FROM node:20-alpine
-COPY ./package.json package-lock.json /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
-WORKDIR /app
-CMD ["npm", "run", "start"]
+# Copy package.json and install dependencies
+COPY package*.json ./
+RUN pnpm install
+
+# Copy configuration files first
+COPY postcss.config.js tailwind.config.js vite.config.ts tsconfig.json ./
+
+# Copy the rest of the application code
+COPY . .
+
+# Create a .env file with environment variables - use relative path for API
+RUN echo "VITE_API_URL=/api" > .env
+
+# Build the application
+RUN pnpm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy the build output to replace the default nginx contents
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

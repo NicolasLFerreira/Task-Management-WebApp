@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devlocal123}
+      POSTGRES_DB: taskmanagementdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - task-management-network
+
+  # ASP.NET Core Backend
+  backend:
+    build:
+      context: ./aspnet
+      dockerfile: Dockerfile
+    ports:
+      - "7200:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=taskmanagementdb;Username=${POSTGRES_USER:-admin};Password=${POSTGRES_PASSWORD:-devlocal123};
+      - Jwt__Key=${JWT_KEY:-Must_Be_Changed_In_Prod_This_Is_A_Long_Secret_Key_For_Development}
+      - Jwt__Issuer=${JWT_ISSUER:-TaskManagementApp}
+      - Jwt__Audience=${JWT_AUDIENCE:-TaskManagementUsers}
+      - Jwt__TokenLifetimeMinutes=${JWT_LIFETIME:-60}
+      - ASPNETCORE_URLS=http://+:80
+    networks:
+      - task-management-network
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./client/task-management-webapp
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - task-management-network
+
+networks:
+  task-management-network:
+    driver: bridge
+
+volumes:
+  pgdata:

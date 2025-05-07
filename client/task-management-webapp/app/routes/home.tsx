@@ -1,13 +1,10 @@
-import type { Route } from "./+types/home";
-import Dashboard from "../pages/Dashboard";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "Tickway – Task Manager" },
-    { name: "description", content: "Organize and prioritize your tasks with Tickway." },
-  ];
+export function meta() {
+  return [{ title: "New React Router App" }, { name: "description", content: "Welcome to React Router!" }]
 }
 
+import { Welcome } from "../welcome/welcome"
+
 export default function Home() {
-  return <Dashboard />;
+  return <Welcome />
 }
