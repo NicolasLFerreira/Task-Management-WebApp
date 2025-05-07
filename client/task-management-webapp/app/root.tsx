@@ -8,7 +8,6 @@ import {
 } from "react-router";
 
 import "./app.css";
-import { SampleService, TaskItemService, type Options } from "api-client";
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,26 +41,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  SampleService.getApiSampleGetUsers().then(response => {
-    console.log("Sample");
-    console.log(response.data);
-  });
-
-  TaskItemService.getApiTasks().then(response => {
-    console.log("GetAll");
-    console.log(response.data);
-  })
-
-  TaskItemService.getApiTasksUserByUserId({ path: { userId: 1 } }).then(response => {
-    console.log("ByUserId");
-    console.log(response.data);
-  });
-
-  TaskItemService.getApiTasksByTaskItemId({ path: { taskItemId: 2 } }).then(response => {    
-    console.log("ByTaskId");
-    console.log(response.data);
-  })
-
   return <Outlet />;
 }
 
