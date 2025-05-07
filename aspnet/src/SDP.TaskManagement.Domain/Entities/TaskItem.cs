@@ -17,7 +17,7 @@ public class TaskItem : Entity
     public TaskItemStatus ProgressStatus { get; set; }
 
     public User? OwnerUser { get; set; }
-    public Guid OwnerUserId { get; set; }
+    public long OwnerUserId { get; set; }
 }
 
 public enum TaskItemPriority

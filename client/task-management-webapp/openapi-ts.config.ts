@@ -27,7 +27,7 @@ export default defineConfig({
 			name: "@hey-api/sdk",
 			transformer: true,
 			asClass: true,
-			client: true,
+			// client: true,
 		},
 		{
 			name: "@hey-api/typescript",
@@ -36,6 +36,7 @@ export default defineConfig({
 		{
 			name: "@hey-api/transformers",
 			dates: true,
+			bigInt: false,
 		},
 	],
 });

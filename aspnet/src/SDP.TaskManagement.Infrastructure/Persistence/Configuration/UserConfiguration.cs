@@ -16,6 +16,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         // PK
 
         builder.HasKey(t => t.Id);
+        builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
         // Properties
 

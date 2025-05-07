@@ -16,6 +16,7 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         // PK
 
         builder.HasKey(t => t.Id);
+        builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
         // Properties
 

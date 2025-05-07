@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250429114152_InitialCreate")]
+    [Migration("20250507023554_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,9 +27,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.TaskItem", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
@@ -41,8 +43,8 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("OwnerUserId")
-                        .HasColumnType("uuid");
+                    b.Property<long>("OwnerUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("Priority")
                         .HasColumnType("integer");
@@ -64,9 +66,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()

@@ -4,7 +4,7 @@ namespace SDP.TaskManagement.Application.Dtos;
 
 public class TaskItemDto
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
 
     public string? Title { get; set; }
 
@@ -18,5 +18,5 @@ public class TaskItemDto
 
     public TaskItemStatus ProgressStatus { get; set; }
 
-    public Guid OwnerUserId { get; set; }
+    public long OwnerUserId { get; set; }
 }
