@@ -10,25 +10,23 @@ import type {
   LoginResponse,
   RegisterData,
   RegisterResponse,
-  GetUsersData,
-  GetUsersResponse,
-  PostApiTaskItemAddTaskItemData,
-  GetApiTaskItemGetTaskItemByTaskItemIdData,
-  GetApiTaskItemGetTaskItemByTaskItemIdResponse,
-  GetApiTaskItemGetAllTaskItemsData,
-  GetApiTaskItemGetAllTaskItemsResponse,
-  GetApiTaskItemGetTaskItemByUserByUserIdData,
-  GetApiTaskItemGetTaskItemByUserByUserIdResponse,
-  PutApiTaskItemUpdateTaskItemData,
-  DeleteApiTaskItemDeleteTaskItemByTaskItemIdData,
+  GetApiSampleGetUsersData,
+  GetApiSampleGetUsersResponse,
+  GetApiTasksData,
+  GetApiTasksResponse,
+  PostApiTasksData,
+  DeleteApiTasksByTaskItemIdData,
+  GetApiTasksByTaskItemIdData,
+  GetApiTasksByTaskItemIdResponse,
+  PutApiTasksByTaskItemIdData,
+  GetApiTasksUserByUserIdData,
+  GetApiTasksUserByUserIdResponse,
 } from "./types.gen";
 import { client as _heyApiClient } from "./client.gen";
 import {
-  registerResponseTransformer,
-  getUsersResponseTransformer,
-  getApiTaskItemGetTaskItemByTaskItemIdResponseTransformer,
-  getApiTaskItemGetAllTaskItemsResponseTransformer,
-  getApiTaskItemGetTaskItemByUserByUserIdResponseTransformer,
+  getApiTasksResponseTransformer,
+  getApiTasksByTaskItemIdResponseTransformer,
+  getApiTasksUserByUserIdResponseTransformer,
 } from "./transformers.gen";
 
 export type Options<
@@ -74,7 +72,6 @@ export class AccountService {
       unknown,
       ThrowOnError
     >({
-      responseTransformer: registerResponseTransformer,
       url: "/api/Account/register",
       ...options,
       headers: {
@@ -86,31 +83,44 @@ export class AccountService {
 }
 
 export class SampleService {
-  public static getUsers<ThrowOnError extends boolean = false>(
-    options?: Options<GetUsersData, ThrowOnError>,
+  public static getApiSampleGetUsers<ThrowOnError extends boolean = false>(
+    options?: Options<GetApiSampleGetUsersData, ThrowOnError>,
   ) {
     return (options?.client ?? _heyApiClient).get<
-      GetUsersResponse,
+      GetApiSampleGetUsersResponse,
       unknown,
       ThrowOnError
     >({
-      responseTransformer: getUsersResponseTransformer,
-      url: "/api/Sample",
+      url: "/api/Sample/GetUsers",
       ...options,
     });
   }
 }
 
 export class TaskItemService {
-  public static postApiTaskItemAddTaskItem<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<PostApiTaskItemAddTaskItemData, ThrowOnError>) {
+  public static getApiTasks<ThrowOnError extends boolean = false>(
+    options?: Options<GetApiTasksData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).get<
+      GetApiTasksResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer: getApiTasksResponseTransformer,
+      url: "/api/tasks",
+      ...options,
+    });
+  }
+
+  public static postApiTasks<ThrowOnError extends boolean = false>(
+    options?: Options<PostApiTasksData, ThrowOnError>,
+  ) {
     return (options?.client ?? _heyApiClient).post<
       unknown,
       unknown,
       ThrowOnError
     >({
-      url: "/api/TaskItem/AddTaskItem",
+      url: "/api/tasks",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -119,83 +129,60 @@ export class TaskItemService {
     });
   }
 
-  public static getApiTaskItemGetTaskItemByTaskItemId<
+  public static deleteApiTasksByTaskItemId<
     ThrowOnError extends boolean = false,
-  >(options: Options<GetApiTaskItemGetTaskItemByTaskItemIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiTaskItemGetTaskItemByTaskItemIdResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseTransformer:
-        getApiTaskItemGetTaskItemByTaskItemIdResponseTransformer,
-      url: "/api/TaskItem/GetTaskItem/{taskItemId}",
-      ...options,
-    });
-  }
-
-  public static getApiTaskItemGetAllTaskItems<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<GetApiTaskItemGetAllTaskItemsData, ThrowOnError>) {
-    return (options?.client ?? _heyApiClient).get<
-      GetApiTaskItemGetAllTaskItemsResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseTransformer: getApiTaskItemGetAllTaskItemsResponseTransformer,
-      url: "/api/TaskItem/GetAllTaskItems",
-      ...options,
-    });
-  }
-
-  public static getApiTaskItemGetTaskItemByUserByUserId<
-    ThrowOnError extends boolean = false,
-  >(
-    options: Options<GetApiTaskItemGetTaskItemByUserByUserIdData, ThrowOnError>,
-  ) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiTaskItemGetTaskItemByUserByUserIdResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseTransformer:
-        getApiTaskItemGetTaskItemByUserByUserIdResponseTransformer,
-      url: "/api/TaskItem/GetTaskItemByUser/{userId}",
-      ...options,
-    });
-  }
-
-  public static putApiTaskItemUpdateTaskItem<
-    ThrowOnError extends boolean = false,
-  >(options?: Options<PutApiTaskItemUpdateTaskItemData, ThrowOnError>) {
-    return (options?.client ?? _heyApiClient).put<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      url: "/api/TaskItem/UpdateTaskItem",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  public static deleteApiTaskItemDeleteTaskItemByTaskItemId<
-    ThrowOnError extends boolean = false,
-  >(
-    options: Options<
-      DeleteApiTaskItemDeleteTaskItemByTaskItemIdData,
-      ThrowOnError
-    >,
-  ) {
+  >(options: Options<DeleteApiTasksByTaskItemIdData, ThrowOnError>) {
     return (options.client ?? _heyApiClient).delete<
       unknown,
       unknown,
       ThrowOnError
     >({
-      url: "/api/TaskItem/DeleteTaskItem/{taskItemId}",
+      url: "/api/tasks/{taskItemId}",
+      ...options,
+    });
+  }
+
+  public static getApiTasksByTaskItemId<ThrowOnError extends boolean = false>(
+    options: Options<GetApiTasksByTaskItemIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).get<
+      GetApiTasksByTaskItemIdResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer: getApiTasksByTaskItemIdResponseTransformer,
+      url: "/api/tasks/{taskItemId}",
+      ...options,
+    });
+  }
+
+  public static putApiTasksByTaskItemId<ThrowOnError extends boolean = false>(
+    options: Options<PutApiTasksByTaskItemIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).put<
+      unknown,
+      unknown,
+      ThrowOnError
+    >({
+      url: "/api/tasks/{taskItemId}",
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+  }
+
+  public static getApiTasksUserByUserId<ThrowOnError extends boolean = false>(
+    options: Options<GetApiTasksUserByUserIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).get<
+      GetApiTasksUserByUserIdResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer: getApiTasksUserByUserIdResponseTransformer,
+      url: "/api/tasks/user/{userId}",
       ...options,
     });
   }

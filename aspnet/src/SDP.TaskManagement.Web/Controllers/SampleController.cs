@@ -22,7 +22,7 @@ namespace SDP.TaskManagement.Web.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet(Name = "GetUsers")]
+        [HttpGet("GetUsers")]
         public ActionResult<List<UserDto>> GetUsers()
         {
             var result = _userRepository.GetQueryable().Select(user => UserMapper.ToDto(user)).ToList();

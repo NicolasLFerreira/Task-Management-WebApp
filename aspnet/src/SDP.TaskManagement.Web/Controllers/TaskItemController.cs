@@ -8,7 +8,7 @@ using SDP.TaskManagement.Domain.Entities;
 namespace SDP.TaskManagement.Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/tasks")]
 public class TaskItemController : ControllerBase
 {
     private readonly IRepository<TaskItem> _repository;
@@ -18,33 +18,33 @@ public class TaskItemController : ControllerBase
         _repository = repository;
     }
 
-    [HttpPost("AddTaskItem")]
-    public async Task<IActionResult> AddTaskItem(TaskItemDto taskItemDto)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] TaskItemDto taskItemDto)
     {
         var taskItem = TaskItemMapper.ToEntity(taskItemDto);
 
         var result = await _repository.AddAsync(taskItem);
 
         return result
-            ? Ok()
-            : Ok($"Good request, but could not find TaskItem with Id '{taskItem.Id}'");
+            ? Created()
+            : BadRequest("Failed to create entity.");
     }
 
-    [HttpGet("GetTaskItem/{taskItemId:long}")]
-    public async Task<ActionResult<TaskItemDto?>> GetTaskItem(long taskItemId)
+    [HttpGet("{taskItemId:long}")]
+    public async Task<ActionResult<TaskItemDto?>> GetById(long taskItemId)
     {
         var result = await _repository.GetByIdAsync(taskItemId);
 
         if (result == null)
-            return Ok($"Good request, but could not find TaskItem with Id '{taskItemId}'");
+            return NotFound($"Entity with Id '{taskItemId}' does not exist.");
 
         var dto = TaskItemMapper.ToDto(result);
 
         return Ok(dto);
     }
 
-    [HttpGet("GetAllTaskItems")]
-    public async Task<ActionResult<List<TaskItem>>> GetAllTaskItems()
+    [HttpGet]
+    public async Task<ActionResult<List<TaskItem>>> GetAll()
     {
         var result = await _repository
             .GetQueryable()
@@ -53,8 +53,8 @@ public class TaskItemController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("GetTaskItemByUser/{userId:long}")]
-    public async Task<ActionResult<List<TaskItem>>> GetTaskItemsByUser(long userId)
+    [HttpGet("user/{userId:long}")]
+    public async Task<ActionResult<List<TaskItem>>> GetByUserId(long userId)
     {
         var result = await _repository
             .GetQueryable()
@@ -64,25 +64,30 @@ public class TaskItemController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPut("UpdateTaskItem")]
-    public async Task<IActionResult> UpdateTaskItem(TaskItemDto taskItemDto)
+    [HttpPut("{taskItemId:long}")]
+    public async Task<IActionResult> Update(long taskItemId, [FromBody] TaskItemDto taskItemDto)
     {
+        if (taskItemId != taskItemDto.Id)
+        {
+            return BadRequest("Id mismatch");
+        }
+
         var taskItem = TaskItemMapper.ToEntity(taskItemDto);
 
         var result = await _repository.UpdateAsync(taskItem);
 
         return result
             ? Ok()
-            : Ok($"Good request, but could not find TaskItem with Id '{taskItem.Id}'");
+            : NotFound($"Entity with Id '{taskItemId}' does not exist.");
     }
 
-    [HttpDelete("DeleteTaskItem/{taskItemId:long}")]
-    public async Task<IActionResult> DeleteTaskItem(long taskItemId)
+    [HttpDelete("{taskItemId:long}")]
+    public async Task<IActionResult> Delete(long taskItemId)
     {
         var result = await _repository.DeleteAsync(taskItemId);
 
         return result
             ? Ok()
-            : Ok($"Good request, but could not find TaskItem with Id '{taskItemId}'");
+            : NotFound($"Entity with Id '{taskItemId}' does not exist.");
     }
 }
