@@ -4,8 +4,8 @@ import type {
   GetApiTasksResponse,
   GetApiTasksByTaskItemIdResponse,
   GetApiTasksUserByUserIdResponse,
-  GetApiTasksSpecialisedByTitlePatternResponse,
-  PostApiTasksSpecialisedResponse,
+  GetApiTasksQueryingByTitlePatternResponse,
+  PostApiTasksQueryingResponse,
 } from "./types.gen";
 
 const userSchemaResponseTransformer = (data: any) => {
@@ -65,18 +65,18 @@ export const getApiTasksUserByUserIdResponseTransformer = async (
   return data;
 };
 
-export const getApiTasksSpecialisedByTitlePatternResponseTransformer = async (
+export const getApiTasksQueryingByTitlePatternResponseTransformer = async (
   data: any,
-): Promise<GetApiTasksSpecialisedByTitlePatternResponse> => {
+): Promise<GetApiTasksQueryingByTitlePatternResponse> => {
   data = data.map((item: any) => {
     return taskItemDtoSchemaResponseTransformer(item);
   });
   return data;
 };
 
-export const postApiTasksSpecialisedResponseTransformer = async (
+export const postApiTasksQueryingResponseTransformer = async (
   data: any,
-): Promise<PostApiTasksSpecialisedResponse> => {
+): Promise<PostApiTasksQueryingResponse> => {
   data = data.map((item: any) => {
     return taskItemDtoSchemaResponseTransformer(item);
   });
