@@ -21,12 +21,18 @@ import type {
   PutApiTasksByTaskItemIdData,
   GetApiTasksUserByUserIdData,
   GetApiTasksUserByUserIdResponse,
+  GetApiTasksSpecialisedByTitlePatternData,
+  GetApiTasksSpecialisedByTitlePatternResponse,
+  PostApiTasksSpecialisedData,
+  PostApiTasksSpecialisedResponse,
 } from "./types.gen";
 import { client as _heyApiClient } from "./client.gen";
 import {
   getApiTasksResponseTransformer,
   getApiTasksByTaskItemIdResponseTransformer,
   getApiTasksUserByUserIdResponseTransformer,
+  getApiTasksSpecialisedByTitlePatternResponseTransformer,
+  postApiTasksSpecialisedResponseTransformer,
 } from "./transformers.gen";
 
 export type Options<
@@ -184,6 +190,41 @@ export class TaskItemService {
       responseTransformer: getApiTasksUserByUserIdResponseTransformer,
       url: "/api/tasks/user/{userId}",
       ...options,
+    });
+  }
+}
+
+export class TaskItemSpecialisedService {
+  public static getApiTasksSpecialisedByTitlePattern<
+    ThrowOnError extends boolean = false,
+  >(options: Options<GetApiTasksSpecialisedByTitlePatternData, ThrowOnError>) {
+    return (options.client ?? _heyApiClient).get<
+      GetApiTasksSpecialisedByTitlePatternResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer:
+        getApiTasksSpecialisedByTitlePatternResponseTransformer,
+      url: "/api/tasks/specialised/{titlePattern}",
+      ...options,
+    });
+  }
+
+  public static postApiTasksSpecialised<ThrowOnError extends boolean = false>(
+    options?: Options<PostApiTasksSpecialisedData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).post<
+      PostApiTasksSpecialisedResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer: postApiTasksSpecialisedResponseTransformer,
+      url: "/api/tasks/specialised",
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
     });
   }
 }

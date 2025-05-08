@@ -9,11 +9,11 @@ using SDP.TaskManagement.Infrastructure.Extensions;
 namespace SDP.TaskManagement.Web.Controllers;
 
 [Route("api/tasks/specialised/")]
-public class TaskItemOperationsEndpoint : ControllerBase
+public class TaskItemSpecialisedController : ControllerBase
 {
     private readonly IRepository<TaskItem> _repository;
 
-    public TaskItemOperationsEndpoint(IRepository<TaskItem> repository)
+    public TaskItemSpecialisedController(IRepository<TaskItem> repository)
     {
         _repository = repository;
     }
