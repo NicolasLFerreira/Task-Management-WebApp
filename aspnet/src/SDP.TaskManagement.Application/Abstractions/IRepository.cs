@@ -8,6 +8,11 @@ namespace SDP.TaskManagement.Application.Abstractions;
 public interface IRepository<TEntity> where TEntity : Entity
 {
     /// <summary>
+    /// Quickly checks if an entity with the specified <see cref="Entity.Id"/>> exists.
+    /// </summary>
+    /// <returns>Whether it exists or not.</returns>
+    Task<bool> Exists(long id);
+    /// <summary>
     /// Adds a single entity.
     /// </summary>
     /// <returns>
