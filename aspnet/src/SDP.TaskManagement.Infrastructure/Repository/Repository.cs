@@ -19,12 +19,15 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     }
 
+    public async Task<bool> Exists(long id)
+    {
+        return await Set
+            .AnyAsync(e => e.Id == id);
+    }
+
     public async Task<bool> AddAsync(TEntity entity)
     {
-        var exists = await Set
-            .AnyAsync(e => e.Id == entity.Id);
-
-        if (exists)
+        if (await Exists(entity.Id))
         {
             return false;
         }
@@ -83,9 +86,8 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var exists = await Set.AnyAsync(e => e.Id == id);
 
-        if (exists)
+        if (await Exists(id))
         {
             return false;
         }

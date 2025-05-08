@@ -8,7 +8,7 @@ using SDP.TaskManagement.Infrastructure.Extensions;
 
 namespace SDP.TaskManagement.Web.Controllers;
 
-[Route("api/tasks/specialised/")]
+[Route("api/tasks/querying/")]
 public class TaskItemSpecialisedController : ControllerBase
 {
     private readonly IRepository<TaskItem> _repository;
