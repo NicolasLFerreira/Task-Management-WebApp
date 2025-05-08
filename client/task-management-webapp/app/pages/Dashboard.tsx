@@ -1,13 +1,14 @@
+// src/app/pages/Dashboard.tsx
+
 import React, { useState } from "react";
 import Header from "../components/Header";
 import TaskCard from "../components/TaskCard";
-import NewTaskModal from "../components/NewTaskModal";
+import Searchbar from "../components/Searchbar";
 import type { Task } from "../types";
 
 const Dashboard = () => {
-  const [showModal, setShowModal] = useState(false);
-
-  const tasks: Task[] = [
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tasks, setTasks] = useState<Task[]>([
     {
       id: "1",
       title: "Finish monthly reporting",
@@ -71,32 +72,43 @@ const Dashboard = () => {
       stage: "Not started",
       priority: "Low",
     },
-  ];
+  ]);
+
+  //  Filter tasks based on search
+  const filteredTasks = tasks.filter((task) =>
+    task.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Delete a task by id
+  const handleDeleteTask = (id: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
       <main className="p-6">
+        {/* Search input */}
+        <Searchbar onSearch={setSearchTerm} />
+
+        {/* Page header */}
         <section className="mb-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800">My Tasks</h2>
-            <p className="text-gray-600">Organize and track your tasks easily with Tickway.</p>
-          </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
-          >
-            New Task
-          </button>
-        </section>
-
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800">My Tasks</h2>
+    <p className="text-gray-600">Organize and track your tasks easily with Tickway.</p>
+  </div>
+  
+</section>
+        {/* Task grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
+          {filteredTasks.length > 0 ? (
+            filteredTasks.map((task) => (
+              <TaskCard key={task.id} task={task} onDelete={handleDeleteTask} />
+            ))
+          ) : (
+            <p className="text-gray-500 col-span-full">No tasks found.</p>
+          )}
         </div>
-
-        {showModal && <NewTaskModal onClose={() => setShowModal(false)} />}
       </main>
     </div>
   );
