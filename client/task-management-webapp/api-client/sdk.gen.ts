@@ -21,18 +21,19 @@ import type {
   PutApiTasksByTaskItemIdData,
   GetApiTasksUserByUserIdData,
   GetApiTasksUserByUserIdResponse,
-  GetApiTasksSpecialisedByTitlePatternData,
-  GetApiTasksSpecialisedByTitlePatternResponse,
-  PostApiTasksSpecialisedData,
-  PostApiTasksSpecialisedResponse,
+  PutApiTasksEditingByTaskItemIdData,
+  GetApiTasksQueryingByTitlePatternData,
+  GetApiTasksQueryingByTitlePatternResponse,
+  PostApiTasksQueryingData,
+  PostApiTasksQueryingResponse,
 } from "./types.gen";
 import { client as _heyApiClient } from "./client.gen";
 import {
   getApiTasksResponseTransformer,
   getApiTasksByTaskItemIdResponseTransformer,
   getApiTasksUserByUserIdResponseTransformer,
-  getApiTasksSpecialisedByTitlePatternResponseTransformer,
-  postApiTasksSpecialisedResponseTransformer,
+  getApiTasksQueryingByTitlePatternResponseTransformer,
+  postApiTasksQueryingResponseTransformer,
 } from "./transformers.gen";
 
 export type Options<
@@ -194,32 +195,50 @@ export class TaskItemService {
   }
 }
 
-export class TaskItemSpecialisedService {
-  public static getApiTasksSpecialisedByTitlePattern<
+export class TaskItemEditingService {
+  public static putApiTasksEditingByTaskItemId<
     ThrowOnError extends boolean = false,
-  >(options: Options<GetApiTasksSpecialisedByTitlePatternData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiTasksSpecialisedByTitlePatternResponse,
+  >(options: Options<PutApiTasksEditingByTaskItemIdData, ThrowOnError>) {
+    return (options.client ?? _heyApiClient).put<
+      unknown,
       unknown,
       ThrowOnError
     >({
-      responseTransformer:
-        getApiTasksSpecialisedByTitlePatternResponseTransformer,
-      url: "/api/tasks/specialised/{titlePattern}",
+      url: "/api/tasks/editing/{taskItemId}",
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+  }
+}
+
+export class TaskItemSpecialisedService {
+  public static getApiTasksQueryingByTitlePattern<
+    ThrowOnError extends boolean = false,
+  >(options: Options<GetApiTasksQueryingByTitlePatternData, ThrowOnError>) {
+    return (options.client ?? _heyApiClient).get<
+      GetApiTasksQueryingByTitlePatternResponse,
+      unknown,
+      ThrowOnError
+    >({
+      responseTransformer: getApiTasksQueryingByTitlePatternResponseTransformer,
+      url: "/api/tasks/querying/{titlePattern}",
       ...options,
     });
   }
 
-  public static postApiTasksSpecialised<ThrowOnError extends boolean = false>(
-    options?: Options<PostApiTasksSpecialisedData, ThrowOnError>,
+  public static postApiTasksQuerying<ThrowOnError extends boolean = false>(
+    options?: Options<PostApiTasksQueryingData, ThrowOnError>,
   ) {
     return (options?.client ?? _heyApiClient).post<
-      PostApiTasksSpecialisedResponse,
+      PostApiTasksQueryingResponse,
       unknown,
       ThrowOnError
     >({
-      responseTransformer: postApiTasksSpecialisedResponseTransformer,
-      url: "/api/tasks/specialised",
+      responseTransformer: postApiTasksQueryingResponseTransformer,
+      url: "/api/tasks/querying",
       ...options,
       headers: {
         "Content-Type": "application/json",
