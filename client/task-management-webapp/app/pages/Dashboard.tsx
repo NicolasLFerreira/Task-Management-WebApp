@@ -44,7 +44,13 @@ const Dashboard = () => {
 				</div>
 
 				{showModal && (
-					<NewTaskModal onClose={() => setShowModal(false)} />
+					<NewTaskModal
+						onClose={() => setShowModal(false)}
+						onTaskCreated={(newTask) => {
+							setTasks((prev) => [...prev, newTask]);
+							setShowModal(false);
+						}}
+					/>
 				)}
 			</main>
 		</div>

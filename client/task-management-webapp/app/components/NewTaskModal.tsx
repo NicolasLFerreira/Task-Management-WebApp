@@ -4,9 +4,10 @@ import { TaskItemService } from "api-client";
 
 interface NewTaskModalProps {
 	onClose: () => void;
+  onTaskCreated: (task: TaskItemDto) => void;
 }
 
-const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose }) => {
+const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose, onTaskCreated }) => {
 	const [task, setTask] = useState<TaskItemDto>({
 		title: "",
 		description: "",
@@ -36,6 +37,7 @@ const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose }) => {
 		}
 		TaskItemService.postApiTasks({ body: task }).then((response) => {
 			console.log(response.data);
+      onTaskCreated(task);
 			onClose();
 		});
 	};
