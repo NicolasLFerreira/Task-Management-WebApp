@@ -23,6 +23,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 			<h3 className="text-lg font-semibold text-gray-900">
 				{task.title}
 			</h3>
+			<h4 className="text-md font-semibold text-gray-700">
+				{task.description != "" ? task.description : "No description"}
+			</h4>
 			<p className="text-sm text-gray-600">
 				Due:{" "}
 				{new Date(task.dueDate!).toLocaleDateString("en-US", {
