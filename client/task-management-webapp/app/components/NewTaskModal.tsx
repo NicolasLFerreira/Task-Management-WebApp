@@ -32,7 +32,6 @@ const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose }) => {
 			!task.priority ||
 			!task.progressStatus
 		) {
-      console.log("FAILED TO SAVE THING")
 			return; // optionally validate with errors
 		}
 		TaskItemService.postApiTasks({ body: task }).then((response) => {
@@ -140,6 +139,23 @@ const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose }) => {
 							<option value="In progress">In progress</option>
 							<option value="Completed">Completed</option>
 						</select>
+					</div>
+
+					<div>
+						<label className="block text-sm font-medium text-gray-700 mb-1">
+							Assigned to
+						</label>
+						<input
+							type="number"
+							className="w-full border border-gray-300 rounded px-3 py-2 text-gray-900"
+							value={task.ownerUserId ?? ""}
+							onChange={(e) =>
+								handleChange(
+									"ownerUserId",
+									Number(e.target.value)
+								)
+							}
+						/>
 					</div>
 
 					<div className="flex justify-end space-x-2 pt-2">
