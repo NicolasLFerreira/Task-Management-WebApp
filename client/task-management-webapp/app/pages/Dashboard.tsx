@@ -9,9 +9,11 @@ const Dashboard = () => {
 	const [tasks, setTasks] = useState<TaskItemDto[]>([]);
 
 	useEffect(() => {
-		TaskItemService.getApiTasks().then((response) => {
-			setTasks(response.data!);
-		});
+		TaskItemService.getApiTasksUserByUserId({ path: { userId: 1 } }).then(
+			(response) => {
+				setTasks(response.data!);
+			}
+		);
 	}, []); // empty dependency array = run once on mount
 
 	return (
