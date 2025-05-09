@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import type { TaskItemDto } from "api-client";
-import { TaskItemService } from "api-client";
+import { TaskItemService, TaskItemSpecialisedService } from "api-client";
 
 interface NewTaskModalProps {
 	onClose: () => void;
-  onTaskCreated: (task: TaskItemDto) => void;
+	onTaskCreated: (task: TaskItemDto) => void;
 }
 
-const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose, onTaskCreated }) => {
+const NewTaskModal: React.FC<NewTaskModalProps> = ({
+	onClose,
+	onTaskCreated,
+}) => {
 	const [task, setTask] = useState<TaskItemDto>({
 		title: "",
 		description: "",
@@ -37,10 +40,16 @@ const NewTaskModal: React.FC<NewTaskModalProps> = ({ onClose, onTaskCreated }) =
 		}
 		TaskItemService.postApiTasks({ body: task }).then((response) => {
 			console.log(response.data);
-      onTaskCreated(task);
+			onTaskCreated(task);
 			onClose();
 		});
 	};
+
+	TaskItemSpecialisedService.getApiTasksQueryingByTitlePattern({
+		path: { titlePattern: "title partial name here" },
+	}).then((response) => {
+		console.log(response.data);
+	});
 
 	return (
 		<div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex justify-center items-center z-50">

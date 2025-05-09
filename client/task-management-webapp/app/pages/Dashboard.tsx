@@ -2,32 +2,96 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TaskCard from "../components/TaskCard";
 import NewTaskModal from "../components/NewTaskModal";
-import { TaskItemService, type TaskItemDto } from "api-client";
+import {
+	TaskItemService,
+	TaskItemSpecialisedService,
+	type TaskItemDto,
+} from "api-client";
 
 const Dashboard = () => {
 	const [showModal, setShowModal] = useState(false);
 	const [tasks, setTasks] = useState<TaskItemDto[]>([]);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [noResultMessage, setNoResultMessage] = useState("");
 
-	useEffect(() => {
+	const handleSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter") {
+			const term = searchTerm.trim();
+
+			if (!term) {
+				setNoResultMessage("");
+				setSearchTerm("");
+				fetchTasks(); // <- Reload all tasks
+				return;
+			}
+
+			try {
+				const response =
+					await TaskItemSpecialisedService.getApiTasksQueryingByTitlePattern(
+						{
+							path: { titlePattern: term },
+						}
+					);
+				const result = response.data ?? [];
+
+				if (result.length === 0) {
+					setNoResultMessage(`No tasks with title "${term}"`);
+				} else {
+					setNoResultMessage("");
+				}
+
+				setTasks(result);
+			} catch (err) {
+				console.error("Search error:", err);
+			}
+		}
+	};
+
+	const fetchTasks = () => {
 		TaskItemService.getApiTasksUserByUserId({ path: { userId: 1 } }).then(
 			(response) => {
-				setTasks(response.data!);
+				setTasks(response.data ?? []);
 			}
 		);
-	}, []); // empty dependency array = run once on mount
+	};
+
+	useEffect(() => {
+		fetchTasks();
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<Header />
 			<main className="p-6">
-				<section className="mb-6 flex items-center justify-between">
-					<div>
+				<section className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					<div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
 						<h2 className="text-xl font-semibold text-gray-800">
 							My Tasks
 						</h2>
-						<p className="text-gray-600">
-							Organize and track your tasks easily with Tickway.
-						</p>
+						<div className="relative">
+							<input
+								type="text"
+								placeholder="Search by title"
+								className="w-full border border-gray-300 rounded px-3 py-2 pr-10 text-gray-900"
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								onKeyDown={handleSearch}
+							/>
+							{searchTerm && (
+								<button
+									type="button"
+									aria-label="Clear search"
+									onClick={() => {
+										setSearchTerm("");
+										setNoResultMessage("");
+										fetchTasks();
+									}}
+									className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+								>
+									&times;
+								</button>
+							)}
+						</div>
 					</div>
 					<button
 						onClick={() => setShowModal(true)}
@@ -37,11 +101,17 @@ const Dashboard = () => {
 					</button>
 				</section>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-					{tasks.map((task) => (
-						<TaskCard key={task.id} task={task} />
-					))}
-				</div>
+				{noResultMessage ? (
+					<div className="text-center text-gray-500 py-8 text-lg col-span-full">
+						{noResultMessage}
+					</div>
+				) : (
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+						{tasks.map((task) => (
+							<TaskCard key={task.id} task={task} />
+						))}
+					</div>
+				)}
 
 				{showModal && (
 					<NewTaskModal
