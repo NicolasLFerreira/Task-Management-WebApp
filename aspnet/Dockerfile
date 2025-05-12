@@ -18,6 +18,7 @@ RUN mkdir -p Controllers
 
 # Add health check endpoint
 RUN echo 'using Microsoft.AspNetCore.Mvc; \n\
+using Microsoft.AspNetCore.Cors; \n\
 namespace SDP.TaskManagement.WebHost.Controllers; \n\
 \n\
 [ApiController] \n\
@@ -25,9 +26,10 @@ namespace SDP.TaskManagement.WebHost.Controllers; \n\
 public class HealthController : ControllerBase \n\
 { \n\
     [HttpGet] \n\
+    [EnableCors("DefaultCorsPolicy")] \n\
     public IActionResult Get() \n\
     { \n\
-        return Ok(new { status = "healthy" }); \n\
+        return Ok(new { status = "healthy", timestamp = DateTime.UtcNow }); \n\
     } \n\
 }' > Controllers/HealthController.cs
 
@@ -44,5 +46,4 @@ COPY --from=build /app/publish .
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 EXPOSE 80
-EXPOSE 443
 ENTRYPOINT ["dotnet", "SDP.TaskManagement.WebHost.dll"]

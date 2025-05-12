@@ -22,12 +22,15 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
     setIsLoading(true)
 
     try {
+      console.log("Attempting login with:", { email })
       const response = await AccountService.login({
         body: {
           email,
           password,
         },
       })
+
+      console.log("Login API response:", response)
 
       if (response.data) {
         // Store token and redirect
@@ -39,6 +42,7 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
         setError("Invalid login response")
       }
     } catch (err: unknown) {
+      console.error("Login error:", err)
       const error = err as { response?: { data?: { message?: string } } }
       setError(error.response?.data?.message || "Invalid email or password")
     } finally {

@@ -57,6 +57,7 @@ public class Program
 
         var app = builder.Build();
 
+        // Apply CORS before other middleware
         app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
         // Development settings
@@ -78,13 +79,14 @@ public class Program
         }
 
         // Middleware
-        app.UseHttpsRedirection();
+        // Remove HttpsRedirection for Docker environment
+        // app.UseHttpsRedirection();
+        
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
 
         app.Run();
-
-        // docker run -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=devlocal123 -e POSTGRES_DB=taskmanagementdb -p 5432:5432 -d postgres:latest
     }
 }
