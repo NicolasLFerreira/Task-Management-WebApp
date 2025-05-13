@@ -1,38 +1,63 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using SDP.TaskManagement.Domain.Entities;
 
-namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration;
-
-public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
+namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
 {
-    public void Configure(EntityTypeBuilder<TaskItem> builder)
+    public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
     {
-        // Table name
+        public void Configure(EntityTypeBuilder<TaskItem> builder)
+        {
+            builder.ToTable("TaskItems");
 
-        builder.ToTable("TaskItems");
+            builder.HasKey(t => t.Id);
 
-        // PK
+            builder.Property(t => t.Title)
+                .IsRequired()
+                .HasMaxLength(200);
 
-        builder.HasKey(t => t.Id);
-        builder.Property(t => t.Id).ValueGeneratedOnAdd();
+            builder.Property(t => t.Description)
+                .HasMaxLength(2000);
 
-        // Properties
+            builder.Property(t => t.DueDate)
+                .IsRequired(false);
 
-        builder.Property(t => t.Title).HasMaxLength(200).IsRequired();
-        builder.Property(t => t.Description).HasMaxLength(2000);
+            builder.Property(t => t.ProgressStatus)
+                .IsRequired();
 
-        builder.Property(t => t.CreationTime).IsRequired();
+            builder.Property(t => t.Priority)
+                .IsRequired();
 
-        builder.Property(t => t.Priority).HasConversion<int>().IsRequired();
-        builder.Property(t => t.ProgressStatus).HasConversion<int>().IsRequired();
+            builder.HasOne(t => t.OwnerUser)
+                .WithMany()
+                .HasForeignKey(t => t.OwnerUserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        // Relationships
+            builder.HasOne(t => t.List)
+                .WithMany(l => l.TaskItems)
+                .HasForeignKey(t => t.ListId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(t => t.OwnerUser)
-               .WithMany(t => t.OwnedTaskItems)
-               .HasForeignKey(t => t.OwnerUserId)
-               .IsRequired();
+            // Remove the explicit many-to-many configuration here since it's already defined in TaskAssigneeConfiguration
+
+            // Configure many-to-many relationship with Label through TaskItemLabel
+            builder.HasMany<Label>()
+                .WithMany()
+                .UsingEntity<TaskItemLabel>(
+                    j => j.HasOne<Label>()
+                        .WithMany()
+                        .HasForeignKey(til => til.LabelId)
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<TaskItem>()
+                        .WithMany()
+                        .HasForeignKey(til => til.TaskItemId)
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j =>
+                    {
+                        j.HasKey(til => new { til.TaskItemId, til.LabelId });
+                        j.ToTable("TaskItemLabels");
+                    }
+                );
+        }
     }
 }

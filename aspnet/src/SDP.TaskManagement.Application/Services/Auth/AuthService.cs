@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Application.Abstractions;
+using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
@@ -32,11 +32,14 @@ public class AuthService : IAuthService
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
 
         // Creates the new user entity with the input.
-        var user = new User()
+        var user = new User
         {
-            Name = registerDto.Name,
             Email = registerDto.Email,
-            PasswordHash = passwordHash
+            PasswordHash = passwordHash,
+            Username = registerDto.Name,
+            FirstName = registerDto.Name,
+            LastName = "",
+            ProfilePhotoPath = "/default-profile.png"
         };
 
         await _userManager.CreateNewUser(user);

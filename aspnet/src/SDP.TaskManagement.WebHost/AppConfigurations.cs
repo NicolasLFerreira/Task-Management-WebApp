@@ -1,4 +1,4 @@
-﻿namespace SDP.TaskManagement.WebHost;
+namespace SDP.TaskManagement.WebHost;
 
 /// <summary>
 /// Contains constants for configuration. Nested classes represent groups of relevant configuration settings.

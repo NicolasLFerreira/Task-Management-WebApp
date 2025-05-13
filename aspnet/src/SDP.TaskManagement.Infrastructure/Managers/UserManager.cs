@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Entities;
@@ -24,7 +24,7 @@ public class UserManager : IUserManager
     public async Task<bool> DoesUsernameExist(string username)
     {
         return await _userRepository.GetQueryable()
-                                    .Where(user => user.Name == username)
+                                    .Where(user => user.Username == username)
                                     .AnyAsync();
     }
 
