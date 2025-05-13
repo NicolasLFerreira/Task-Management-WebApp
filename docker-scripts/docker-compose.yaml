@@ -1,77 +1,24 @@
+# Note to the team: 
+# Use 'docker-compose up -d --build' on first run to build the images.
+# Consecutive runs can exclude the '--build'.
+#
+# Environment variables are to be set in the .env file in the same folder
+# as the docker-compose.yml file (i.e. this one that you have open rn).
+
 services:
   db:
     image: postgres:latest
+    container_name: taskmanagement-db
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "5432:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-taskmanagementdb}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: taskmanagementdb
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - taskmanagement_pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - taskmanagement-network
-
-  backend:
-    build:
-      context: ../aspnet
-      dockerfile: Dockerfile
-    ports:
-      - "${BACKEND_PORT:-7200}:80"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${POSTGRES_DB:-taskmanagementdb};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-postgres};
-      - Jwt__Key=${JWT_KEY:-ThisIsAVeryLongSecretKeyForHS256SigningAlgorithm}
-      - Jwt__Issuer=${JWT_ISSUER:-TaskManagementApp}
-      - Jwt__Audience=${JWT_AUDIENCE:-TaskManagementUsers}
-      - Jwt__TokenLifetimeMinutes=${JWT_LIFETIME:-60}
-      - ASPNETCORE_URLS=http://+:80
-    volumes:
-      - aspnet-keys:/root/.aspnet/DataProtection-Keys
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-    networks:
-      - taskmanagement-network
-
-  frontend:
-    build:
-      context: ../client/task-management-webapp
-      dockerfile: Dockerfile.dev
-    ports:
-      - "${FRONTEND_PORT:-3000}:3000"
-    volumes:
-      - ../client/task-management-webapp:/app
-      - /app/node_modules
-      - ./favicon:/app/public:ro
-    environment:
-      - BACKEND_URL=http://backend:80
-      - PORT=3000
-      - HOST=0.0.0.0
-    depends_on:
-      - backend
-    restart: unless-stopped
-    networks:
-      - taskmanagement-network
-
-networks:
-  taskmanagement-network:
-    driver: bridge
 
 volumes:
-  pgdata:
-  aspnet-keys:
+  taskmanagement_pgdata:
