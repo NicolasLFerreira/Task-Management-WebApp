@@ -125,7 +125,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.HasIndex("InviterId");
 
-                    b.ToTable("BoardMembers");
+                    b.ToTable("BoardMember");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>

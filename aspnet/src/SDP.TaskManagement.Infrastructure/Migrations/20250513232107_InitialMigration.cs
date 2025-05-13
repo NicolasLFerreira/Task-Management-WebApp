@@ -114,7 +114,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BoardMembers",
+                name: "BoardMember",
                 columns: table => new
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false),
@@ -126,20 +126,20 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BoardMembers", x => new { x.UserId, x.BoardId });
+                    table.PrimaryKey("PK_BoardMember", x => new { x.UserId, x.BoardId });
                     table.ForeignKey(
-                        name: "FK_BoardMembers_Boards_BoardId",
+                        name: "FK_BoardMember_Boards_BoardId",
                         column: x => x.BoardId,
                         principalTable: "Boards",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BoardMembers_Users_InviterId",
+                        name: "FK_BoardMember_Users_InviterId",
                         column: x => x.InviterId,
                         principalTable: "Users",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_BoardMembers_Users_UserId",
+                        name: "FK_BoardMember_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -403,13 +403,13 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 column: "UploadedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BoardMembers_BoardId",
-                table: "BoardMembers",
+                name: "IX_BoardMember_BoardId",
+                table: "BoardMember",
                 column: "BoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BoardMembers_InviterId",
-                table: "BoardMembers",
+                name: "IX_BoardMember_InviterId",
+                table: "BoardMember",
                 column: "InviterId");
 
             migrationBuilder.CreateIndex(
@@ -517,7 +517,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 name: "Attachments");
 
             migrationBuilder.DropTable(
-                name: "BoardMembers");
+                name: "BoardMember");
 
             migrationBuilder.DropTable(
                 name: "ChecklistItems");

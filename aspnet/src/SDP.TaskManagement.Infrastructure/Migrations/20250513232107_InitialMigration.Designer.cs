@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250513133910_InitialMigration")]
+    [Migration("20250513232107_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -128,7 +128,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.HasIndex("InviterId");
 
-                    b.ToTable("BoardMembers");
+                    b.ToTable("BoardMember");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
