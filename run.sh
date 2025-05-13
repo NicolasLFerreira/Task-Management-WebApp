@@ -63,7 +63,7 @@ BACKEND_HTTPS_PORT=7201
 FRONTEND_PORT=3000
 
 # JWT Configuration
-JWT_KEY=Must_Be_Changed_In_Prod
+JWT_KEY=ThisIsAVeryLongSecretKeyForHS256SigningAlgorithm
 JWT_ISSUER=TaskManagementApp
 JWT_AUDIENCE=TaskManagementUsers
 JWT_LIFETIME=60

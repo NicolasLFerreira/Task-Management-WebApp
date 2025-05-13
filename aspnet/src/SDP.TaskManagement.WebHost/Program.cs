@@ -8,6 +8,10 @@ using SDP.TaskManagement.WebHost.Swagger;
 
 using System.Text;
 using System.Text.Json.Serialization;
+using SDP.TaskManagement.WebHost.Middleware;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -21,65 +25,45 @@ public class Program
         builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Database.DefaultConnection)));
 
-        // Jwt auth
-        // Sets the configuration for Jwt validation.
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = builder.Configuration[AppConfigurations.Jwt.Issuer],
-                    ValidateAudience = true,
-                    ValidAudience = builder.Configuration[AppConfigurations.Jwt.Audience],
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[AppConfigurations.Jwt.Key] ?? throw new InvalidConfigurationException("Jwt key not present."))),
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+        // Add services to the container
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerDocumentation();
 
-        // Add services to the container.
+        // Configure CORS
+        //builder.Services.ConfigureCors();
 
-        builder.Services
-            .AddControllers()
-            .AddJsonOptions(options =>
-            {
-                // Configuration for ensuring enums are represented as strings rather than numbers.
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            });
+        // Add JWT Authentication
+        //builder.Services.AddJwtAuthentication(builder.Configuration);
 
-        // Services extensions
-        builder.Services
-            .ConfigureCors()
-            .AddSwaggerConfiguration()
-            .AddDependencyInjection();
+        // Add dependency injection
+        builder.Services.AddDependencyInjection(builder.Configuration);
+        builder.Services.ConfigureCors();
+        builder.Services.AddJwtAuthentication(builder.Configuration);
 
         var app = builder.Build();
 
-        // Apply CORS before other middleware
-        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
-
-        // Development settings
+        // Configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskManagement API");
-                options.RoutePrefix = string.Empty;
-            });
+            app.UseSwaggerUI();
 
-            // For local database creation.
-            using (var serviceScope = app.Services.CreateScope())
+            // Apply migrations in development
+            using (var scope = app.Services.CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
-                context.Database.Migrate();
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.Migrate();
             }
         }
 
-        // Middleware
-        
+        // Use custom exception handling middleware
+        //app.UseExceptionHandling();
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        app.UseHttpsRedirection();
+        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
+
         app.UseAuthentication();
         app.UseAuthorization();
 

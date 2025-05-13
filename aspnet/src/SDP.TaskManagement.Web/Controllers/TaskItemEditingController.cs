@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Entities;

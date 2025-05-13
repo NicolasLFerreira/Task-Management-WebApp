@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
@@ -34,8 +34,8 @@ public class TaskItemSpecialisedController : ControllerBase
     {
             var result = await _repository
             .GetQueryable()
-            .WhereIf(input.Title != null, e => e.Title.Contains(input.Title))
-            .WhereIf(input.Description != null, e => e.Description.Contains(input.Description))
+            .WhereIf(input.Title != null, e => e.Title.Contains(input.Title!))
+            .WhereIf(input.Description != null, e => e.Description != null && e.Description.Contains(input.Description!))
             .WhereIf(input.Status != null, e => e.ProgressStatus == input.Status)
             .WhereIf(input.Priority != null, e => e.Priority == input.Priority)
             .ToListAsync();
@@ -48,6 +48,6 @@ public sealed class FilterTaskItemInputDto()
 {
     public string? Title { get; set; }
     public string? Description { get; set; }
-    public TaskItemStatus? Status { get; set; }
-    public TaskItemPriority? Priority { get; set; }
+    public Domain.Entities.TaskItemStatus? Status { get; set; }
+    public Domain.Entities.TaskItemPriority? Priority { get; set; }
 }

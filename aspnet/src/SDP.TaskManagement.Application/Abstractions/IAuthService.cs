@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Dtos;
 
 namespace SDP.TaskManagement.Application.Abstractions;
 

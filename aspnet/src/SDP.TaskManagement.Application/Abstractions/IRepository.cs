@@ -1,4 +1,4 @@
-﻿using SDP.TaskManagement.Domain.Base;
+using SDP.TaskManagement.Domain.Base;
 
 namespace SDP.TaskManagement.Application.Abstractions;
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Base;

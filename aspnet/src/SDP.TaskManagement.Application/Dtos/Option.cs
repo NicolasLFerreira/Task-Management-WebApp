@@ -1,4 +1,4 @@
-﻿namespace SDP.TaskManagement.Application.Dtos;
+namespace SDP.TaskManagement.Application.Dtos;
 
 /// <summary>
 /// Class for handling errors without the use of expensive exceptions.
