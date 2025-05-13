@@ -20,8 +20,8 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
 
         // Properties
 
-        builder.Property(t => t.Title).HasMaxLength(200).IsRequired();
-        builder.Property(t => t.Description).HasMaxLength(2000);
+        builder.Property(t => t.Title).HasMaxLength(50).IsRequired();
+        builder.Property(t => t.Description).HasMaxLength(2000).IsRequired();
 
         builder.Property(t => t.CreationTime).IsRequired();
 
@@ -33,6 +33,11 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
         builder.HasOne(t => t.OwnerUser)
                .WithMany(t => t.OwnedTaskItems)
                .HasForeignKey(t => t.OwnerUserId)
+               .IsRequired();
+
+        builder.HasOne(t => t.Group)
+               .WithMany(t => t.TaskItems)
+               .HasForeignKey(t => t.GroupId)
                .IsRequired();
     }
 }

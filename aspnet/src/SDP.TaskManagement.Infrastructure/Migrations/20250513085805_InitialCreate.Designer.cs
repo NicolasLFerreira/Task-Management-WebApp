@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250507023554_InitialCreate")]
+    [Migration("20250513085805_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,11 +37,15 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("GroupId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("OwnerUserId")
                         .HasColumnType("bigint");
@@ -54,14 +58,42 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("OwnerUserId");
 
                     b.ToTable("TaskItems", (string)null);
+                });
+
+            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.TaskItemGroup", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TaskItemGroups", (string)null);
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.User", b =>
@@ -96,13 +128,26 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.TaskItem", b =>
                 {
+                    b.HasOne("SDP.TaskManagement.Domain.Entities.TaskItemGroup", "Group")
+                        .WithMany("TaskItems")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SDP.TaskManagement.Domain.Entities.User", "OwnerUser")
                         .WithMany("OwnedTaskItems")
                         .HasForeignKey("OwnerUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Group");
+
                     b.Navigation("OwnerUser");
+                });
+
+            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.TaskItemGroup", b =>
+                {
+                    b.Navigation("TaskItems");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.User", b =>

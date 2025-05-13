@@ -18,11 +18,14 @@ public class TaskItem : Entity
 
     public User? OwnerUser { get; set; }
     public long OwnerUserId { get; set; }
+
+    public TaskItemGroup? Group { get; set; }
+    public long GroupId { get; set; }
 }
 
 public enum TaskItemPriority
 {
-    Low = 0,
+    Low,
     Medium,
     High
 }
