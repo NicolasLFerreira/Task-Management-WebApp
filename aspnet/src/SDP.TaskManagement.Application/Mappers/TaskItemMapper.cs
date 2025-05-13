@@ -1,8 +1,5 @@
 using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Domain.Entities;
-using System.Linq;
-using System.Collections.Generic;
-using System;
 
 namespace SDP.TaskManagement.Application.Mappers;
 
@@ -17,8 +14,8 @@ public static class TaskItemMapper
             Description = dto.Description,
             DueDate = dto.DueDate,
             CreationTime = dto.CreationTime,
-            Priority = (Domain.Entities.TaskItemPriority)(int)dto.Priority,
-            ProgressStatus = (Domain.Entities.TaskItemStatus)(int)dto.ProgressStatus,
+            Priority = (TaskItemPriority)(int)dto.Priority,
+            ProgressStatus = (TaskItemStatus)(int)dto.ProgressStatus,
             OwnerUserId = dto.OwnerUserId,
             ListId = dto.ListId,
             Position = dto.Position,
@@ -39,8 +36,8 @@ public static class TaskItemMapper
             Description = entity.Description,
             DueDate = entity.DueDate,
             CreationTime = entity.CreationTime,
-            Priority = (Dtos.TaskItemPriority)(int)entity.Priority,
-            ProgressStatus = (Dtos.TaskItemStatus)(int)entity.ProgressStatus,
+            Priority = (TaskItemPriority)(int)entity.Priority,
+            ProgressStatus = (TaskItemStatus)(int)entity.ProgressStatus,
             OwnerUserId = entity.OwnerUserId,
             ListId = entity.ListId,
             Position = entity.Position,
@@ -121,19 +118,19 @@ public static class TaskItemMapper
 
         return dto;
     }
-    
+
     public static string FormatFileSize(long bytes)
     {
         string[] sizes = { "B", "KB", "MB", "GB", "TB" };
         double len = bytes;
         int order = 0;
-        
+
         while (len >= 1024 && order < sizes.Length - 1)
         {
             order++;
             len = len / 1024;
         }
-        
+
         return $"{len:0.##} {sizes[order]}";
     }
 

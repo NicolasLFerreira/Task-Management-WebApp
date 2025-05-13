@@ -1,16 +1,7 @@
 using System;
+using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Dtos;
-
-public enum NotificationType
-{
-    System = 0,
-    Assignment = 1,
-    Comment = 2,
-    Invitation = 3,
-    Mention = 4,
-    DueDate = 5
-}
 
 public class NotificationDto
 {

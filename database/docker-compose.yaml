@@ -1,0 +1,23 @@
+# Note to the team: 
+# Use 'docker-compose up -d --build' on first run to build the images.
+# Consecutive runs can exclude the '--build'.
+#
+# Environment variables are to be set in the .env file in the same folder
+# as the docker-compose.yml file (i.e. this one that you have open rn).
+
+services:
+  db:
+    image: postgres:latest
+    container_name: taskmanagement-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: taskmanagementdb
+    volumes:
+      - taskmanagement_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  taskmanagement_pgdata:

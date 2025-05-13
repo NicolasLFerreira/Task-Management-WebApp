@@ -5,12 +5,12 @@ namespace SDP.TaskManagement.Domain.Entities;
 
 public enum NotificationType
 {
-    Assignment = 0,
-    Comment = 1,
-    Invitation = 2,
-    Mention = 3,
-    DueDate = 4,
-    System = 5
+    System,
+    Assignment,
+    Comment,
+    Invitation,
+    Mention,
+    DueDate
 }
 
 public class Notification : Entity

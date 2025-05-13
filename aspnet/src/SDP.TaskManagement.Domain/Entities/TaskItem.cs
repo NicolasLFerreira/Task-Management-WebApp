@@ -4,18 +4,22 @@ using System.Collections.Generic;
 
 namespace SDP.TaskManagement.Domain.Entities;
 
+
 public enum TaskItemPriority
 {
     Low = 0,
     Medium = 1,
-    High = 2
+    High = 2,
+    Critical = 3
 }
 
 public enum TaskItemStatus
 {
     Todo = 0,
     InProgress = 1,
-    Completed = 2
+    InReview = 2,
+    Completed = 3,
+    Archived = 4
 }
 
 public class TaskItem : Entity

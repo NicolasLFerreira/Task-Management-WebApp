@@ -1,24 +1,6 @@
-using System;
-using System.Collections.Generic;
+using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Dtos;
-
-public enum TaskItemPriority
-{
-    Low = 0,
-    Medium = 1,
-    High = 2,
-    Critical = 3
-}
-
-public enum TaskItemStatus
-{
-    ToDo = 0,
-    InProgress = 1,
-    InReview = 2,
-    Done = 3,
-    Archived = 4
-}
 
 public class TaskItemDto
 {

@@ -27,7 +27,7 @@ public static class BoardMemberMapper
             UserProfilePhotoPath = user?.ProfilePhotoPath ?? "Unknown",
             BoardId = boardMember.BoardId,
             BoardName = board?.Title ?? "Unknown",
-            Role = (Dtos.BoardMemberRole)(int)boardMember.Role,
+            Role = (BoardMemberRole)(int)boardMember.Role,
             JoinedDate = boardMember.JoinedDate ?? DateTime.UtcNow,
             InviterId = boardMember.InviterId,
             InviterName = invitedBy?.Username ?? "Unknown"
@@ -75,7 +75,7 @@ public static class BoardMemberMapper
             Id = entity.Id,
             UserId = entity.UserId,
             BoardId = entity.BoardId,
-            Role = (Dtos.BoardMemberRole)(int)entity.Role,
+            Role = (BoardMemberRole)(int)entity.Role,
             UserName = entity.User?.Username ?? "Unknown",
             UserEmail = entity.User?.Email ?? "Unknown",
             UserProfilePhotoPath = entity.User?.ProfilePhotoPath ?? "Unknown",

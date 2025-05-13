@@ -1,12 +1,9 @@
 using System;
+using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Dtos;
 
-public enum BoardMemberRole
-{
-    Member = 0,
-    Admin = 1
-}
+
 
 public class BoardMemberDto
 {

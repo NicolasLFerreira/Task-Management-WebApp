@@ -5,9 +5,8 @@ namespace SDP.TaskManagement.Domain.Entities
 {
     public enum BoardMemberRole
     {
-        Viewer = 0,
-        Member = 1,
-        Admin = 2
+        Member = 0,
+        Admin = 1
     }
 
     public class BoardMember : Entity

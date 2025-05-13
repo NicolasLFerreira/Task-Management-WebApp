@@ -12,14 +12,14 @@ public static class NotificationMapper
             return new NotificationDto
             {
                 Content = "Unknown",
-                Type = Dtos.NotificationType.System,
+                Type = NotificationType.System,
                 CreationDate = DateTime.UtcNow
             };
 
         return new NotificationDto
         {
             Id = notification.Id,
-            Type = (Dtos.NotificationType)(int)notification.Type,
+            Type = (NotificationType)(int)notification.Type,
             Content = notification.Content ?? string.Empty,
             UserId = notification.UserId,
             IsRead = notification.IsRead,
@@ -47,7 +47,7 @@ public static class NotificationMapper
         return new Notification
         {
             Id = dto.Id,
-            Type = (Domain.Entities.NotificationType)(int)dto.Type,
+            Type = (NotificationType)(int)dto.Type,
             Content = dto.Content,
             UserId = dto.UserId,
             IsRead = dto.IsRead,
