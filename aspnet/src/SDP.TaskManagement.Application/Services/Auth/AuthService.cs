@@ -54,8 +54,15 @@ public class AuthService : IAuthService
 
         var user = await _userManager.GetUserByEmail(loginDto.Email);
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-            throw new UnauthorizedAccessException("Invalid credentials.");
+        if (user == null)
+        {
+            return new() { Error = "User not found." };
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+        {
+            return new() { Error = "Invalid password." };
+        }
 
         return new()
         {

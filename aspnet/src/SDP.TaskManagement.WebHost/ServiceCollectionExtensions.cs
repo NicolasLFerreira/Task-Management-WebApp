@@ -35,7 +35,8 @@ public static class ServiceCollectionExtensions
             {
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
-                      .AllowAnyHeader();
+                      .AllowAnyHeader()
+                      .WithExposedHeaders("Content-Disposition");
             });
         });
 

@@ -37,6 +37,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
     setIsLoading(true)
 
     try {
+      console.log("Attempting registration with:", { name, email })
       const response = await AccountService.register({
         body: {
           name,
@@ -44,6 +45,8 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
           password,
         },
       })
+
+      console.log("Registration API response:", response)
 
       if (response.data) {
         // Registration successful
@@ -53,6 +56,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
         setError("Registration failed")
       }
     } catch (err: unknown) {
+      console.error("Registration error:", err)
       const error = err as { response?: { data?: { message?: string } } }
       setError(error.response?.data?.message || "Registration failed. Please try again.")
     } finally {

@@ -4,10 +4,12 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
 import LoginForm from "../components/LoginForm"
 import RegisterForm from "../components/RegisterForm"
+import ApiDebugger from "../components/ApiDebugger"
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
+  const [showDebugger, setShowDebugger] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -51,6 +53,21 @@ const Auth = () => {
           <RegisterForm onSuccess={handleRegisterSuccess} onLoginClick={() => setIsLogin(true)} />
         )}
       </div>
+
+      <div className="mt-4 text-center">
+        <button
+          onClick={() => setShowDebugger(!showDebugger)}
+          className="text-sm text-indigo-600 hover:text-indigo-500"
+        >
+          {showDebugger ? "Hide API Debugger" : "Show API Debugger"}
+        </button>
+      </div>
+
+      {showDebugger && (
+        <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-lg">
+          <ApiDebugger />
+        </div>
+      )}
     </div>
   )
 }
