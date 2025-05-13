@@ -79,8 +79,6 @@ public class Program
         }
 
         // Middleware
-        // Remove HttpsRedirection for Docker environment
-        // app.UseHttpsRedirection();
         
         app.UseAuthentication();
         app.UseAuthorization();
