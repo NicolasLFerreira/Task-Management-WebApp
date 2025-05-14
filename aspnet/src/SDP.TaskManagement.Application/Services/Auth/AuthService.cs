@@ -36,9 +36,9 @@ public class AuthService : IAuthService
         {
             Email = registerDto.Email,
             PasswordHash = passwordHash,
-            Username = registerDto.Name,
-            FirstName = registerDto.Name,
-            LastName = "",
+            Username = registerDto.Username,
+            FirstName = registerDto.FirstName ?? registerDto.Name,
+            LastName = registerDto.LastName ?? "",
             ProfilePhotoPath = "/default-profile.png"
         };
 

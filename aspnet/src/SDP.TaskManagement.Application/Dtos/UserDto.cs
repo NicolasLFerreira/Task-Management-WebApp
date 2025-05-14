@@ -16,5 +16,5 @@ public class UserDto
     
     // Helper properties
     public string FullName => $"{FirstName} {LastName}";
-    public string Initials => $"{FirstName[0]}{LastName[0]}";
+    public string Initials => $"{(string.IsNullOrEmpty(FirstName) ? "" : FirstName[0])}{(string.IsNullOrEmpty(LastName) ? "" : LastName[0])}";
 }

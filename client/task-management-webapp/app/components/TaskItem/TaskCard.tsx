@@ -1,5 +1,5 @@
 import React from "react";
-import type { TaskItemDto, TaskItemPriority, TaskItemStatus } from "api-client";
+import type { SdpTaskManagementApplicationDtosTaskItemDto as TaskItemDto , SdpTaskManagementApplicationDtosTaskItemDto as TaskItemPriority, SdpTaskManagementApplicationDtosTaskItemDto as TaskItemStatus } from "api-client";
 
 interface TaskCardProps {
 	task: TaskItemDto;

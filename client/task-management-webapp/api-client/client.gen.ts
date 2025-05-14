@@ -23,6 +23,6 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
 
 export const client = createClient(
   createConfig<ClientOptions>({
-    baseURL: "https://localhost:7200/",
+    baseURL: "http://localhost:7200/",
   }),
 );
