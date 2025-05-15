@@ -121,11 +121,37 @@ public static class ServiceCollectionExtensions
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Management API", Version = "v1" });
             
-            // Add custom schema ID provider to resolve naming conflicts
+            // Add custom schema ID provider to generate cleaner type names
             c.CustomSchemaIds(type => 
             {
-                // Return the full type name including namespace to avoid conflicts
-                return type.FullName;
+                if (type == null)
+                    return "Unknown";
+        
+                // For generic types, create a more readable name
+                if (type.IsGenericType)
+                {
+                    var genericArguments = type.GetGenericArguments()
+                        .Select(t => t.Name)
+                        .ToArray();
+            
+                    var genericTypeName = type.Name;
+        
+                    // Remove the generic type marker (`n) from the name
+                    var index = genericTypeName.IndexOf('`');
+                    if (index > 0)
+                        genericTypeName = genericTypeName.Substring(0, index);
+            
+                    return $"{genericTypeName}Of{string.Join("And", genericArguments)}";
+                }
+    
+                // For nested types, include the parent type name to avoid conflicts
+                if (type.IsNested && type.DeclaringType != null)
+                {
+                    return $"{type.DeclaringType.Name}{type.Name}";
+                }
+    
+                // For normal types, just use the type name
+                return type.Name;
             });
             
             // Add JWT Authentication to Swagger

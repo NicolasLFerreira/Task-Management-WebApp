@@ -40,9 +40,7 @@ import type {
   PutApiUserProfileResponse,
 } from "./types.gen";
 
-const sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const userDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
   }
@@ -55,13 +53,11 @@ const sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer = (
 export const registerResponseTransformer = async (
   data: any,
 ): Promise<RegisterResponse> => {
-  data = sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(data);
+  data = userDtoSchemaResponseTransformer(data);
   return data;
 };
 
-const sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const attachmentDtoSchemaResponseTransformer = (data: any) => {
   if (data.uploadTime) {
     data.uploadTime = new Date(data.uploadTime);
   }
@@ -71,10 +67,7 @@ const sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer = (
 export const getApiAttachmentByIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiAttachmentByIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer(
-      data,
-    );
+  data = attachmentDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -82,9 +75,7 @@ export const getApiAttachmentTaskByTaskIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiAttachmentTaskByTaskIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer(
-      item,
-    );
+    return attachmentDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -92,52 +83,40 @@ export const getApiAttachmentTaskByTaskIdResponseTransformer = async (
 export const postApiAttachmentUploadByTaskIdResponseTransformer = async (
   data: any,
 ): Promise<PostApiAttachmentUploadByTaskIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer(
-      data,
-    );
+  data = attachmentDtoSchemaResponseTransformer(data);
   return data;
 };
 
-const sdpTaskManagementApplicationDtosCommentDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const commentDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
   }
   return data;
 };
 
-const sdpTaskManagementApplicationDtosChecklistItemDtoSchemaResponseTransformer =
-  (data: any) => {
-    if (data.creationDate) {
-      data.creationDate = new Date(data.creationDate);
-    }
-    if (data.completionDate) {
-      data.completionDate = new Date(data.completionDate);
-    }
-    return data;
-  };
+const checklistItemDtoSchemaResponseTransformer = (data: any) => {
+  if (data.creationDate) {
+    data.creationDate = new Date(data.creationDate);
+  }
+  if (data.completionDate) {
+    data.completionDate = new Date(data.completionDate);
+  }
+  return data;
+};
 
-const sdpTaskManagementApplicationDtosChecklistDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const checklistDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
   }
   if (data.items) {
     data.items = data.items.map((item: any) => {
-      return sdpTaskManagementApplicationDtosChecklistItemDtoSchemaResponseTransformer(
-        item,
-      );
+      return checklistItemDtoSchemaResponseTransformer(item);
     });
   }
   return data;
 };
 
-const sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const taskItemDtoSchemaResponseTransformer = (data: any) => {
   if (data.dueDate) {
     data.dueDate = new Date(data.dueDate);
   }
@@ -155,74 +134,55 @@ const sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer = (
   }
   if (data.assignees) {
     data.assignees = data.assignees.map((item: any) => {
-      return sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(
-        item,
-      );
+      return userDtoSchemaResponseTransformer(item);
     });
   }
   if (data.comments) {
     data.comments = data.comments.map((item: any) => {
-      return sdpTaskManagementApplicationDtosCommentDtoSchemaResponseTransformer(
-        item,
-      );
+      return commentDtoSchemaResponseTransformer(item);
     });
   }
   if (data.attachments) {
     data.attachments = data.attachments.map((item: any) => {
-      return sdpTaskManagementApplicationDtosAttachmentDtoSchemaResponseTransformer(
-        item,
-      );
+      return attachmentDtoSchemaResponseTransformer(item);
     });
   }
   if (data.checklists) {
     data.checklists = data.checklists.map((item: any) => {
-      return sdpTaskManagementApplicationDtosChecklistDtoSchemaResponseTransformer(
-        item,
-      );
+      return checklistDtoSchemaResponseTransformer(item);
     });
   }
   return data;
 };
 
-const sdpTaskManagementApplicationDtosListDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const listDtoSchemaResponseTransformer = (data: any) => {
   if (data.taskItems) {
     data.taskItems = data.taskItems.map((item: any) => {
-      return sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(
-        item,
-      );
+      return taskItemDtoSchemaResponseTransformer(item);
     });
   }
   return data;
 };
 
-const sdpTaskManagementApplicationDtosBoardMemberDtoSchemaResponseTransformer =
-  (data: any) => {
-    if (data.joinedDate) {
-      data.joinedDate = new Date(data.joinedDate);
-    }
-    return data;
-  };
+const boardMemberDtoSchemaResponseTransformer = (data: any) => {
+  if (data.joinedDate) {
+    data.joinedDate = new Date(data.joinedDate);
+  }
+  return data;
+};
 
-const sdpTaskManagementApplicationDtosBoardDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const boardDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
   }
   if (data.lists) {
     data.lists = data.lists.map((item: any) => {
-      return sdpTaskManagementApplicationDtosListDtoSchemaResponseTransformer(
-        item,
-      );
+      return listDtoSchemaResponseTransformer(item);
     });
   }
   if (data.members) {
     data.members = data.members.map((item: any) => {
-      return sdpTaskManagementApplicationDtosBoardMemberDtoSchemaResponseTransformer(
-        item,
-      );
+      return boardMemberDtoSchemaResponseTransformer(item);
     });
   }
   return data;
@@ -232,9 +192,7 @@ export const getApiBoardsResponseTransformer = async (
   data: any,
 ): Promise<GetApiBoardsResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosBoardDtoSchemaResponseTransformer(
-      item,
-    );
+    return boardDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -242,16 +200,14 @@ export const getApiBoardsResponseTransformer = async (
 export const postApiBoardsResponseTransformer = async (
   data: any,
 ): Promise<PostApiBoardsResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosBoardDtoSchemaResponseTransformer(data);
+  data = boardDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const getApiBoardsByBoardIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiBoardsByBoardIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosBoardDtoSchemaResponseTransformer(data);
+  data = boardDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -259,9 +215,7 @@ export const getApiChecklistsTaskByTaskIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiChecklistsTaskByTaskIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosChecklistDtoSchemaResponseTransformer(
-      item,
-    );
+    return checklistDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -269,36 +223,28 @@ export const getApiChecklistsTaskByTaskIdResponseTransformer = async (
 export const getApiChecklistsByChecklistIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiChecklistsByChecklistIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosChecklistDtoSchemaResponseTransformer(data);
+  data = checklistDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const postApiChecklistsResponseTransformer = async (
   data: any,
 ): Promise<PostApiChecklistsResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosChecklistDtoSchemaResponseTransformer(data);
+  data = checklistDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const postApiChecklistsItemsResponseTransformer = async (
   data: any,
 ): Promise<PostApiChecklistsItemsResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosChecklistItemDtoSchemaResponseTransformer(
-      data,
-    );
+  data = checklistItemDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const getApiChecklistsItemsByItemIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiChecklistsItemsByItemIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosChecklistItemDtoSchemaResponseTransformer(
-      data,
-    );
+  data = checklistItemDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -306,9 +252,7 @@ export const getApiCommentsTaskByTaskIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiCommentsTaskByTaskIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosCommentDtoSchemaResponseTransformer(
-      item,
-    );
+    return commentDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -316,53 +260,45 @@ export const getApiCommentsTaskByTaskIdResponseTransformer = async (
 export const getApiCommentsByCommentIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiCommentsByCommentIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosCommentDtoSchemaResponseTransformer(data);
+  data = commentDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const postApiCommentsResponseTransformer = async (
   data: any,
 ): Promise<PostApiCommentsResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosCommentDtoSchemaResponseTransformer(data);
+  data = commentDtoSchemaResponseTransformer(data);
   return data;
 };
 
-const sdpTaskManagementWebControllersRecentActivityDtoSchemaResponseTransformer =
-  (data: any) => {
-    if (data.date) {
-      data.date = new Date(data.date);
-    }
-    return data;
-  };
+const recentActivityDtoSchemaResponseTransformer = (data: any) => {
+  if (data.date) {
+    data.date = new Date(data.date);
+  }
+  return data;
+};
 
 export const getApiDashboardRecentActivityResponseTransformer = async (
   data: any,
 ): Promise<GetApiDashboardRecentActivityResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementWebControllersRecentActivityDtoSchemaResponseTransformer(
-      item,
-    );
+    return recentActivityDtoSchemaResponseTransformer(item);
   });
   return data;
 };
 
-const sdpTaskManagementWebControllersUpcomingTaskDtoSchemaResponseTransformer =
-  (data: any) => {
-    if (data.dueDate) {
-      data.dueDate = new Date(data.dueDate);
-    }
-    return data;
-  };
+const upcomingTaskDtoSchemaResponseTransformer = (data: any) => {
+  if (data.dueDate) {
+    data.dueDate = new Date(data.dueDate);
+  }
+  return data;
+};
 
 export const getApiDashboardUpcomingTasksResponseTransformer = async (
   data: any,
 ): Promise<GetApiDashboardUpcomingTasksResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementWebControllersUpcomingTaskDtoSchemaResponseTransformer(
-      item,
-    );
+    return upcomingTaskDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -371,9 +307,7 @@ export const getApiListsBoardByBoardIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiListsBoardByBoardIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosListDtoSchemaResponseTransformer(
-      item,
-    );
+    return listDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -381,20 +315,18 @@ export const getApiListsBoardByBoardIdResponseTransformer = async (
 export const getApiListsByListIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiListsByListIdResponse> => {
-  data = sdpTaskManagementApplicationDtosListDtoSchemaResponseTransformer(data);
+  data = listDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const postApiListsResponseTransformer = async (
   data: any,
 ): Promise<PostApiListsResponse> => {
-  data = sdpTaskManagementApplicationDtosListDtoSchemaResponseTransformer(data);
+  data = listDtoSchemaResponseTransformer(data);
   return data;
 };
 
-const sdpTaskManagementApplicationDtosMessageDtoSchemaResponseTransformer = (
-  data: any,
-) => {
+const messageDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
   }
@@ -408,9 +340,7 @@ export const getApiMessagesResponseTransformer = async (
   data: any,
 ): Promise<GetApiMessagesResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosMessageDtoSchemaResponseTransformer(
-      item,
-    );
+    return messageDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -418,8 +348,7 @@ export const getApiMessagesResponseTransformer = async (
 export const postApiMessagesResponseTransformer = async (
   data: any,
 ): Promise<PostApiMessagesResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosMessageDtoSchemaResponseTransformer(data);
+  data = messageDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -427,9 +356,7 @@ export const getApiMessagesConversationByUserIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiMessagesConversationByUserIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosMessageDtoSchemaResponseTransformer(
-      item,
-    );
+    return messageDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -437,26 +364,22 @@ export const getApiMessagesConversationByUserIdResponseTransformer = async (
 export const getApiMessagesByMessageIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiMessagesByMessageIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosMessageDtoSchemaResponseTransformer(data);
+  data = messageDtoSchemaResponseTransformer(data);
   return data;
 };
 
-const sdpTaskManagementApplicationDtosNotificationDtoSchemaResponseTransformer =
-  (data: any) => {
-    if (data.creationDate) {
-      data.creationDate = new Date(data.creationDate);
-    }
-    return data;
-  };
+const notificationDtoSchemaResponseTransformer = (data: any) => {
+  if (data.creationDate) {
+    data.creationDate = new Date(data.creationDate);
+  }
+  return data;
+};
 
 export const getApiNotificationsResponseTransformer = async (
   data: any,
 ): Promise<GetApiNotificationsResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosNotificationDtoSchemaResponseTransformer(
-      item,
-    );
+    return notificationDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -465,9 +388,7 @@ export const getApiNotificationsUnreadResponseTransformer = async (
   data: any,
 ): Promise<GetApiNotificationsUnreadResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosNotificationDtoSchemaResponseTransformer(
-      item,
-    );
+    return notificationDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -476,9 +397,7 @@ export const getApiSampleGetUsersResponseTransformer = async (
   data: any,
 ): Promise<GetApiSampleGetUsersResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(
-      item,
-    );
+    return userDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -487,9 +406,7 @@ export const getApiTasksResponseTransformer = async (
   data: any,
 ): Promise<GetApiTasksResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(
-      item,
-    );
+    return taskItemDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -497,16 +414,14 @@ export const getApiTasksResponseTransformer = async (
 export const postApiTasksResponseTransformer = async (
   data: any,
 ): Promise<PostApiTasksResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(data);
+  data = taskItemDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const getApiTasksByTaskIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiTasksByTaskIdResponse> => {
-  data =
-    sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(data);
+  data = taskItemDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -514,9 +429,7 @@ export const getApiTasksListByListIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiTasksListByListIdResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(
-      item,
-    );
+    return taskItemDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -525,9 +438,7 @@ export const getApiTasksQueryingByTitlePatternResponseTransformer = async (
   data: any,
 ): Promise<GetApiTasksQueryingByTitlePatternResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(
-      item,
-    );
+    return taskItemDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -536,9 +447,7 @@ export const postApiTasksQueryingResponseTransformer = async (
   data: any,
 ): Promise<PostApiTasksQueryingResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosTaskItemDtoSchemaResponseTransformer(
-      item,
-    );
+    return taskItemDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -546,7 +455,7 @@ export const postApiTasksQueryingResponseTransformer = async (
 export const getApiUsersProfileResponseTransformer = async (
   data: any,
 ): Promise<GetApiUsersProfileResponse> => {
-  data = sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(data);
+  data = userDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -554,9 +463,7 @@ export const getApiUsersSearchResponseTransformer = async (
   data: any,
 ): Promise<GetApiUsersSearchResponse> => {
   data = data.map((item: any) => {
-    return sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(
-      item,
-    );
+    return userDtoSchemaResponseTransformer(item);
   });
   return data;
 };
@@ -564,13 +471,13 @@ export const getApiUsersSearchResponseTransformer = async (
 export const getApiUserProfileResponseTransformer = async (
   data: any,
 ): Promise<GetApiUserProfileResponse> => {
-  data = sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(data);
+  data = userDtoSchemaResponseTransformer(data);
   return data;
 };
 
 export const putApiUserProfileResponseTransformer = async (
   data: any,
 ): Promise<PutApiUserProfileResponse> => {
-  data = sdpTaskManagementApplicationDtosUserDtoSchemaResponseTransformer(data);
+  data = userDtoSchemaResponseTransformer(data);
   return data;
 };
