@@ -3,17 +3,14 @@ import { useEffect } from "react"
 import { useNavigate } from "react-router"
 
 export function meta() {
-  return [
-    { title: "Tickway – Task Manager" },
-    { name: "description", content: "Organize and prioritize your tasks with Tickway." },
-  ]
+  return [{ title: "Tickaway – Home" }]
 }
 
-export default function Home() {
+export default function HomeRoute() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Redirect to auth if not logged in, otherwise to dashboard
+    // Check if user is authenticated
     const token = localStorage.getItem("auth_token")
     if (token) {
       navigate("/dashboard")
