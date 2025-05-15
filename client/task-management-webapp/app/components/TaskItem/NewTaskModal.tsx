@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { SdpTaskManagementApplicationDtosTaskItemDto as TaskItemDto  } from "api-client";
+import type { TaskItemDto } from "api-client";
 import { TaskItemService, TaskItemSpecialisedService } from "api-client";
 
 interface NewTaskModalProps {
