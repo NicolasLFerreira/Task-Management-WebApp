@@ -23,6 +23,7 @@ import type {
   UserDtoReadable,
   // Board types
   BoardDto,
+  BoardMemberRole,
   // Task types
   TaskItemDto,
   TaskItemStatus,
@@ -150,6 +151,41 @@ export class ApiService {
     })
   }
 
+  /**
+   * Add a member to a board
+   * @param boardId Board ID
+   * @param userId User ID to add
+   * @param role Optional role (defaults to member)
+   */
+  static async addBoardMember(
+    boardId: number,
+    userId: number,
+    role: BoardMemberRole = BoardMemberRole._1,
+  ): Promise<void> {
+    // This is a placeholder implementation - you'll need to replace with the actual API call
+    // For example:
+    await BoardService.postApiBoardsMembersByBoardId({
+      path: { boardId },
+      body: {
+        userId,
+        role,
+      },
+    })
+  }
+
+  /**
+   * Remove a member from a board
+   * @param boardId Board ID
+   * @param memberId Board member ID to remove
+   */
+  static async removeBoardMember(boardId: number, memberId: number): Promise<void> {
+    // This is a placeholder implementation - you'll need to replace with the actual API call
+    // For example:
+    await BoardService.deleteApiBoardsMembersByBoardIdAndMemberId({
+      path: { boardId, memberId },
+    })
+  }
+
   // LIST OPERATIONS
 
   /**
@@ -211,17 +247,23 @@ export class ApiService {
   }
 
   /**
-   * Reorder lists in a board
-   * @param boardId Board ID
-   * @param listIds Ordered list IDs
+   * Reorders lists within a board
+   * @param boardId - The ID of the board
+   * @param listIds - Array of list IDs in the new order
+   * @returns Promise that resolves when the operation is complete
    */
   static async reorderLists(boardId: number, listIds: number[]): Promise<void> {
-    await ListService.postApiListsReorder({
-      body: {
-        boardId,
-        listIds,
-      },
-    })
+    try {
+      await ListService.postApiListsReorder({
+        body: {
+          boardId,
+          listIds,
+        },
+      })
+    } catch (error) {
+      console.error("Error reordering lists:", error)
+      throw error
+    }
   }
 
   // TASK OPERATIONS

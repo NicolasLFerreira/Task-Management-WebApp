@@ -1,4 +1,5 @@
 "use client"
+import type React from "react"
 import { Modal } from "./Modal"
 import { Button } from "./Button"
 
@@ -8,7 +9,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void
   title: string
   message: string
-  confirmLabel?: string
+  confirmLabel?: React.ReactNode
   cancelLabel?: string
   variant?: "danger" | "warning" | "info"
   isLoading?: boolean

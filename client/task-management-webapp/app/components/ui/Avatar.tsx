@@ -1,29 +1,36 @@
-import { cn } from "../../lib/utils"
-interface AvatarProps {
+import type React from "react"
+
+export interface AvatarProps {
   src?: string
-  name: string
-  size?: "sm" | "md" | "lg"
+  name?: string
+  size?: "xs" | "sm" | "md" | "lg"
   className?: string
 }
 
-export function Avatar({ src, name, size = "md", className }: AvatarProps) {
-  const sizeClasses = {
-    sm: "h-8 w-8 text-xs",
-    md: "h-10 w-10 text-sm",
-    lg: "h-12 w-12 text-base",
-  }
-
+export const Avatar: React.FC<AvatarProps> = ({ src, name, size = "md", className = "" }) => {
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2)
+    if (!name) return "?"
+    const parts = name.split(" ")
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase()
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase()
   }
 
-  const initials = getInitials(name)
-  const colors = [
+  const getSizeClasses = () => {
+    switch (size) {
+      case "xs":
+        return "w-6 h-6 text-xs"
+      case "sm":
+        return "w-8 h-8 text-sm"
+      case "md":
+        return "w-10 h-10 text-base"
+      case "lg":
+        return "w-12 h-12 text-lg"
+      default:
+        return "w-10 h-10 text-base"
+    }
+  }
+
+  const bgColors = [
     "bg-blue-500",
     "bg-green-500",
     "bg-yellow-500",
@@ -31,33 +38,23 @@ export function Avatar({ src, name, size = "md", className }: AvatarProps) {
     "bg-purple-500",
     "bg-pink-500",
     "bg-indigo-500",
+    "bg-teal-500",
   ]
 
-  // Generate a consistent color based on the name
-  const colorIndex = name.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length
-  const bgColor = colors[colorIndex]
+  const getRandomBgColor = (name: string) => {
+    if (!name) return bgColors[0]
+    const charCode = name.charCodeAt(0)
+    return bgColors[charCode % bgColors.length]
+  }
 
   return (
-    <div
-      className={cn(
-        "relative inline-flex items-center justify-center rounded-full text-white",
-        sizeClasses[size],
-        !src && bgColor,
-        className,
-      )}
-    >
+    <div className={`${getSizeClasses()} flex items-center justify-center rounded-full overflow-hidden ${className}`}>
       {src ? (
-        <img
-          src={src || "/placeholder.svg"}
-          alt={name}
-          className="h-full w-full rounded-full object-cover"
-          onError={(e) => {
-            // If image fails to load, show initials instead
-            ;(e.target as HTMLImageElement).style.display = "none"
-          }}
-        />
+        <img src={src || "/placeholder.svg"} alt={name || "Avatar"} className="w-full h-full object-cover" />
       ) : (
-        <span>{initials}</span>
+        <div className={`w-full h-full flex items-center justify-center text-white ${getRandomBgColor(name || "")}`}>
+          {name ? getInitials(name) : "?"}
+        </div>
       )}
     </div>
   )

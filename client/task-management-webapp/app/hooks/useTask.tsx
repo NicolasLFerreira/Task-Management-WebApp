@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useState, type ReactNode, useContext } from "react"
+import { createContext, useState, type ReactNode, useContext, useCallback } from "react"
 import { ApiService } from "../services/api-service"
 import { useToast } from "./useToast"
 import type {
@@ -13,6 +13,7 @@ import type {
   TaskItemStatus,
   TaskItemPriority,
 } from "../../api-client/types.gen"
+import { ToastContext } from "../contexts/ToastContext"
 
 interface TaskContextType {
   currentTask: TaskItemDto | null
@@ -60,6 +61,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
   const toast = useToast()
+ // const { showSuccess, showError } = useContext(ToastContext)
 
   const fetchTasks = async (listId?: number) => {
     setIsLoading(true)
@@ -653,11 +655,137 @@ export function TaskProvider({ children }: { children: ReactNode }) {
  * @returns Task context values and methods
  */
 export const useTask = () => {
-  const context = useContext(TaskContext)
+  const [tasks, setTasks] = useState<TaskItemDto[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { showSuccess, showError } = useContext(ToastContext)
 
-  if (!context) {
-    throw new Error("useTask must be used within a TaskProvider")
+  const fetchTasks = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const fetchedTasks = await ApiService.getTasks()
+      setTasks(fetchedTasks)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch tasks"
+      setError(errorMessage)
+      showError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [showError])
+
+  const fetchTasksByBoardId = useCallback(
+    async (boardId: number) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        // First get all lists for the board
+        const lists = await ApiService.getListsByBoardId(boardId)
+
+        // Then get tasks for each list
+        const allTasks: TaskItemDto[] = []
+        for (const list of lists) {
+          if (list.id) {
+            const listTasks = await ApiService.getTasksByListId(list.id)
+            allTasks.push(...listTasks)
+          }
+        }
+
+        setTasks(allTasks)
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch tasks for board"
+        setError(errorMessage)
+        showError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [showError],
+  )
+
+  const fetchTasksByListId = useCallback(
+    async (listId: number) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const fetchedTasks = await ApiService.getTasksByListId(listId)
+        setTasks(fetchedTasks)
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to fetch tasks for list"
+        setError(errorMessage)
+        showError(errorMessage)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [showError],
+  )
+
+  // Add moveTask to the useTask hook return value
+  const moveTask = useCallback(
+    async (taskId: number, sourceListId: number, targetListId: number) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        // Optimistically update UI
+        setTasks((prevTasks) => {
+          const updatedTasks = prevTasks.map((task) => {
+            if (task.id === taskId) {
+              return { ...task, listId: targetListId }
+            }
+            return task
+          })
+          return updatedTasks
+        })
+
+        // Call API to persist changes - add position parameter (default to 0)
+        await ApiService.moveTask(taskId, targetListId, 0)
+        showSuccess("Task moved successfully")
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to move task"
+        setError(errorMessage)
+        showError(errorMessage)
+
+        // Revert optimistic update by refetching tasks
+        await fetchTasks()
+        throw err
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [fetchTasks, showError, showSuccess],
+  )
+
+  const createTask = useCallback(
+    async (taskData: TaskItemDto): Promise<TaskItemDto> => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const newTask = await ApiService.createTask(taskData)
+        setTasks((prevTasks) => [...prevTasks, newTask])
+        showSuccess("Task created successfully")
+        return newTask
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Failed to create task"
+        setError(errorMessage)
+        showError(errorMessage)
+        throw err
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [showError, showSuccess],
+  )
+
+  return {
+    tasks,
+    isLoading,
+    error,
+    fetchTasks,
+    fetchTasksByBoardId,
+    fetchTasksByListId,
+    moveTask,
+    createTask, // Add createTask to the return object
   }
-
-  return context
 }
