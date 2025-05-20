@@ -53,15 +53,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRepository<TaskAssignee>, Repository<TaskAssignee>>();
         
         // Register services
-        services.AddScoped<ITokenService, Application.Services.Auth.TokenService>();
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserManager, UserManager>();
-        services.AddScoped<IAuthService, Application.Services.Auth.AuthService>();
-        services.AddScoped<IFileSystemService,Infrastructure.Services.FileSystemService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IFileSystemService, FileSystemService>();
         
         // Register domain services using the Abstractions namespace interfaces
-        services.AddScoped<Application.Services.BoardService>();
-        services.AddScoped<SDP.TaskManagement.Application.Abstractions.INotificationService, Application.Services.NotificationService>();
-        services.AddScoped<Application.Services.TaskService>();
+        services.AddScoped<BoardService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<TaskService>();
         
         // Register configuration options
         services.Configure<FileStorageOptions>(
@@ -78,8 +78,8 @@ public static class ServiceCollectionExtensions
             {
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
-                      .AllowAnyHeader()
-                      .WithExposedHeaders("Content-Disposition");
+                      .AllowAnyHeader();
+                      //.WithExposedHeaders("Content-Disposition");
             });
         });
 
