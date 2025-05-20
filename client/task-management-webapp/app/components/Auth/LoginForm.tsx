@@ -52,6 +52,8 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
     }
   }
 
+  const regex = "/^[a-z]*[a-z0-9]@.*[a-z].[com,net]/";
+
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white p-8 rounded-lg shadow-md">
@@ -82,7 +84,7 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              pattern={regex}
               title="Please enter a valid email address"
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
               placeholder="your@email.com"
