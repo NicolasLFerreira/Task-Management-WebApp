@@ -1,17 +1,7 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Protocols.Configuration;
-using Microsoft.IdentityModel.Tokens;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
-using SDP.TaskManagement.WebHost.Swagger;
-
-using System.Text;
-using System.Text.Json.Serialization;
 using SDP.TaskManagement.WebHost.Middleware;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -31,7 +21,7 @@ public class Program
         builder.Services.AddSwaggerDocumentation();
 
         // Configure CORS
-        //builder.Services.ConfigureCors();
+        builder.Services.ConfigureCors();
 
         // Add JWT Authentication
         //builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -47,7 +37,11 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Tickaway API");
+                options.RoutePrefix = string.Empty;
+            });
 
             // Apply migrations in development
             using (var scope = app.Services.CreateScope())
@@ -57,18 +51,18 @@ public class Program
             }
         }
 
-        // Use custom exception handling middleware
-        //app.UseExceptionHandling();
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
-
         app.UseHttpsRedirection();
         app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
+        // Middleware
+
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
 
+        // Start app
         app.Run();
     }
 }

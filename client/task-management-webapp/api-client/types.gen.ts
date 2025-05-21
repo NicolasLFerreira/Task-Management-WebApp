@@ -1529,7 +1529,7 @@ export type PostApiUserProfileProfilePhotoResponses = {
 };
 
 export type ClientOptions = {
-  baseURL: "http://localhost:7200" | (string & {});
+  baseURL: "https://localhost:7200" | (string & {});
 };
 export type ChecklistDto = ChecklistDtoReadable | ChecklistDtoWritable
 

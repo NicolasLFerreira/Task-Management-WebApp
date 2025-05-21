@@ -17,8 +17,7 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async () => {
     setError(null)
     setIsLoading(true)
 
@@ -52,6 +51,8 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
     }
   }
 
+  const regex = "/^[a-z]*[a-z0-9]@.*[a-z].[com,net]/";
+
   return (
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white p-8 rounded-lg shadow-md">
@@ -71,7 +72,7 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -82,7 +83,7 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              pattern={regex}
               title="Please enter a valid email address"
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
               placeholder="your@email.com"
@@ -119,14 +120,14 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
 
           <div>
             <button
-              type="submit"
               disabled={isLoading}
+              onClick={() => handleSubmit()}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50"
             >
               {isLoading ? "Logging in..." : "Login"}
             </button>
           </div>
-        </form>
+        </div>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
