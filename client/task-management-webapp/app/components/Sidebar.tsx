@@ -21,10 +21,21 @@ import {
 type SidebarProps = {
   darkMode: boolean
   toggleDarkMode: () => void
+  onCollapsedChange: (collapsed: boolean) => void
+  initialCollapsed?: boolean
+  mobileVisible?: boolean
+  onMobileClose?: () => void
 }
 
-const Sidebar = ({ darkMode, toggleDarkMode }: SidebarProps) => {
-  const [collapsed, setCollapsed] = useState(false)
+const Sidebar = ({
+  darkMode,
+  toggleDarkMode,
+  onCollapsedChange,
+  initialCollapsed = false,
+  mobileVisible,
+  onMobileClose,
+}: SidebarProps) => {
+  const [collapsed, setCollapsed] = useState(initialCollapsed || false)
   const [isMobile, setIsMobile] = useState(false)
   const [currentPage, setCurrentPage] = useState(() => {
     // Get the current page from localStorage or default to dashboard
@@ -49,7 +60,9 @@ const Sidebar = ({ darkMode, toggleDarkMode }: SidebarProps) => {
   }, [])
 
   const toggleSidebar = () => {
-    setCollapsed(!collapsed)
+    const newCollapsedState = !collapsed
+    setCollapsed(newCollapsedState)
+    onCollapsedChange(newCollapsedState)
   }
 
   const navigateTo = (page: string) => {
@@ -67,10 +80,13 @@ const Sidebar = ({ darkMode, toggleDarkMode }: SidebarProps) => {
     <div
       className={`${
         collapsed ? "w-16" : "w-64"
-      } fixed left-0 top-16 h-[calc(100vh-64px)] bg-white dark:bg-gray-800 transition-all duration-300 shadow-md z-10 ${
-        isMobile && collapsed ? "-translate-x-full" : "translate-x-0"
+      } fixed left-0 top-16 h-[calc(100vh-64px)] bg-white dark:bg-gray-800 transition-all duration-300 shadow-md z-20 ${
+        isMobile ? (mobileVisible ? "translate-x-0" : "-translate-x-full") : "translate-x-0"
       }`}
     >
+      {isMobile && mobileVisible && (
+        <div className="fixed inset-0 bg-black/50 z-10" onClick={onMobileClose} aria-hidden="true" />
+      )}
       <button
         onClick={toggleSidebar}
         className={`absolute -right-3 top-6 bg-teal-600 text-white rounded-full p-1 shadow-md ${
