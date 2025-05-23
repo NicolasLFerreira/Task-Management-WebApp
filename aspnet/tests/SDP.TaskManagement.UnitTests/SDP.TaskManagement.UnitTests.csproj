@@ -9,13 +9,25 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SDP.TaskManagement.Application\SDP.TaskManagement.Application.csproj" />
+    <ProjectReference Include="..\..\src\SDP.TaskManagement.Domain\SDP.TaskManagement.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\SDP.TaskManagement.Web\SDP.TaskManagement.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="FluentAssertions" />
+    <Using Include="Moq" />
   </ItemGroup>
 
 </Project>
