@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Entities;
+
 using System.Security.Claims;
 
 namespace SDP.TaskManagement.Web.Controllers;
@@ -30,36 +32,36 @@ public class DashboardController : ControllerBase
     public async Task<ActionResult<DashboardStatsDto>> GetDashboardStats()
     {
         var userId = GetCurrentUserId();
-        
+
         // Get user's boards
         var ownedBoardIds = await _boardRepository.GetQueryable()
             .Where(b => b.OwnerId == userId)
             .Select(b => b.Id)
             .ToListAsync();
-            
+
         var memberBoardIds = await _boardMemberRepository.GetQueryable()
             .Where(bm => bm.UserId == userId)
             .Select(bm => bm.BoardId)
             .ToListAsync();
-            
+
         var allBoardIds = ownedBoardIds.Concat(memberBoardIds).Distinct().ToList();
-        
+
         // Get tasks from user's boards
         var tasks = await _taskRepository.GetQueryable()
             .Where(t => t.OwnerUserId == userId || t.Assignees.Any(a => a.Id == userId))
             .ToListAsync();
-            
+
         // Calculate stats
         var totalTasks = tasks.Count;
         var completedTasks = tasks.Count(t => t.ProgressStatus == TaskItemStatus.Completed);
         var inProgressTasks = tasks.Count(t => t.ProgressStatus == TaskItemStatus.InProgress);
         var todoTasks = tasks.Count(t => t.ProgressStatus == TaskItemStatus.Todo);
-        
+
         var overdueTasks = tasks.Count(t => t.DueDate.HasValue && t.DueDate.Value < DateTime.UtcNow && t.ProgressStatus != TaskItemStatus.Completed);
         var dueSoonTasks = tasks.Count(t => t.DueDate.HasValue && t.DueDate.Value >= DateTime.UtcNow && t.DueDate.Value <= DateTime.UtcNow.AddDays(3) && t.ProgressStatus != TaskItemStatus.Completed);
-        
+
         var highPriorityTasks = tasks.Count(t => t.Priority == TaskItemPriority.High && t.ProgressStatus != TaskItemStatus.Completed);
-        
+
         var stats = new DashboardStatsDto
         {
             TotalTasks = totalTasks,
@@ -72,7 +74,7 @@ public class DashboardController : ControllerBase
             CompletionRate = totalTasks > 0 ? (double)completedTasks / totalTasks : 0,
             TotalBoards = allBoardIds.Count
         };
-        
+
         return Ok(stats);
     }
 
@@ -80,23 +82,23 @@ public class DashboardController : ControllerBase
     public async Task<ActionResult<List<RecentActivityDto>>> GetRecentActivity()
     {
         var userId = GetCurrentUserId();
-        
+
         // Get recently updated tasks
         var recentTasks = await _taskRepository.GetQueryable()
             .Where(t => t.OwnerUserId == userId || t.Assignees.Any(a => a.Id == userId))
-            .OrderByDescending(t => t.CreationTime)
+            .OrderByDescending(t => t.CreatedAt)
             .Take(10)
             .ToListAsync();
-            
+
         var activities = recentTasks.Select(t => new RecentActivityDto
         {
             Id = t.Id,
             Type = "Task",
             Title = t.Title,
-            Date = t.CreationTime,
+            Date = t.CreatedAt,
             Status = t.ProgressStatus.ToString()
         }).ToList();
-        
+
         return Ok(activities);
     }
 
@@ -104,17 +106,17 @@ public class DashboardController : ControllerBase
     public async Task<ActionResult<List<UpcomingTaskDto>>> GetUpcomingTasks()
     {
         var userId = GetCurrentUserId();
-        
+
         // Get upcoming tasks (due in the next 7 days)
         var upcomingTasks = await _taskRepository.GetQueryable()
-            .Where(t => (t.OwnerUserId == userId || t.Assignees.Any(a => a.Id == userId)) &&
+            .Where(t => ( t.OwnerUserId == userId || t.Assignees.Any(a => a.Id == userId) ) &&
                         t.DueDate.HasValue &&
                         t.DueDate.Value >= DateTime.UtcNow &&
                         t.DueDate.Value <= DateTime.UtcNow.AddDays(7) &&
                         t.ProgressStatus != TaskItemStatus.Completed)
             .OrderBy(t => t.DueDate)
             .ToListAsync();
-            
+
         var upcomingTaskDtos = upcomingTasks.Select(t => new UpcomingTaskDto
         {
             Id = t.Id,
@@ -123,16 +125,16 @@ public class DashboardController : ControllerBase
             Priority = t.Priority.ToString(),
             Status = t.ProgressStatus.ToString()
         }).ToList();
-        
+
         return Ok(upcomingTaskDtos);
     }
-    
+
     private long GetCurrentUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         if (userIdClaim == null)
             throw new UnauthorizedAccessException("User ID not found in token");
-            
+
         return long.Parse(userIdClaim.Value);
     }
 }

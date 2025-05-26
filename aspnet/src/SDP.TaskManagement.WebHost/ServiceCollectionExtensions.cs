@@ -44,8 +44,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRepository<Label>, Repository<Label>>();
         services.AddScoped<IRepository<Comment>, Repository<Comment>>();
         services.AddScoped<IRepository<Attachment>, Repository<Attachment>>();
-        services.AddScoped<IRepository<Checklist>, Repository<Checklist>>();
-        services.AddScoped<IRepository<ChecklistItem>, Repository<ChecklistItem>>();
         services.AddScoped<IRepository<BoardMember>, Repository<BoardMember>>();
         services.AddScoped<IRepository<Notification>, Repository<Notification>>();
         services.AddScoped<IRepository<Message>, Repository<Message>>();
@@ -57,11 +55,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFileSystemService, FileSystemService>();
-        
-        // Register domain services using the Abstractions namespace interfaces
-        services.AddScoped<BoardService>();
-        services.AddScoped<INotificationService, NotificationService>();
-        services.AddScoped<TaskService>();
         
         // Register configuration options
         services.Configure<FileStorageOptions>(
