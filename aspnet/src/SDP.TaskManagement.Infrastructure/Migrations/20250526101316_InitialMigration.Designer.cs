@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250513232107_InitialMigration")]
+    [Migration("20250526101316_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -129,80 +129,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.HasIndex("InviterId");
 
                     b.ToTable("BoardMember");
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CreatedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("TaskItemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("TaskItemId");
-
-                    b.ToTable("Checklists", (string)null);
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.ChecklistItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("ChecklistId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CompletedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CompletedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsChecked")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChecklistId");
-
-                    b.HasIndex("CompletedById");
-
-                    b.ToTable("ChecklistItems", (string)null);
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Comment", b =>
@@ -410,17 +336,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("LastModifiedTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("ListId")
@@ -581,40 +501,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.TaskItem", "TaskItem")
-                        .WithMany("Checklists")
-                        .HasForeignKey("TaskItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("TaskItem");
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.ChecklistItem", b =>
-                {
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.Checklist", "Checklist")
-                        .WithMany("Items")
-                        .HasForeignKey("ChecklistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "CompletedBy")
-                        .WithMany()
-                        .HasForeignKey("CompletedById");
-
-                    b.Navigation("Checklist");
-
-                    b.Navigation("CompletedBy");
-                });
-
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Comment", b =>
                 {
                     b.HasOne("SDP.TaskManagement.Domain.Entities.TaskItem", "TaskItem")
@@ -750,11 +636,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Label", b =>
                 {
                     b.Navigation("TaskItems");
@@ -770,8 +651,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("Assignees");
 
                     b.Navigation("Attachments");
-
-                    b.Navigation("Checklists");
 
                     b.Navigation("Comments");
 
