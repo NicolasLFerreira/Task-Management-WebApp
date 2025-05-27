@@ -6,7 +6,7 @@ public class TaskItemDto
 {
     public long Id { get; set; }
 
-    public string Title { get; set; } = string.Empty;
+    public required string Title { get; set; }
 
     public string? Description { get; set; }
 
