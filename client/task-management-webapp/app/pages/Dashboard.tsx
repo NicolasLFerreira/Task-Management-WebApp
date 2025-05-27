@@ -32,8 +32,8 @@ const Dashboard = () => {
         ])
 
         setStats(statsResponse.data || null)
-        setActivities(activitiesResponse.data || [])
-        setUpcomingTasks(upcomingTasksResponse.data || [])
+        setActivities(Array.isArray(activitiesResponse.data) ? activitiesResponse.data : [])
+        setUpcomingTasks(Array.isArray(upcomingTasksResponse.data) ? upcomingTasksResponse.data : [])
       } catch (err) {
         console.error("Error fetching dashboard data:", err)
         setError("Failed to load dashboard data. Please try again later.")
