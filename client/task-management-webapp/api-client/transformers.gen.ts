@@ -18,7 +18,6 @@ import type {
   GetApiMessagesByMessageIdResponse,
   GetApiNotificationsResponse,
   GetApiNotificationsUnreadResponse,
-  GetApiSampleGetUsersResponse,
   GetApiTasksResponse,
   PostApiTasksResponse,
   GetApiTasksByTaskIdResponse,
@@ -226,15 +225,6 @@ export const getApiNotificationsUnreadResponseTransformer = async (
 ): Promise<GetApiNotificationsUnreadResponse> => {
   data = data.map((item: any) => {
     return notificationDtoSchemaResponseTransformer(item);
-  });
-  return data;
-};
-
-export const getApiSampleGetUsersResponseTransformer = async (
-  data: any,
-): Promise<GetApiSampleGetUsersResponse> => {
-  data = data.map((item: any) => {
-    return userDtoSchemaResponseTransformer(item);
   });
   return data;
 };

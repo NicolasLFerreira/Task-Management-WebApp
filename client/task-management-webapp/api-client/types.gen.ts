@@ -953,23 +953,6 @@ export type PostApiNotificationsReadAllResponses = {
   200: unknown;
 };
 
-export type GetApiSampleGetUsersData = {
-  body?: never;
-  path?: never;
-  query?: never;
-  url: "/api/Sample/GetUsers";
-};
-
-export type GetApiSampleGetUsersResponses = {
-  /**
-   * OK
-   */
-  200: Array<UserDtoReadable>;
-};
-
-export type GetApiSampleGetUsersResponse =
-  GetApiSampleGetUsersResponses[keyof GetApiSampleGetUsersResponses];
-
 export type GetApiTasksData = {
   body?: never;
   path?: never;

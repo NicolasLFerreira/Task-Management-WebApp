@@ -74,8 +74,6 @@ import type {
   GetApiNotificationsUnreadResponse,
   PostApiNotificationsByNotificationIdReadData,
   PostApiNotificationsReadAllData,
-  GetApiSampleGetUsersData,
-  GetApiSampleGetUsersResponse,
   GetApiTasksData,
   GetApiTasksResponse,
   PostApiTasksData,
@@ -126,7 +124,6 @@ import {
   getApiMessagesByMessageIdResponseTransformer,
   getApiNotificationsResponseTransformer,
   getApiNotificationsUnreadResponseTransformer,
-  getApiSampleGetUsersResponseTransformer,
   getApiTasksResponseTransformer,
   postApiTasksResponseTransformer,
   getApiTasksByTaskIdResponseTransformer,
@@ -1093,29 +1090,6 @@ export class NotificationService {
         },
       ],
       url: "/api/notifications/read-all",
-      ...options,
-    });
-  }
-}
-
-export class SampleService {
-  public static getApiSampleGetUsers<ThrowOnError extends boolean = false>(
-    options?: Options<GetApiSampleGetUsersData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).get<
-      GetApiSampleGetUsersResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: getApiSampleGetUsersResponseTransformer,
-      url: "/api/Sample/GetUsers",
       ...options,
     });
   }
