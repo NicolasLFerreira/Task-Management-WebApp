@@ -1,10 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { Bell, Search, User, Menu, X } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { useTheme } from "./ThemeProvider"
+import { UserService } from "../../api-client"
+import type { UserDtoReadable } from "../../api-client/types.gen"
 
 type HeaderProps = {
   toggleSidebarMobile?: () => void
@@ -12,16 +16,35 @@ type HeaderProps = {
 }
 
 const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
-  const { logout, user } = useAuth()
+  const { logout, user, isAuthenticated } = useAuth()
   const { darkMode, toggleDarkMode } = useTheme()
   const navigate = useNavigate()
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
   const [notifications] = useState([
     { id: 1, text: "New task assigned to you", time: "5 min ago" },
     { id: 2, text: "Comment on 'Project Plan'", time: "1 hour ago" },
     { id: 3, text: "Due date approaching for 'Submit Report'", time: "3 hours ago" },
   ])
+  const [userProfile, setUserProfile] = useState<UserDtoReadable | null>(null)
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (isAuthenticated) {
+        try {
+          const response = await UserService.getApiUsersProfile()
+          if (response.data) {
+            setUserProfile(response.data)
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error)
+        }
+      }
+    }
+
+    fetchUserProfile()
+  }, [isAuthenticated, user])
 
   const handleLogout = () => {
     logout()
@@ -30,6 +53,24 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
   const navigateTo = (path: string) => {
     navigate(path)
     setShowUserMenu(false)
+  }
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const term = searchTerm.trim()
+      if (term) {
+        navigate(`/search?q=${encodeURIComponent(term)}`)
+        setSearchTerm("")
+      }
+    }
+  }
+
+  // Get display name from user profile or auth context
+  const getDisplayName = () => {
+    if (userProfile) {
+      return userProfile.fullName || userProfile.username || "User"
+    }
+    return user?.username || "User"
   }
 
   return (
@@ -147,6 +188,9 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
               placeholder="Quick search..."
               className="bg-teal-700 text-white placeholder-teal-200 rounded-full py-1 px-4 pl-9 text-sm focus:outline-none focus:ring-2 focus:ring-white"
               aria-label="Quick search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearch}
             />
             <Search
               size={16}
@@ -177,22 +221,20 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
               aria-labelledby="user-menu"
             >
               <div className="py-1">
-                <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">
-                  {user?.username || "User"}
-                </div>
+                <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-100">{getDisplayName()}</div>
                 <button
-                  onClick={() => navigateTo("/profile")}
+                  onClick={() => navigateTo("/dashboard")}
                   className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                   role="menuitem"
                 >
-                  Profile
+                  Dashboard
                 </button>
                 <button
                   onClick={() => navigateTo("/settings")}
                   className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                   role="menuitem"
                 >
-                  Settings
+                  Profile
                 </button>
                 <button
                   onClick={handleLogout}
