@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useNavigate, useLocation } from "react-router"
 import {
   LayoutDashboard,
   Kanban,
@@ -37,11 +38,8 @@ const Sidebar = ({
 }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(initialCollapsed || false)
   const [isMobile, setIsMobile] = useState(false)
-  const [currentPage, setCurrentPage] = useState(() => {
-    // Get the current page from localStorage or default to dashboard
-    const savedPage = localStorage.getItem("currentPage")
-    return savedPage || "dashboard"
-  })
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -65,15 +63,11 @@ const Sidebar = ({
     onCollapsedChange(newCollapsedState)
   }
 
-  const navigateTo = (page: string) => {
-    setCurrentPage(page)
-    localStorage.setItem("currentPage", page)
-
-    // Use window.history to update the URL without a page reload
-    window.history.pushState({}, "", `/${page}`)
-
-    // Dispatch a custom event that the App component can listen for
-    window.dispatchEvent(new CustomEvent("navigationChange", { detail: { page } }))
+  const navigateTo = (path: string) => {
+    navigate(path)
+    if (isMobile && onMobileClose) {
+      onMobileClose()
+    }
   }
 
   return (
@@ -97,68 +91,68 @@ const Sidebar = ({
         {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
       </button>
 
-      <nav className="py-4">
+      <nav className="py-4" aria-label="Main navigation">
         <ul className="space-y-2 px-2">
           <NavItem
-            page="dashboard"
-            currentPage={currentPage}
-            onClick={() => navigateTo("dashboard")}
+            path="/dashboard"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/dashboard")}
             icon={<LayoutDashboard size={20} />}
             label="Dashboard"
             collapsed={collapsed}
           />
           <NavItem
-            page="boards"
-            currentPage={currentPage}
-            onClick={() => navigateTo("boards")}
+            path="/boards"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/boards")}
             icon={<Kanban size={20} />}
             label="Boards"
             collapsed={collapsed}
           />
           <NavItem
-            page="tasks"
-            currentPage={currentPage}
-            onClick={() => navigateTo("tasks")}
+            path="/tasks"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/tasks")}
             icon={<CheckSquare size={20} />}
             label="My Tasks"
             collapsed={collapsed}
           />
           <NavItem
-            page="notifications"
-            currentPage={currentPage}
-            onClick={() => navigateTo("notifications")}
+            path="/notifications"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/notifications")}
             icon={<Bell size={20} />}
             label="Notifications"
             collapsed={collapsed}
           />
           <NavItem
-            page="search"
-            currentPage={currentPage}
-            onClick={() => navigateTo("search")}
+            path="/search"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/search")}
             icon={<Search size={20} />}
             label="Search"
             collapsed={collapsed}
           />
           <NavItem
-            page="chat"
-            currentPage={currentPage}
-            onClick={() => navigateTo("chat")}
+            path="/chat"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/chat")}
             icon={<MessageSquare size={20} />}
             label="Chat"
             collapsed={collapsed}
           />
           <NavItem
-            page="team"
-            currentPage={currentPage}
-            onClick={() => navigateTo("team")}
+            path="/team"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/team")}
             icon={<Users size={20} />}
             label="Team"
             collapsed={collapsed}
           />
           <NavItem
-            page="settings"
-            currentPage={currentPage}
-            onClick={() => navigateTo("settings")}
+            path="/settings"
+            currentPath={location.pathname}
+            onClick={() => navigateTo("/settings")}
             icon={<Settings size={20} />}
             label="Settings"
             collapsed={collapsed}
@@ -183,16 +177,16 @@ const Sidebar = ({
 }
 
 type NavItemProps = {
-  page: string
-  currentPage: string
+  path: string
+  currentPath: string
   onClick: () => void
   icon: React.ReactNode
   label: string
   collapsed: boolean
 }
 
-const NavItem = ({ page, currentPage, onClick, icon, label, collapsed }: NavItemProps) => {
-  const isActive = currentPage === page
+const NavItem = ({ path, currentPath, onClick, icon, label, collapsed }: NavItemProps) => {
+  const isActive = currentPath === path
 
   return (
     <li>
@@ -205,8 +199,11 @@ const NavItem = ({ page, currentPage, onClick, icon, label, collapsed }: NavItem
             ? "bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-200"
             : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
         }`}
+        aria-current={isActive ? "page" : undefined}
       >
-        <span className="flex-shrink-0">{icon}</span>
+        <span className="flex-shrink-0" aria-hidden="true">
+          {icon}
+        </span>
         {!collapsed && <span className="ml-3">{label}</span>}
       </button>
     </li>

@@ -1,65 +1,73 @@
-import type React from "react"
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
+"use client"
 
+import { Outlet, useLocation } from "react-router-dom"
+import { useState, useEffect } from "react"
+import Header from "./components/Header"
+import Sidebar from "./components/Sidebar"
+import { AuthProvider } from "./contexts/AuthContext"
+import { ThemeProvider } from "./components/ThemeProvider"
+import { HelmetProvider } from "react-helmet-async"
 import "./app.css"
 
-export const links = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-]
+export default function Root() {
+  const [darkMode, setDarkMode] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileSidebarVisible, setMobileSidebarVisible] = useState(false)
+  const location = useLocation()
 
-export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  )
-}
+  // Check if current route is auth page
+  const isAuthPage = location.pathname === "/auth"
 
-export default function App() {
-  return <Outlet />
-}
+  // Initialize dark mode from localStorage or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme")
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
+    setDarkMode(savedTheme === "dark" || (!savedTheme && prefersDark))
+  }, [])
 
-export function ErrorBoundary({ error }: { error: Error | { status: number; statusText: string } }) {
-  let message = "Something went wrong!"
-  let details = "We encountered an unexpected error. Please try again later."
-  let stack: string | undefined
+  // Update theme when darkMode changes
+  useEffect(() => {
+    localStorage.setItem("theme", darkMode ? "dark" : "light")
+    document.documentElement.classList.toggle("dark", darkMode)
+  }, [darkMode])
 
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error"
-    details = error.status === 404 ? "The requested page could not be found." : error.statusText || details
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message
-    stack = error.stack
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => !prev)
+  }
+
+  const toggleMobileSidebar = () => {
+    setMobileSidebarVisible((prev) => !prev)
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <HelmetProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+            {/* Only render Header and Sidebar if not on auth page */}
+            {!isAuthPage && (
+              <>
+                <Header toggleSidebarMobile={toggleMobileSidebar} sidebarVisible={mobileSidebarVisible} />
+                <Sidebar
+                  darkMode={darkMode}
+                  toggleDarkMode={toggleDarkMode}
+                  onCollapsedChange={setSidebarCollapsed}
+                  mobileVisible={mobileSidebarVisible}
+                  onMobileClose={() => setMobileSidebarVisible(false)}
+                />
+              </>
+            )}
+
+            <main
+              className={`${!isAuthPage ? "pt-16" : ""} transition-all duration-300 ${!isAuthPage && (sidebarCollapsed ? "md:ml-16" : "md:ml-64")}`}
+            >
+              <div className={`${isAuthPage ? "h-screen" : "container mx-auto px-4 py-8"}`}>
+                <Outlet />
+              </div>
+            </main>
+          </div>
+        </ThemeProvider>
+      </AuthProvider>
+    </HelmetProvider>
   )
 }
