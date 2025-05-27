@@ -109,9 +109,6 @@ public class ListController : ControllerBase
         if (!result)
             return BadRequest("Failed to create list");
 
-        listDto.Id = list.Id;
-        listDto.Position = list.Position;
-
         return Ok();
     }
 
@@ -235,8 +232,6 @@ public sealed class ReorderListsDto
 
 public sealed class ListCreationDto
 {
-    public long Id { get; set; }
-
     public required string Title { get; set; }
 
     public int Position { get; set; }

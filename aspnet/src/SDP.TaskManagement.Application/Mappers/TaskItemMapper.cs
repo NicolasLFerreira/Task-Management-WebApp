@@ -15,8 +15,6 @@ public static class TaskItemMapper
             DueDate = entity.DueDate,
             Priority = entity.Priority,
             ProgressStatus = entity.ProgressStatus,
-            OwnerUserId = entity.OwnerUserId,
-            ListId = entity.ListId,
             Position = entity.Position,
             CreatedAt = entity.CreatedAt,
         };

@@ -97,7 +97,7 @@ public class TaskItemController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TaskItemDto>> CreateTask([FromBody] TaskItemDto taskDto)
+    public async Task<ActionResult<TaskItemDto>> CreateTask([FromBody] TaskItemCreationDto taskDto)
     {
         var userId = GetCurrentUserId();
 
@@ -134,12 +134,7 @@ public class TaskItemController : ControllerBase
         if (!result)
             return BadRequest("Failed to create task");
 
-        taskDto.Id = task.Id;
-        taskDto.CreatedAt = task.CreatedAt;
-        taskDto.OwnerUserId = userId;
-        taskDto.Position = task.Position;
-
-        return CreatedAtAction(nameof(GetTask), new { taskId = task.Id }, taskDto);
+        return Ok();
     }
 
     [HttpPut("{taskId}")]
@@ -390,4 +385,19 @@ public class ReorderTasksDto
 {
     public long ListId { get; set; }
     public List<long> TaskIds { get; set; } = [];
+}
+
+public class TaskItemCreationDto
+{
+    public required string Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public DateTime? DueDate { get; set; }
+
+    public TaskItemPriority Priority { get; set; }
+
+    public TaskItemStatus ProgressStatus { get; set; }
+
+    public long ListId { get; set; }
 }

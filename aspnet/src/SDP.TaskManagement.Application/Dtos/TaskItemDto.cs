@@ -16,10 +16,6 @@ public class TaskItemDto
 
     public TaskItemStatus ProgressStatus { get; set; }
 
-    public long ListId { get; set; }
-
-    public long OwnerUserId { get; set; }
-
     public int Position { get; set; }
 
     public DateTime CreatedAt { get; set; }
