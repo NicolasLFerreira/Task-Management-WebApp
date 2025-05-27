@@ -1,5 +1,7 @@
 using SDP.TaskManagement.Domain.Base;
 
+using System.Linq.Expressions;
+
 namespace SDP.TaskManagement.Application.Abstractions;
 
 /// <summary>
@@ -30,6 +32,10 @@ public interface IRepository<TEntity> where TEntity : Entity
     /// Gets a single entity by its <see cref="Entity.Id"/>.
     /// </summary>
     Task<TEntity?> GetByIdAsync(long id);
+    /// <summary>
+    /// Gets a single entity by its Id with injected expressions for navigation inclusion.
+    /// </summary>
+    Task<TEntity?> GetByIdAsyncWithNavigation(long id, params Expression<Func<TEntity, object>>[] expressions);
     /// <summary>
     /// Retrieves a queryable of the whole database table for the respective <see cref="Entity"/>
     /// </summary>
