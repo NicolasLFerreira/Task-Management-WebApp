@@ -30,7 +30,7 @@ public class TaskItem : AuditedEntity
 
     // Collections
 
-    public List<TaskAssignee>? Assignees { get; set; }
+    public List<TaskAssignee> Assignees { get; set; } = [];
 
     public List<TaskItemLabel>? Labels { get; set; }
 
