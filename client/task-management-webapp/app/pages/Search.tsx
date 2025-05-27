@@ -39,9 +39,9 @@ const Search = () => {
         path: { titlePattern: term.trim() },
       })
 
-      setTasks(Array.isArray(response.data) ? response.data : [])
+      setTasks(response.data ? response.data : [])
 
-      if (Array.isArray(response.data) && response.data.length === 0) {
+      if (response.data && response.data.length === 0) {
         setNoResultMessage("No tasks found matching your search")
       } else {
         setNoResultMessage("")
@@ -63,7 +63,7 @@ const Search = () => {
     try {
       const response = await TaskItemService.getApiTasks()
 
-      setTasks(Array.isArray(response.data) ? response.data : [])
+      setTasks(response.data ? response.data : [])
     } catch (err) {
       console.error("Search error:", err)
       setNoResultMessage("An error occurred while fetching tasks. Please try again.")
