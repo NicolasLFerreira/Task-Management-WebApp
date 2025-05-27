@@ -48,7 +48,7 @@ public class BoardController : ControllerBase
             Id = b.Id,
             Title = b.Title,
             Description = b.Description,
-            CreationDate = b.CreationDate,
+            CreatedAt = b.CreationDate,
             OwnerId = b.OwnerId
         }).ToList();
         
@@ -75,12 +75,14 @@ public class BoardController : ControllerBase
                 return Forbid("You don't have access to this board");
         }
         
-        var boardDto = new BoardDto
+        var boardDto = 
+            
+            new BoardDto
         {
             Id = board.Id,
             Title = board.Title,
             Description = board.Description,
-            CreationDate = board.CreationDate,
+            CreatedAt = board.CreationDate,
             OwnerId = board.OwnerId
         };
         
@@ -96,7 +98,7 @@ public class BoardController : ControllerBase
         {
             Title = boardDto.Title,
             Description = boardDto.Description,
-            CreationDate = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
             OwnerId = userId
         };
         
@@ -106,7 +108,7 @@ public class BoardController : ControllerBase
             return BadRequest("Failed to create board");
             
         boardDto.Id = board.Id;
-        boardDto.CreationDate = board.CreationDate;
+        boardDto.CreatedAt = board.CreationDate;
         boardDto.OwnerId = userId;
         
         return CreatedAtAction(nameof(GetBoard), new { boardId = board.Id }, boardDto);

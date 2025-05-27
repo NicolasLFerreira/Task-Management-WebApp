@@ -100,7 +100,7 @@ public class AttachmentController : ControllerBase
                 FileType = Path.GetExtension(file.FileName),
                 UploadTime = DateTime.UtcNow,
                 TaskItemId = taskId,
-                UploadedById = userId
+                UploadUserId = userId
             };
             
             // Save to database
@@ -165,7 +165,7 @@ public class AttachmentController : ControllerBase
             return Forbid();
             
         // Only the uploader or task owner can delete attachments
-        if (attachment.UploadedById != userId && task.OwnerUserId != userId)
+        if (attachment.UploadUserId != userId && task.OwnerUserId != userId)
             return Forbid();
             
         // Delete file

@@ -16,7 +16,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
                 .IsRequired()
                 .HasMaxLength(2000);
 
-            builder.Property(m => m.CreationDate)
+            builder.Property(m => m.SentDate)
                 .IsRequired();
 
             builder.Property(m => m.IsRead)

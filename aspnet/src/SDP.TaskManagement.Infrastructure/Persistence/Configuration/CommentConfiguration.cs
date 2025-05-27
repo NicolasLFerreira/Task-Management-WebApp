@@ -16,7 +16,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
                 .IsRequired()
                 .HasMaxLength(1000);
 
-            builder.Property(c => c.CreationDate)
+            builder.Property(c => c.PostedAt)
                 .IsRequired();
 
             builder.HasOne(c => c.TaskItem)

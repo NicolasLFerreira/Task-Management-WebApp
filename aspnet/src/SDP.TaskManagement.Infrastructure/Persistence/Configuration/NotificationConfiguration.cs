@@ -24,7 +24,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
                 .IsRequired()
                 .HasDefaultValue(false);
 
-            builder.Property(n => n.CreationDate)
+            builder.Property(n => n.CreatedAt)
                 .IsRequired();
 
             builder.HasOne(n => n.User)

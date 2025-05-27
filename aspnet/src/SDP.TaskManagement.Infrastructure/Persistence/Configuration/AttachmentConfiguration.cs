@@ -34,9 +34,9 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
                 .HasForeignKey(a => a.TaskItemId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(a => a.UploadedBy)
+            builder.HasOne(a => a.UploadUser)
                 .WithMany()
-                .HasForeignKey(a => a.UploadedById)
+                .HasForeignKey(a => a.UploadUserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
