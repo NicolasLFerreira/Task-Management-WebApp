@@ -33,11 +33,14 @@ const Dashboard = () => {
         ])
 
         setStats(statsResponse.data || null)
-        setActivities(activitiesResponse.data || [])
-        setUpcomingTasks(upcomingTasksResponse.data || [])
+        setActivities(Array.isArray(activitiesResponse.data) ? activitiesResponse.data : [])
+        setUpcomingTasks(Array.isArray(upcomingTasksResponse.data) ? upcomingTasksResponse.data : [])
       } catch (err) {
         console.error("Error fetching dashboard data:", err)
         setError("Failed to load dashboard data. Please try again later.")
+        // Set default values in case of error
+        setActivities([])
+        setUpcomingTasks([])
       } finally {
         setIsLoading(false)
       }
@@ -134,7 +137,7 @@ const Dashboard = () => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
             <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activity</h2>
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {activities.length > 0 ? (
+              {activities && activities.length > 0 ? (
                 activities.map((activity) => <ActivityItem key={activity.id} activity={activity} />)
               ) : (
                 <p className="text-gray-500 dark:text-gray-400 py-4 text-center">No recent activity</p>
