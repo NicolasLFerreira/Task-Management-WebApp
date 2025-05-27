@@ -32,7 +32,7 @@ public class MessageController : ControllerBase
         var messages = await _messageRepository.GetQueryable()
             .Where(m => m.SenderId == userId || m.RecipientId == userId)
             .Include(m => m.Sender)
-            .OrderByDescending(m => m.CreationDate)
+            .OrderByDescending(m => m.SentDate)
             .ToListAsync();
             
         var messageDtos = new List<MessageDto>();
@@ -50,7 +50,7 @@ public class MessageController : ControllerBase
                 RecipientId = m.RecipientId,
                 RecipientName = recipient != null ? $"{recipient.FirstName} {recipient.LastName}" : "Unknown",
                 Content = m.Content,
-                CreationDate = m.CreationDate,
+                CreationDate = m.SentDate,
                 IsRead = m.IsRead
             });
         }
@@ -72,7 +72,7 @@ public class MessageController : ControllerBase
             .Where(m => (m.SenderId == currentUserId && m.RecipientId == userId) ||
                         (m.SenderId == userId && m.RecipientId == currentUserId))
             .Include(m => m.Sender)
-            .OrderBy(m => m.CreationDate)
+            .OrderBy(m => m.SentDate)
             .ToListAsync();
             
         var messageDtos = new List<MessageDto>();
@@ -90,7 +90,7 @@ public class MessageController : ControllerBase
                 RecipientId = m.RecipientId,
                 RecipientName = recipient != null ? $"{recipient.FirstName} {recipient.LastName}" : "Unknown",
                 Content = m.Content,
-                CreationDate = m.CreationDate,
+                CreationDate = m.SentDate,
                 IsRead = m.IsRead
             });
         }
@@ -121,7 +121,7 @@ public class MessageController : ControllerBase
             SenderId = senderId,
             RecipientId = messageDto.RecipientId,
             Content = messageDto.Content,
-            CreationDate = DateTime.UtcNow,
+            SentDate = DateTime.UtcNow,
             IsRead = false
         };
         
@@ -136,7 +136,7 @@ public class MessageController : ControllerBase
         messageDto.SenderId = senderId;
         messageDto.SenderName = sender != null ? $"{sender.FirstName} {sender.LastName}" : "Unknown";
         messageDto.RecipientName = $"{receiver.FirstName} {receiver.LastName}";
-        messageDto.CreationDate = message.CreationDate;
+        messageDto.CreationDate = message.SentDate;
         messageDto.IsRead = message.IsRead;
         
         return CreatedAtAction(nameof(GetMessage), new { messageId = message.Id }, messageDto);
@@ -169,7 +169,7 @@ public class MessageController : ControllerBase
             RecipientId = message.RecipientId,
             RecipientName = recipient != null ? $"{recipient.FirstName} {recipient.LastName}" : "Unknown",
             Content = message.Content,
-            CreationDate = message.CreationDate,
+            CreationDate = message.SentDate,
             IsRead = message.IsRead
         };
         

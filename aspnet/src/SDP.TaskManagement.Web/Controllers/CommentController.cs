@@ -53,7 +53,7 @@ public class CommentController : ControllerBase
         var comments = await _commentRepository.GetQueryable()
             .Where(c => c.TaskItemId == taskId)
             .Include(c => c.User)
-            .OrderBy(c => c.CreationDate)
+            .OrderBy(c => c.PostedAt)
             .ToListAsync();
             
         var commentDtos = comments.Select(c => {
@@ -65,7 +65,7 @@ public class CommentController : ControllerBase
                 UserId = c.UserId,
                 UserName = userName,
                 TaskItemId = c.TaskItemId,
-                CreationDate = c.CreationDate
+                CreationDate = c.PostedAt
             };
         }).ToList();
         
@@ -103,7 +103,7 @@ public class CommentController : ControllerBase
             UserId = comment.UserId,
             UserName = userName,
             TaskItemId = comment.TaskItemId,
-            CreationDate = comment.CreationDate
+            CreationDate = comment.PostedAt
         };
         
         return Ok(commentDto);
@@ -128,7 +128,7 @@ public class CommentController : ControllerBase
             Content = commentDto.Content,
             UserId = userId,
             TaskItemId = commentDto.TaskItemId,
-            CreationDate = DateTime.UtcNow
+            PostedAt = DateTime.UtcNow
         };
         
         var result = await _commentRepository.AddAsync(comment);
@@ -142,7 +142,7 @@ public class CommentController : ControllerBase
         commentDto.Id = comment.Id;
         commentDto.UserId = userId;
         commentDto.UserName = userName;
-        commentDto.CreationDate = comment.CreationDate;
+        commentDto.CreationDate = comment.PostedAt;
         
         return CreatedAtAction(nameof(GetComment), new { commentId = comment.Id }, commentDto);
     }

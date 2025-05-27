@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Infrastructure.Persistence;
 

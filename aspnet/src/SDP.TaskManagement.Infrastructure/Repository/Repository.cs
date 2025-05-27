@@ -4,6 +4,8 @@ using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Domain.Base;
 using SDP.TaskManagement.Infrastructure.Persistence;
 
+using System.Linq.Expressions;
+
 namespace SDP.TaskManagement.Infrastructure.Repository;
 
 public class Repository<TEntity> : IRepository<TEntity>
@@ -56,6 +58,19 @@ public class Repository<TEntity> : IRepository<TEntity>
     {
         return await Set
             .FindAsync(id);
+    }
+
+    public async Task<TEntity?> GetByIdAsyncWithNavigation(long id, params Expression<Func<TEntity, object>>[] expressions)
+    {
+        IQueryable<TEntity> query = Set;
+
+        foreach (var expression in expressions)
+        {
+            query.Include(expression);
+        }
+
+        return await query
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public IQueryable<TEntity> GetQueryable()

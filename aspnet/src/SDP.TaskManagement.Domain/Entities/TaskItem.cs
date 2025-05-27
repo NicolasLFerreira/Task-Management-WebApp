@@ -1,9 +1,43 @@
 using SDP.TaskManagement.Domain.Base;
-using System;
-using System.Collections.Generic;
 
 namespace SDP.TaskManagement.Domain.Entities;
 
+public class TaskItem : AuditedEntity
+{
+    public required string Title { get; set; }
+
+    public string? Description { get; set; }
+
+    public TaskItemPriority Priority { get; set; }
+
+    public TaskItemStatus ProgressStatus { get; set; }
+
+    public DateTime? DueDate { get; set; }
+
+    // List related
+
+    public long ListId { get; set; }
+
+    public List? List { get; set; }
+
+    public int Position { get; set; }
+
+    // Relationships
+
+    public long OwnerUserId { get; set; }
+
+    public User? OwnerUser { get; set; }
+
+    // Collections
+
+    public List<TaskAssignee>? Assignees { get; set; }
+
+    public List<TaskItemLabel>? Labels { get; set; }
+
+    public List<Comment>? Comments { get; set; }
+
+    public List<Attachment>? Attachments { get; set; }
+}
 
 public enum TaskItemPriority
 {
@@ -20,38 +54,4 @@ public enum TaskItemStatus
     InReview = 2,
     Completed = 3,
     Archived = 4
-}
-
-public class TaskItem : Entity
-{
-    public required string Title { get; set; }
-
-    public string? Description { get; set; }
-
-    public DateTime? DueDate { get; set; }
-
-    public DateTime CreationTime { get; set; }
-
-    public TaskItemPriority Priority { get; set; }
-
-    public TaskItemStatus ProgressStatus { get; set; }
-
-    // New properties for the board/list structure
-    public long ListId { get; set; }
-    public int Position { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
-    public DateTime? LastModifiedTime { get; set; }
-
-    // Relationships
-    public List? List { get; set; }
-    public User? OwnerUser { get; set; }
-    public long OwnerUserId { get; set; }
-    
-    // Collections
-    public ICollection<TaskAssignee> Assignees { get; set; } = new List<TaskAssignee>();
-    public ICollection<TaskItemLabel> Labels { get; set; } = new List<TaskItemLabel>();
-    public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
-    public ICollection<Attachment>? Attachments { get; set; } = new List<Attachment>();
-    public ICollection<Checklist>? Checklists { get; set; } = new List<Checklist>();
 }

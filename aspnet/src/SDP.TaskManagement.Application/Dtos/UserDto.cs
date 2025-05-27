@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace SDP.TaskManagement.Application.Dtos;
 
 public class UserDto

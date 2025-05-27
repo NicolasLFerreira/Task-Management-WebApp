@@ -11,12 +11,13 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Messages");
 
             builder.HasKey(m => m.Id);
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
             builder.Property(m => m.Content)
                 .IsRequired()
                 .HasMaxLength(2000);
 
-            builder.Property(m => m.CreationDate)
+            builder.Property(m => m.SentDate)
                 .IsRequired();
 
             builder.Property(m => m.IsRead)

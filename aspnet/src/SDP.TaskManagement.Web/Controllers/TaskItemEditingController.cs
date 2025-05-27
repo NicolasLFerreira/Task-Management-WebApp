@@ -25,7 +25,6 @@ public class TaskItemEditingController : ControllerBase
             return NotFound("Id does not exist.");
         }
 
-
         if (input.Priority != null)
             entity.Priority = input.Priority.Value;
 

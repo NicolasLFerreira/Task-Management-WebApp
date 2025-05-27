@@ -38,7 +38,7 @@ public class UserController : ControllerBase
             FirstName = user.FirstName,
             LastName = user.LastName,
             ProfilePhotoPath = user.ProfilePhotoPath,
-            CreationDate = user.CreationDate
+            CreationDate = user.JoinDate
         };
         
         return Ok(userDto);
@@ -126,7 +126,7 @@ public class UserController : ControllerBase
             FirstName = u.FirstName,
             LastName = u.LastName,
             ProfilePhotoPath = u.ProfilePhotoPath,
-            CreationDate = u.CreationDate
+            CreationDate = u.JoinDate
         }).ToList();
         
         return Ok(userDtos);

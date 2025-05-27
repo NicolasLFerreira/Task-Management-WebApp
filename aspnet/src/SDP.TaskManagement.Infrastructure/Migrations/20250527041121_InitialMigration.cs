@@ -24,7 +24,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     ProfilePhotoPath = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     LastLogin = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
@@ -40,9 +40,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     OwnerId = table.Column<long>(type: "bigint", nullable: false),
-                    LastModifiedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,12 +61,12 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    SenderId = table.Column<long>(type: "bigint", nullable: false),
-                    RecipientId = table.Column<long>(type: "bigint", nullable: false),
                     Content = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsRead = table.Column<bool>(type: "boolean", nullable: false),
-                    ReadDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    SentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReadDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    SenderId = table.Column<long>(type: "bigint", nullable: false),
+                    RecipientId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -93,14 +93,14 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Content = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
                     IsRead = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EntityType = table.Column<string>(type: "text", nullable: true),
                     EntityId = table.Column<long>(type: "bigint", nullable: true),
                     ActionLink = table.Column<string>(type: "text", nullable: true),
                     RelatedEntityType = table.Column<string>(type: "text", nullable: true),
-                    RelatedEntityId = table.Column<Guid>(type: "uuid", nullable: true)
+                    RelatedEntityId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,8 +174,8 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    BoardId = table.Column<long>(type: "bigint", nullable: false),
-                    Position = table.Column<int>(type: "integer", nullable: false)
+                    Position = table.Column<int>(type: "integer", nullable: false),
+                    BoardId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -196,16 +196,14 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "character varying(2000)", maxLength: 2000, nullable: true),
-                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CreationTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Priority = table.Column<int>(type: "integer", nullable: false),
                     ProgressStatus = table.Column<int>(type: "integer", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ListId = table.Column<long>(type: "bigint", nullable: false),
                     Position = table.Column<int>(type: "integer", nullable: false),
+                    OwnerUserId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    LastModifiedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    OwnerUserId = table.Column<long>(type: "bigint", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,11 +230,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FileName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     FilePath = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    FileSize = table.Column<long>(type: "bigint", nullable: false),
                     FileType = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    UploadTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FileSize = table.Column<long>(type: "bigint", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     TaskItemId = table.Column<long>(type: "bigint", nullable: false),
-                    UploadedById = table.Column<long>(type: "bigint", nullable: false)
+                    UploadUserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -248,39 +246,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Attachments_Users_UploadedById",
-                        column: x => x.UploadedById,
+                        name: "FK_Attachments_Users_UploadUserId",
+                        column: x => x.UploadUserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Checklists",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    TaskItemId = table.Column<long>(type: "bigint", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CreatedByUserId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Checklists", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Checklists_TaskItems_TaskItemId",
-                        column: x => x.TaskItemId,
-                        principalTable: "TaskItems",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Checklists_Users_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -290,9 +260,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Content = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    PostedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
-                    TaskItemId = table.Column<long>(type: "bigint", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    TaskItemId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -317,8 +287,8 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TaskItemId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    TaskItemId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -362,45 +332,15 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ChecklistItems",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Content = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    IsChecked = table.Column<bool>(type: "boolean", nullable: false),
-                    ChecklistId = table.Column<long>(type: "bigint", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CompletionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CompletedByUserId = table.Column<long>(type: "bigint", nullable: true),
-                    CompletedById = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChecklistItems", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChecklistItems_Checklists_ChecklistId",
-                        column: x => x.ChecklistId,
-                        principalTable: "Checklists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ChecklistItems_Users_CompletedById",
-                        column: x => x.CompletedById,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Attachments_TaskItemId",
                 table: "Attachments",
                 column: "TaskItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attachments_UploadedById",
+                name: "IX_Attachments_UploadUserId",
                 table: "Attachments",
-                column: "UploadedById");
+                column: "UploadUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BoardMember_BoardId",
@@ -416,26 +356,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 name: "IX_Boards_OwnerId",
                 table: "Boards",
                 column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChecklistItems_ChecklistId",
-                table: "ChecklistItems",
-                column: "ChecklistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChecklistItems_CompletedById",
-                table: "ChecklistItems",
-                column: "CompletedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Checklists_CreatedById",
-                table: "Checklists",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Checklists_TaskItemId",
-                table: "Checklists",
-                column: "TaskItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_TaskItemId",
@@ -520,9 +440,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                 name: "BoardMember");
 
             migrationBuilder.DropTable(
-                name: "ChecklistItems");
-
-            migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
@@ -536,9 +453,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "TaskItemLabels");
-
-            migrationBuilder.DropTable(
-                name: "Checklists");
 
             migrationBuilder.DropTable(
                 name: "Labels");

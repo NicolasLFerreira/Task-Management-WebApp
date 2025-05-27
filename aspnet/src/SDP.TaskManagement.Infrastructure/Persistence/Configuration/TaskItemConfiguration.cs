@@ -11,6 +11,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("TaskItems");
 
             builder.HasKey(t => t.Id);
+            builder.Property(t => t.Id).ValueGeneratedOnAdd();
 
             builder.Property(t => t.Title)
                 .IsRequired()
@@ -37,8 +38,6 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
                 .WithMany(l => l.TaskItems)
                 .HasForeignKey(t => t.ListId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            // Remove the explicit many-to-many configuration here since it's already defined in TaskAssigneeConfiguration
 
             // Configure many-to-many relationship with Label through TaskItemLabel
             builder.HasMany<Label>()

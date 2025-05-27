@@ -6,9 +6,10 @@ namespace SDP.TaskManagement.Domain.Entities;
 public class TaskItemLabel : Entity
 {
     public long TaskItemId { get; set; }
+
+    public TaskItem? TaskItem { get; set; }
+
     public long LabelId { get; set; }
 
-    // Navigation properties
-    public required TaskItem TaskItem { get; set; }
-    public required Label Label { get; set; }
+    public Label? Label { get; set; }
 }

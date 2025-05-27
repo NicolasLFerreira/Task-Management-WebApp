@@ -11,12 +11,13 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Comments");
 
             builder.HasKey(c => c.Id);
+            builder.Property(c => c.Id).ValueGeneratedOnAdd();
 
             builder.Property(c => c.Content)
                 .IsRequired()
                 .HasMaxLength(1000);
 
-            builder.Property(c => c.CreationDate)
+            builder.Property(c => c.PostedAt)
                 .IsRequired();
 
             builder.HasOne(c => c.TaskItem)

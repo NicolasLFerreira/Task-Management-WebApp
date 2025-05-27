@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250513232107_InitialMigration")]
+    [Migration("20250527041121_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -54,17 +54,17 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<long>("TaskItemId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("UploadTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UploadedById")
+                    b.Property<long>("UploadUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TaskItemId");
 
-                    b.HasIndex("UploadedById");
+                    b.HasIndex("UploadUserId");
 
                     b.ToTable("Attachments", (string)null);
                 });
@@ -77,15 +77,12 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
@@ -94,6 +91,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -131,80 +131,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.ToTable("BoardMember");
                 });
 
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CreatedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("TaskItemId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("TaskItemId");
-
-                    b.ToTable("Checklists", (string)null);
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.ChecklistItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("ChecklistId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CompletedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("CompletedByUserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsChecked")
-                        .HasColumnType("boolean");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChecklistId");
-
-                    b.HasIndex("CompletedById");
-
-                    b.ToTable("ChecklistItems", (string)null);
-                });
-
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Comment", b =>
                 {
                     b.Property<long>("Id")
@@ -218,7 +144,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("PostedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("TaskItemId")
@@ -303,9 +229,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("boolean");
 
@@ -317,6 +240,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -343,7 +269,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("EntityId")
@@ -410,17 +336,11 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("LastModifiedTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("ListId")
@@ -481,9 +401,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -493,6 +410,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("timestamp with time zone");
@@ -534,15 +454,15 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "UploadedBy")
+                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "UploadUser")
                         .WithMany()
-                        .HasForeignKey("UploadedById")
+                        .HasForeignKey("UploadUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TaskItem");
 
-                    b.Navigation("UploadedBy");
+                    b.Navigation("UploadUser");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Board", b =>
@@ -579,40 +499,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("Inviter");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.TaskItem", "TaskItem")
-                        .WithMany("Checklists")
-                        .HasForeignKey("TaskItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("TaskItem");
-                });
-
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.ChecklistItem", b =>
-                {
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.Checklist", "Checklist")
-                        .WithMany("Items")
-                        .HasForeignKey("ChecklistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "CompletedBy")
-                        .WithMany()
-                        .HasForeignKey("CompletedById");
-
-                    b.Navigation("Checklist");
-
-                    b.Navigation("CompletedBy");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Comment", b =>
@@ -750,11 +636,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Checklist", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Label", b =>
                 {
                     b.Navigation("TaskItems");
@@ -770,8 +651,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Navigation("Assignees");
 
                     b.Navigation("Attachments");
-
-                    b.Navigation("Checklists");
 
                     b.Navigation("Comments");
 

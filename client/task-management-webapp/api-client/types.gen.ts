@@ -7,78 +7,20 @@ export type AttachmentDto = {
   fileSize?: number;
   fileType: string | null;
   uploadTime?: Date;
-  taskItemId?: number;
-  uploadedById?: number;
-  uploadedByUsername: string | null;
-  formattedFileSize: string | null;
+  uploadUsername: string | null;
 };
 
 export type BoardDto = {
   id?: number;
   title: string | null;
   description?: string | null;
-  creationDate?: Date;
-  ownerId?: number;
-  ownerName?: string | null;
-  lists?: Array<ListDto> | null;
-  members?: Array<BoardMemberDto> | null;
+  createdAt?: Date;
+  ownerUsername: string | null;
 };
-
-export type BoardMemberDto = {
-  id?: number;
-  userId?: number;
-  userName?: string | null;
-  userEmail?: string | null;
-  userProfilePhotoPath?: string | null;
-  boardId?: number;
-  boardName?: string | null;
-  role?: BoardMemberRole;
-  joinedDate?: Date;
-  inviterId?: number | null;
-  inviterName?: string | null;
-};
-
-export enum BoardMemberRole {
-  _0 = 0,
-  _1 = 1,
-}
 
 export type ChangePasswordDto = {
   currentPassword: string | null;
   newPassword: string | null;
-};
-
-export type ChecklistDtoReadable = {
-  id?: number;
-  title: string | null;
-  taskItemId?: number;
-  creationDate?: Date;
-  createdByUserId?: number | null;
-  createdByName?: string | null;
-  items?: Array<ChecklistItemDto> | null;
-  readonly completedItemsCount?: number;
-  readonly totalItemsCount?: number;
-};
-
-export type ChecklistDtoWritable = {
-  id?: number;
-  title: string | null;
-  taskItemId?: number;
-  creationDate?: Date;
-  createdByUserId?: number | null;
-  createdByName?: string | null;
-  items?: Array<ChecklistItemDto> | null;
-};
-
-export type ChecklistItemDto = {
-  id?: number;
-  content: string | null;
-  isChecked?: boolean;
-  checklistId?: number;
-  creationDate?: Date;
-  completionDate?: Date | null;
-  completedByUserId?: number | null;
-  completedByName?: string | null;
 };
 
 export type CommentDto = {
@@ -122,12 +64,16 @@ export type LabelDto = {
   boardId?: number;
 };
 
+export type ListCreationDto = {
+  title: string | null;
+  position?: number;
+  boardId?: number;
+};
+
 export type ListDto = {
   id?: number;
   title: string | null;
-  boardId?: number;
   position?: number;
-  taskItems?: Array<TaskItemDto> | null;
 };
 
 export type LoginDto = {
@@ -206,27 +152,24 @@ export type ReorderTasksDto = {
   taskIds?: Array<number> | null;
 };
 
-export type TaskItemDto = {
-  id?: number;
-  title?: string | null;
+export type TaskItemCreationDto = {
+  title: string | null;
   description?: string | null;
   dueDate?: Date | null;
-  creationTime?: Date;
-  lastModifiedTime?: Date | null;
   priority?: TaskItemPriority;
   progressStatus?: TaskItemStatus;
-  ownerUserId?: number;
-  ownerUserName?: string | null;
   listId?: number;
-  listName?: string | null;
+};
+
+export type TaskItemDto = {
+  id?: number;
+  title: string | null;
+  description?: string | null;
+  dueDate?: Date | null;
+  priority?: TaskItemPriority;
+  progressStatus?: TaskItemStatus;
   position?: number;
   createdAt?: Date;
-  updatedAt?: Date;
-  assignees?: Array<UserDto> | null;
-  labels?: Array<LabelDto> | null;
-  comments?: Array<CommentDto> | null;
-  attachments?: Array<AttachmentDto> | null;
-  checklists?: Array<ChecklistDto> | null;
 };
 
 export enum TaskItemPriority {
@@ -433,11 +376,8 @@ export type PostApiBoardsResponses = {
   /**
    * OK
    */
-  200: BoardDto;
+  200: unknown;
 };
-
-export type PostApiBoardsResponse =
-  PostApiBoardsResponses[keyof PostApiBoardsResponses];
 
 export type DeleteApiBoardsByBoardIdData = {
   body?: never;
@@ -484,161 +424,6 @@ export type PutApiBoardsByBoardIdData = {
 };
 
 export type PutApiBoardsByBoardIdResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
-
-export type GetApiChecklistsTaskByTaskIdData = {
-  body?: never;
-  path: {
-    taskId: number;
-  };
-  query?: never;
-  url: "/api/checklists/task/{taskId}";
-};
-
-export type GetApiChecklistsTaskByTaskIdResponses = {
-  /**
-   * OK
-   */
-  200: Array<ChecklistDtoReadable>;
-};
-
-export type GetApiChecklistsTaskByTaskIdResponse =
-  GetApiChecklistsTaskByTaskIdResponses[keyof GetApiChecklistsTaskByTaskIdResponses];
-
-export type DeleteApiChecklistsByChecklistIdData = {
-  body?: never;
-  path: {
-    checklistId: number;
-  };
-  query?: never;
-  url: "/api/checklists/{checklistId}";
-};
-
-export type DeleteApiChecklistsByChecklistIdResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
-
-export type GetApiChecklistsByChecklistIdData = {
-  body?: never;
-  path: {
-    checklistId: number;
-  };
-  query?: never;
-  url: "/api/checklists/{checklistId}";
-};
-
-export type GetApiChecklistsByChecklistIdResponses = {
-  /**
-   * OK
-   */
-  200: ChecklistDtoReadable;
-};
-
-export type GetApiChecklistsByChecklistIdResponse =
-  GetApiChecklistsByChecklistIdResponses[keyof GetApiChecklistsByChecklistIdResponses];
-
-export type PutApiChecklistsByChecklistIdData = {
-  body?: ChecklistDtoWritable;
-  path: {
-    checklistId: number;
-  };
-  query?: never;
-  url: "/api/checklists/{checklistId}";
-};
-
-export type PutApiChecklistsByChecklistIdResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
-
-export type PostApiChecklistsData = {
-  body?: ChecklistDtoWritable;
-  path?: never;
-  query?: never;
-  url: "/api/checklists";
-};
-
-export type PostApiChecklistsResponses = {
-  /**
-   * OK
-   */
-  200: ChecklistDtoReadable;
-};
-
-export type PostApiChecklistsResponse =
-  PostApiChecklistsResponses[keyof PostApiChecklistsResponses];
-
-export type PostApiChecklistsItemsData = {
-  body?: ChecklistItemDto;
-  path?: never;
-  query?: never;
-  url: "/api/checklists/items";
-};
-
-export type PostApiChecklistsItemsResponses = {
-  /**
-   * OK
-   */
-  200: ChecklistItemDto;
-};
-
-export type PostApiChecklistsItemsResponse =
-  PostApiChecklistsItemsResponses[keyof PostApiChecklistsItemsResponses];
-
-export type DeleteApiChecklistsItemsByItemIdData = {
-  body?: never;
-  path: {
-    itemId: number;
-  };
-  query?: never;
-  url: "/api/checklists/items/{itemId}";
-};
-
-export type DeleteApiChecklistsItemsByItemIdResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
-
-export type GetApiChecklistsItemsByItemIdData = {
-  body?: never;
-  path: {
-    itemId: number;
-  };
-  query?: never;
-  url: "/api/checklists/items/{itemId}";
-};
-
-export type GetApiChecklistsItemsByItemIdResponses = {
-  /**
-   * OK
-   */
-  200: ChecklistItemDto;
-};
-
-export type GetApiChecklistsItemsByItemIdResponse =
-  GetApiChecklistsItemsByItemIdResponses[keyof GetApiChecklistsItemsByItemIdResponses];
-
-export type PutApiChecklistsItemsByItemIdData = {
-  body?: ChecklistItemDto;
-  path: {
-    itemId: number;
-  };
-  query?: never;
-  url: "/api/checklists/items/{itemId}";
-};
-
-export type PutApiChecklistsItemsByItemIdResponses = {
   /**
    * OK
    */
@@ -782,20 +567,6 @@ export type GetApiDashboardUpcomingTasksResponses = {
 
 export type GetApiDashboardUpcomingTasksResponse =
   GetApiDashboardUpcomingTasksResponses[keyof GetApiDashboardUpcomingTasksResponses];
-
-export type GetHealthData = {
-  body?: never;
-  path?: never;
-  query?: never;
-  url: "/Health";
-};
-
-export type GetHealthResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
 
 export type GetApiHealthData = {
   body?: never;
@@ -1003,7 +774,7 @@ export type PutApiListsByListIdResponses = {
 };
 
 export type PostApiListsData = {
-  body?: ListDto;
+  body?: ListCreationDto;
   path?: never;
   query?: never;
   url: "/api/lists";
@@ -1013,11 +784,8 @@ export type PostApiListsResponses = {
   /**
    * OK
    */
-  200: ListDto;
+  200: unknown;
 };
-
-export type PostApiListsResponse =
-  PostApiListsResponses[keyof PostApiListsResponses];
 
 export type PostApiListsReorderData = {
   body?: ReorderListsDto;
@@ -1220,7 +988,7 @@ export type GetApiTasksResponse =
   GetApiTasksResponses[keyof GetApiTasksResponses];
 
 export type PostApiTasksData = {
-  body?: TaskItemDto;
+  body?: TaskItemCreationDto;
   path?: never;
   query?: never;
   url: "/api/tasks";
@@ -1529,9 +1297,5 @@ export type PostApiUserProfileProfilePhotoResponses = {
 };
 
 export type ClientOptions = {
-  baseURL: "https://localhost:7200" | (string & {});
+  baseURL: "http://localhost:5200" | (string & {});
 };
-export type ChecklistDto = ChecklistDtoReadable | ChecklistDtoWritable
-
-// If UserDto is not defined, add it
-export type UserDto = UserDtoReadable | UserDtoWritable

@@ -27,7 +27,7 @@ public class NotificationController : ControllerBase
 
         var notifications = await _notificationRepository.GetQueryable()
             .Where(n => n.UserId == userId)
-            .OrderByDescending(n => n.CreationDate)
+            .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
 
         var notificationDtos = notifications.Select(n => new NotificationDto
@@ -37,7 +37,7 @@ public class NotificationController : ControllerBase
             Content = n.Content,
             UserId = n.UserId,
             IsRead = n.IsRead,
-            CreationDate = n.CreationDate
+            CreationDate = n.CreatedAt
         }).ToList();
 
         return Ok(notificationDtos);
@@ -50,7 +50,7 @@ public class NotificationController : ControllerBase
 
         var notifications = await _notificationRepository.GetQueryable()
             .Where(n => n.UserId == userId && !n.IsRead)
-            .OrderByDescending(n => n.CreationDate)
+            .OrderByDescending(n => n.CreatedAt)
             .ToListAsync();
 
         var notificationDtos = notifications.Select(n => new NotificationDto
@@ -60,7 +60,7 @@ public class NotificationController : ControllerBase
             Content = n.Content,
             UserId = n.UserId,
             IsRead = n.IsRead,
-            CreationDate = n.CreationDate
+            CreationDate = n.CreatedAt
         }).ToList();
 
         return Ok(notificationDtos);
