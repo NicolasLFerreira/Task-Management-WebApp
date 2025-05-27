@@ -7,7 +7,7 @@ import {
   createClient,
   createConfig,
 } from "@hey-api/client-axios";
-import { createClientConfig } from "../config/hey-api";
+import { createClientConfig } from "../../config/hey-api";
 
 /**
  * The `createClientConfig()` function will be called on client initialization

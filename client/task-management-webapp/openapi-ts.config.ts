@@ -14,7 +14,7 @@ export default defineConfig({
 	output: {
 		format: "prettier",
 		lint: "eslint",
-		path: "./api-client",
+		path: "./src/api-client",
 		clean: true,
 	},
 	plugins: [
