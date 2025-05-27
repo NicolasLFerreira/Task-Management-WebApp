@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using SDP.TaskManagement.Application.Abstractions;
@@ -5,7 +6,9 @@ using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Web.Controllers;
 
+[ApiController]
 [Route("api/tasks/editing")]
+[Authorize]
 public class TaskItemEditingController : ControllerBase
 {
     private readonly IRepository<TaskItem> _repository;

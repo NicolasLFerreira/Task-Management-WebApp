@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Helmet } from "react-helmet-async"
 import PageContainer from "../components/PageContainer"
 import StatCard from "../components/Dashboard/StatCard"
 import ActivityItem from "../components/Dashboard/ActivityItem"
@@ -37,6 +38,9 @@ const Dashboard = () => {
       } catch (err) {
         console.error("Error fetching dashboard data:", err)
         setError("Failed to load dashboard data. Please try again later.")
+        // Set default values in case of error
+        setActivities([])
+        setUpcomingTasks([])
       } finally {
         setIsLoading(false)
       }
@@ -69,85 +73,92 @@ const Dashboard = () => {
   }
 
   return (
-    <PageContainer>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
-        <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of your tasks.</p>
-      </div>
+    <>
+      <Helmet>
+        <title>Tickway – Dashboard</title>
+        <meta name="description" content="Manage your tasks with Tickway." />
+      </Helmet>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard
-          title="Total Tasks"
-          value={stats?.totalTasks || 0}
-          icon={<Layers className="h-6 w-6 text-teal-600" />}
-          color="border-teal-500"
-        />
-        <StatCard
-          title="Completed Tasks"
-          value={stats?.completedTasks || 0}
-          icon={<CheckCircle className="h-6 w-6 text-green-600" />}
-          color="border-green-500"
-          subtitle={`${stats?.completionRate ? (stats.completionRate * 100).toFixed(0) : 0}% completion rate`}
-        />
-        <StatCard
-          title="In Progress"
-          value={stats?.inProgressTasks || 0}
-          icon={<Clock className="h-6 w-6 text-blue-600" />}
-          color="border-blue-500"
-        />
-        <StatCard
-          title="Overdue Tasks"
-          value={stats?.overdueTasks || 0}
-          icon={<AlertCircle className="h-6 w-6 text-red-600" />}
-          color="border-red-500"
-        />
-      </div>
+      <PageContainer>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400">Welcome back! Here's an overview of your tasks.</p>
+        </div>
 
-      {/* Charts and Lists */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Task Distribution Chart */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-5">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Task Distribution</h2>
-          <TaskDistributionChart
-            todoTasks={stats?.todoTasks || 0}
-            inProgressTasks={stats?.inProgressTasks || 0}
-            completedTasks={stats?.completedTasks || 0}
-            overdueTasks={stats?.overdueTasks || 0}
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <StatCard
+            title="Total Tasks"
+            value={stats?.totalTasks || 0}
+            icon={<Layers className="h-6 w-6 text-teal-600" />}
+            color="border-teal-500"
+          />
+          <StatCard
+            title="Completed Tasks"
+            value={stats?.completedTasks || 0}
+            icon={<CheckCircle className="h-6 w-6 text-green-600" />}
+            color="border-green-500"
+            subtitle={`${stats?.completionRate ? (stats.completionRate * 100).toFixed(0) : 0}% completion rate`}
+          />
+          <StatCard
+            title="In Progress"
+            value={stats?.inProgressTasks || 0}
+            icon={<Clock className="h-6 w-6 text-blue-600" />}
+            color="border-blue-500"
+          />
+          <StatCard
+            title="Overdue Tasks"
+            value={stats?.overdueTasks || 0}
+            icon={<AlertCircle className="h-6 w-6 text-red-600" />}
+            color="border-red-500"
           />
         </div>
 
-        {/* Completion Rate Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Completion Rate</h2>
-          <CompletionRateChart completedTasks={stats?.completedTasks || 0} totalTasks={stats?.totalTasks || 0} />
-        </div>
+        {/* Charts and Lists */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Task Distribution Chart */}
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Task Distribution</h2>
+            <TaskDistributionChart
+              todoTasks={stats?.todoTasks || 0}
+              inProgressTasks={stats?.inProgressTasks || 0}
+              completedTasks={stats?.completedTasks || 0}
+              overdueTasks={stats?.overdueTasks || 0}
+            />
+          </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activity</h2>
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
-            {activities.length > 0 ? (
-              activities.map((activity) => <ActivityItem key={activity.id} activity={activity} />)
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 py-4 text-center">No recent activity</p>
-            )}
+          {/* Completion Rate Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Completion Rate</h2>
+            <CompletionRateChart completedTasks={stats?.completedTasks || 0} totalTasks={stats?.totalTasks || 0} />
+          </div>
+
+          {/* Recent Activity */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Recent Activity</h2>
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+              {activities && activities.length > 0 ? (
+                activities.map((activity) => <ActivityItem key={activity.id} activity={activity} />)
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 py-4 text-center">No recent activity</p>
+              )}
+            </div>
+          </div>
+
+          {/* Upcoming Tasks */}
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Upcoming Tasks</h2>
+            <div>
+              {upcomingTasks.length > 0 ? (
+                upcomingTasks.map((task) => <UpcomingTaskItem key={task.id} task={task} />)
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400 py-4 text-center">No upcoming tasks</p>
+              )}
+            </div>
           </div>
         </div>
-
-        {/* Upcoming Tasks */}
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-5">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Upcoming Tasks</h2>
-          <div>
-            {upcomingTasks.length > 0 ? (
-              upcomingTasks.map((task) => <UpcomingTaskItem key={task.id} task={task} />)
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 py-4 text-center">No upcoming tasks</p>
-            )}
-          </div>
-        </div>
-      </div>
-    </PageContainer>
+      </PageContainer>
+    </>
   )
 }
 

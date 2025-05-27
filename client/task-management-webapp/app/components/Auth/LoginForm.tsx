@@ -1,9 +1,8 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { AccountService } from "../../../api-client"
+import { getErrorMessage, logError } from "../../utils/errorHandler"
 
 interface LoginFormProps {
   onSuccess: (token: string) => void
@@ -35,23 +34,17 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
 
       if (response.data) {
         // Store token and redirect
-        const token = response.data
-        localStorage.setItem("auth_token", token)
-        console.log("Login successful, token received")
-        onSuccess(token)
+        onSuccess(response.data)
       } else {
         setError("Invalid login response")
       }
     } catch (err: unknown) {
-      console.error("Login error:", err)
-      const error = err as { response?: { data?: { message?: string } } }
-      setError(error.response?.data?.message || "Invalid email or password")
+      logError(err, "LoginForm.handleSubmit")
+      setError(getErrorMessage(err))
     } finally {
       setIsLoading(false)
     }
   }
-
-  const regex = "/^[a-z]*[a-z0-9]@.*[a-z].[com,net]/";
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -83,8 +76,6 @@ const LoginForm = ({ onSuccess, onRegisterClick }: LoginFormProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern={regex}
-              title="Please enter a valid email address"
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
               placeholder="your@email.com"
             />

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,9 @@ using SDP.TaskManagement.Infrastructure.Extensions;
 
 namespace SDP.TaskManagement.Web.Controllers;
 
+[ApiController]
 [Route("api/tasks/querying/")]
+[Authorize]
 public class TaskItemSpecialisedController : ControllerBase
 {
     private readonly IRepository<TaskItem> _repository;

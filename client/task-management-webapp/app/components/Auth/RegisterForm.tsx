@@ -1,11 +1,10 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
 import { AccountService } from "../../../api-client"
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter"
 import { cn } from "../../lib/utils"
+import { getErrorMessage, logError } from "../../utils/errorHandler"
 
 interface RegisterFormProps {
   onSuccess: () => void
@@ -32,8 +31,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
     }
   }, [email, username])
 
-  const emailRegexString = "^[a-z]*[a-z0-9]@.*[a-z].[com,net]";
-  const emailRegex = /^[a-z]*[a-z0-9]@.*[a-z].[com,net]/;
+  const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i
 
   const handleSubmit = async () => {
     setError(null)
@@ -97,18 +95,8 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
         setError("Registration failed")
       }
     } catch (err: unknown) {
-      console.error("Registration error:", err)
-      // Enhanced error logging
-      if (err instanceof Error) {
-        console.error("Error name:", err.name)
-        console.error("Error message:", err.message)
-      }
-      const error = err as { response?: { data?: { message?: string }; status?: number; statusText?: string } }
-      console.error("Response status:", error.response?.status)
-      console.error("Response status text:", error.response?.statusText)
-      console.error("Response data:", error.response?.data)
-
-      setError(error.response?.data?.message || "Registration failed. Please try again.")
+      logError(err, "RegisterForm.handleSubmit")
+      setError(getErrorMessage(err))
     } finally {
       setIsLoading(false)
     }
@@ -124,7 +112,9 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
         <div className="bg-white p-8 rounded-lg shadow-md">
           <div className="text-center py-6">
             <div className="mx-auto mb-4 h-16 w-16 text-green-500 flex items-center justify-center">
-              <span className="text-4xl">✓</span>
+              <span className="text-4xl" aria-hidden="true">
+                ✓
+              </span>
             </div>
             <h3 className="mb-2 text-xl font-semibold">Registration Successful!</h3>
             <p className="text-gray-600">
@@ -218,11 +208,15 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              pattern={emailRegexString}
-              title="Please enter a valid email address"
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
               placeholder="your@email.com"
+              aria-describedby={!emailRegex.test(email) && email ? "email-error" : undefined}
             />
+            {!emailRegex.test(email) && email && (
+              <p id="email-error" className="mt-1 text-sm text-red-600">
+                Please enter a valid email address
+              </p>
+            )}
           </div>
 
           <div>
@@ -242,9 +236,12 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
                   ? "border-green-500 focus:ring-green-500 focus:border-green-500"
                   : "border-gray-300 focus:ring-teal-500 focus:border-teal-500",
               )}
+              aria-describedby="password-strength"
             />
             {passwordFocused && password.length > 0 && (
-              <PasswordStrengthMeter password={password} onScoreChange={handlePasswordScoreChange} />
+              <div id="password-strength">
+                <PasswordStrengthMeter password={password} onScoreChange={handlePasswordScoreChange} />
+              </div>
             )}
           </div>
 
@@ -264,9 +261,12 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
                   ? "border-green-500 focus:ring-green-500 focus:border-green-500"
                   : "border-gray-300 focus:ring-teal-500 focus:border-teal-500",
               )}
+              aria-describedby={confirmPassword && password !== confirmPassword ? "confirm-password-error" : undefined}
             />
             {confirmPassword && password !== confirmPassword && (
-              <p className="mt-1 text-sm text-red-600">Passwords do not match</p>
+              <p id="confirm-password-error" className="mt-1 text-sm text-red-600">
+                Passwords do not match
+              </p>
             )}
           </div>
 
