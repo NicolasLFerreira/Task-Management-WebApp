@@ -7,6 +7,7 @@ import {
   createClient,
   createConfig,
 } from "@hey-api/client-axios";
+import { createClientConfig } from "../config/hey-api";
 
 /**
  * The `createClientConfig()` function will be called on client initialization
@@ -22,7 +23,9 @@ export type CreateClientConfig<T extends DefaultClientOptions = ClientOptions> =
   ) => Config<Required<DefaultClientOptions> & T>;
 
 export const client = createClient(
-  createConfig<ClientOptions>({
-    baseURL: "https://localhost:7200/",
-  }),
+  createClientConfig(
+    createConfig<ClientOptions>({
+      baseURL: "https://localhost:7200/",
+    }),
+  ),
 );

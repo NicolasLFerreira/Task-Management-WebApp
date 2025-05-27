@@ -22,25 +22,10 @@ import type {
   GetApiBoardsData,
   GetApiBoardsResponse,
   PostApiBoardsData,
-  PostApiBoardsResponse,
   DeleteApiBoardsByBoardIdData,
   GetApiBoardsByBoardIdData,
   GetApiBoardsByBoardIdResponse,
   PutApiBoardsByBoardIdData,
-  GetApiChecklistsTaskByTaskIdData,
-  GetApiChecklistsTaskByTaskIdResponse,
-  DeleteApiChecklistsByChecklistIdData,
-  GetApiChecklistsByChecklistIdData,
-  GetApiChecklistsByChecklistIdResponse,
-  PutApiChecklistsByChecklistIdData,
-  PostApiChecklistsData,
-  PostApiChecklistsResponse,
-  PostApiChecklistsItemsData,
-  PostApiChecklistsItemsResponse,
-  DeleteApiChecklistsItemsByItemIdData,
-  GetApiChecklistsItemsByItemIdData,
-  GetApiChecklistsItemsByItemIdResponse,
-  PutApiChecklistsItemsByItemIdData,
   GetApiCommentsTaskByTaskIdData,
   GetApiCommentsTaskByTaskIdResponse,
   DeleteApiCommentsByCommentIdData,
@@ -55,7 +40,6 @@ import type {
   GetApiDashboardRecentActivityResponse,
   GetApiDashboardUpcomingTasksData,
   GetApiDashboardUpcomingTasksResponse,
-  GetHealthData,
   GetApiHealthData,
   GetApiLabelsBoardByBoardIdData,
   GetApiLabelsBoardByBoardIdResponse,
@@ -74,7 +58,6 @@ import type {
   GetApiListsByListIdResponse,
   PutApiListsByListIdData,
   PostApiListsData,
-  PostApiListsResponse,
   PostApiListsReorderData,
   GetApiMessagesData,
   GetApiMessagesResponse,
@@ -131,21 +114,12 @@ import {
   getApiAttachmentTaskByTaskIdResponseTransformer,
   postApiAttachmentUploadByTaskIdResponseTransformer,
   getApiBoardsResponseTransformer,
-  postApiBoardsResponseTransformer,
   getApiBoardsByBoardIdResponseTransformer,
-  getApiChecklistsTaskByTaskIdResponseTransformer,
-  getApiChecklistsByChecklistIdResponseTransformer,
-  postApiChecklistsResponseTransformer,
-  postApiChecklistsItemsResponseTransformer,
-  getApiChecklistsItemsByItemIdResponseTransformer,
   getApiCommentsTaskByTaskIdResponseTransformer,
   getApiCommentsByCommentIdResponseTransformer,
   postApiCommentsResponseTransformer,
   getApiDashboardRecentActivityResponseTransformer,
   getApiDashboardUpcomingTasksResponseTransformer,
-  getApiListsBoardByBoardIdResponseTransformer,
-  getApiListsByListIdResponseTransformer,
-  postApiListsResponseTransformer,
   getApiMessagesResponseTransformer,
   postApiMessagesResponseTransformer,
   getApiMessagesConversationByUserIdResponseTransformer,
@@ -367,18 +341,16 @@ export class BoardService {
     options?: Options<PostApiBoardsData, ThrowOnError>,
   ) {
     return (options?.client ?? _heyApiClient).post<
-      PostApiBoardsResponse,
+      unknown,
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
           type: "apiKey",
         },
       ],
-      responseTransformer: postApiBoardsResponseTransformer,
       url: "/api/boards",
       ...options,
       headers: {
@@ -443,205 +415,6 @@ export class BoardService {
         },
       ],
       url: "/api/boards/{boardId}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-}
-
-export class ChecklistService {
-  public static getApiChecklistsTaskByTaskId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<GetApiChecklistsTaskByTaskIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiChecklistsTaskByTaskIdResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: getApiChecklistsTaskByTaskIdResponseTransformer,
-      url: "/api/checklists/task/{taskId}",
-      ...options,
-    });
-  }
-
-  public static deleteApiChecklistsByChecklistId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<DeleteApiChecklistsByChecklistIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).delete<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/api/checklists/{checklistId}",
-      ...options,
-    });
-  }
-
-  public static getApiChecklistsByChecklistId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<GetApiChecklistsByChecklistIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiChecklistsByChecklistIdResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: getApiChecklistsByChecklistIdResponseTransformer,
-      url: "/api/checklists/{checklistId}",
-      ...options,
-    });
-  }
-
-  public static putApiChecklistsByChecklistId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<PutApiChecklistsByChecklistIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).put<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/api/checklists/{checklistId}",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  public static postApiChecklists<ThrowOnError extends boolean = false>(
-    options?: Options<PostApiChecklistsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).post<
-      PostApiChecklistsResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: postApiChecklistsResponseTransformer,
-      url: "/api/checklists",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  public static postApiChecklistsItems<ThrowOnError extends boolean = false>(
-    options?: Options<PostApiChecklistsItemsData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).post<
-      PostApiChecklistsItemsResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: postApiChecklistsItemsResponseTransformer,
-      url: "/api/checklists/items",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  public static deleteApiChecklistsItemsByItemId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<DeleteApiChecklistsItemsByItemIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).delete<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/api/checklists/items/{itemId}",
-      ...options,
-    });
-  }
-
-  public static getApiChecklistsItemsByItemId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<GetApiChecklistsItemsByItemIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).get<
-      GetApiChecklistsItemsByItemIdResponse,
-      unknown,
-      ThrowOnError
-    >({
-      responseType: "text",
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      responseTransformer: getApiChecklistsItemsByItemIdResponseTransformer,
-      url: "/api/checklists/items/{itemId}",
-      ...options,
-    });
-  }
-
-  public static putApiChecklistsItemsByItemId<
-    ThrowOnError extends boolean = false,
-  >(options: Options<PutApiChecklistsItemsByItemIdData, ThrowOnError>) {
-    return (options.client ?? _heyApiClient).put<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/api/checklists/items/{itemId}",
       ...options,
       headers: {
         "Content-Type": "application/json",
@@ -827,25 +600,6 @@ export class DashboardService {
 }
 
 export class HealthService {
-  public static getHealth<ThrowOnError extends boolean = false>(
-    options?: Options<GetHealthData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).get<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/Health",
-      ...options,
-    });
-  }
-
   public static getApiHealth<ThrowOnError extends boolean = false>(
     options?: Options<GetApiHealthData, ThrowOnError>,
   ) {
@@ -1033,7 +787,6 @@ export class ListService {
           type: "apiKey",
         },
       ],
-      responseTransformer: getApiListsBoardByBoardIdResponseTransformer,
       url: "/api/lists/board/{boardId}",
       ...options,
     });
@@ -1073,7 +826,6 @@ export class ListService {
           type: "apiKey",
         },
       ],
-      responseTransformer: getApiListsByListIdResponseTransformer,
       url: "/api/lists/{listId}",
       ...options,
     });
@@ -1106,18 +858,16 @@ export class ListService {
     options?: Options<PostApiListsData, ThrowOnError>,
   ) {
     return (options?.client ?? _heyApiClient).post<
-      PostApiListsResponse,
+      unknown,
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
           type: "apiKey",
         },
       ],
-      responseTransformer: postApiListsResponseTransformer,
       url: "/api/lists",
       ...options,
       headers: {

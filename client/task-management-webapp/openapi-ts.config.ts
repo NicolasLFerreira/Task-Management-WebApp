@@ -10,7 +10,7 @@ import { defineConfig } from "@hey-api/openapi-ts";
  */
 
 export default defineConfig({
-	input: "http://localhost:7200/swagger/v1/swagger.json",
+	input: "http://localhost:5200/swagger/v1/swagger.json",
 	output: {
 		format: "prettier",
 		lint: "eslint",
@@ -22,6 +22,7 @@ export default defineConfig({
 		{
 			name: "@hey-api/client-axios",
 			baseUrl: "https://localhost:7200/",
+			runtimeConfigPath: "./config/hey-api.ts",
 		},
 		{
 			name: "@hey-api/sdk",

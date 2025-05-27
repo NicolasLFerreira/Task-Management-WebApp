@@ -6,21 +6,12 @@ import type {
   GetApiAttachmentTaskByTaskIdResponse,
   PostApiAttachmentUploadByTaskIdResponse,
   GetApiBoardsResponse,
-  PostApiBoardsResponse,
   GetApiBoardsByBoardIdResponse,
-  GetApiChecklistsTaskByTaskIdResponse,
-  GetApiChecklistsByChecklistIdResponse,
-  PostApiChecklistsResponse,
-  PostApiChecklistsItemsResponse,
-  GetApiChecklistsItemsByItemIdResponse,
   GetApiCommentsTaskByTaskIdResponse,
   GetApiCommentsByCommentIdResponse,
   PostApiCommentsResponse,
   GetApiDashboardRecentActivityResponse,
   GetApiDashboardUpcomingTasksResponse,
-  GetApiListsBoardByBoardIdResponse,
-  GetApiListsByListIdResponse,
-  PostApiListsResponse,
   GetApiMessagesResponse,
   PostApiMessagesResponse,
   GetApiMessagesConversationByUserIdResponse,
@@ -87,103 +78,9 @@ export const postApiAttachmentUploadByTaskIdResponseTransformer = async (
   return data;
 };
 
-const commentDtoSchemaResponseTransformer = (data: any) => {
-  if (data.creationDate) {
-    data.creationDate = new Date(data.creationDate);
-  }
-  return data;
-};
-
-const checklistItemDtoSchemaResponseTransformer = (data: any) => {
-  if (data.creationDate) {
-    data.creationDate = new Date(data.creationDate);
-  }
-  if (data.completionDate) {
-    data.completionDate = new Date(data.completionDate);
-  }
-  return data;
-};
-
-const checklistDtoSchemaResponseTransformer = (data: any) => {
-  if (data.creationDate) {
-    data.creationDate = new Date(data.creationDate);
-  }
-  if (data.items) {
-    data.items = data.items.map((item: any) => {
-      return checklistItemDtoSchemaResponseTransformer(item);
-    });
-  }
-  return data;
-};
-
-const taskItemDtoSchemaResponseTransformer = (data: any) => {
-  if (data.dueDate) {
-    data.dueDate = new Date(data.dueDate);
-  }
-  if (data.creationTime) {
-    data.creationTime = new Date(data.creationTime);
-  }
-  if (data.lastModifiedTime) {
-    data.lastModifiedTime = new Date(data.lastModifiedTime);
-  }
+const boardDtoSchemaResponseTransformer = (data: any) => {
   if (data.createdAt) {
     data.createdAt = new Date(data.createdAt);
-  }
-  if (data.updatedAt) {
-    data.updatedAt = new Date(data.updatedAt);
-  }
-  if (data.assignees) {
-    data.assignees = data.assignees.map((item: any) => {
-      return userDtoSchemaResponseTransformer(item);
-    });
-  }
-  if (data.comments) {
-    data.comments = data.comments.map((item: any) => {
-      return commentDtoSchemaResponseTransformer(item);
-    });
-  }
-  if (data.attachments) {
-    data.attachments = data.attachments.map((item: any) => {
-      return attachmentDtoSchemaResponseTransformer(item);
-    });
-  }
-  if (data.checklists) {
-    data.checklists = data.checklists.map((item: any) => {
-      return checklistDtoSchemaResponseTransformer(item);
-    });
-  }
-  return data;
-};
-
-const listDtoSchemaResponseTransformer = (data: any) => {
-  if (data.taskItems) {
-    data.taskItems = data.taskItems.map((item: any) => {
-      return taskItemDtoSchemaResponseTransformer(item);
-    });
-  }
-  return data;
-};
-
-const boardMemberDtoSchemaResponseTransformer = (data: any) => {
-  if (data.joinedDate) {
-    data.joinedDate = new Date(data.joinedDate);
-  }
-  return data;
-};
-
-const boardDtoSchemaResponseTransformer = (data: any) => {
-  if (data.creationDate) {
-    data.creationDate = new Date(data.creationDate);
-  }
-  if (data.lists) {
-    data.lists = data.lists.map((item: any) => {
-      return listDtoSchemaResponseTransformer(item);
-    });
-  }
-  if (data.members) {
-    data.members = data.members.map((item: any) => {
-      return boardMemberDtoSchemaResponseTransformer(item);
-    });
   }
   return data;
 };
@@ -197,13 +94,6 @@ export const getApiBoardsResponseTransformer = async (
   return data;
 };
 
-export const postApiBoardsResponseTransformer = async (
-  data: any,
-): Promise<PostApiBoardsResponse> => {
-  data = boardDtoSchemaResponseTransformer(data);
-  return data;
-};
-
 export const getApiBoardsByBoardIdResponseTransformer = async (
   data: any,
 ): Promise<GetApiBoardsByBoardIdResponse> => {
@@ -211,40 +101,10 @@ export const getApiBoardsByBoardIdResponseTransformer = async (
   return data;
 };
 
-export const getApiChecklistsTaskByTaskIdResponseTransformer = async (
-  data: any,
-): Promise<GetApiChecklistsTaskByTaskIdResponse> => {
-  data = data.map((item: any) => {
-    return checklistDtoSchemaResponseTransformer(item);
-  });
-  return data;
-};
-
-export const getApiChecklistsByChecklistIdResponseTransformer = async (
-  data: any,
-): Promise<GetApiChecklistsByChecklistIdResponse> => {
-  data = checklistDtoSchemaResponseTransformer(data);
-  return data;
-};
-
-export const postApiChecklistsResponseTransformer = async (
-  data: any,
-): Promise<PostApiChecklistsResponse> => {
-  data = checklistDtoSchemaResponseTransformer(data);
-  return data;
-};
-
-export const postApiChecklistsItemsResponseTransformer = async (
-  data: any,
-): Promise<PostApiChecklistsItemsResponse> => {
-  data = checklistItemDtoSchemaResponseTransformer(data);
-  return data;
-};
-
-export const getApiChecklistsItemsByItemIdResponseTransformer = async (
-  data: any,
-): Promise<GetApiChecklistsItemsByItemIdResponse> => {
-  data = checklistItemDtoSchemaResponseTransformer(data);
+const commentDtoSchemaResponseTransformer = (data: any) => {
+  if (data.creationDate) {
+    data.creationDate = new Date(data.creationDate);
+  }
   return data;
 };
 
@@ -300,29 +160,6 @@ export const getApiDashboardUpcomingTasksResponseTransformer = async (
   data = data.map((item: any) => {
     return upcomingTaskDtoSchemaResponseTransformer(item);
   });
-  return data;
-};
-
-export const getApiListsBoardByBoardIdResponseTransformer = async (
-  data: any,
-): Promise<GetApiListsBoardByBoardIdResponse> => {
-  data = data.map((item: any) => {
-    return listDtoSchemaResponseTransformer(item);
-  });
-  return data;
-};
-
-export const getApiListsByListIdResponseTransformer = async (
-  data: any,
-): Promise<GetApiListsByListIdResponse> => {
-  data = listDtoSchemaResponseTransformer(data);
-  return data;
-};
-
-export const postApiListsResponseTransformer = async (
-  data: any,
-): Promise<PostApiListsResponse> => {
-  data = listDtoSchemaResponseTransformer(data);
   return data;
 };
 
@@ -399,6 +236,16 @@ export const getApiSampleGetUsersResponseTransformer = async (
   data = data.map((item: any) => {
     return userDtoSchemaResponseTransformer(item);
   });
+  return data;
+};
+
+const taskItemDtoSchemaResponseTransformer = (data: any) => {
+  if (data.dueDate) {
+    data.dueDate = new Date(data.dueDate);
+  }
+  if (data.createdAt) {
+    data.createdAt = new Date(data.createdAt);
+  }
   return data;
 };
 
