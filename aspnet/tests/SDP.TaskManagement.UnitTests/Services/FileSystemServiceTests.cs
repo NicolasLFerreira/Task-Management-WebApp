@@ -12,6 +12,7 @@ using FluentAssertions;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions.Formatting;
 
 namespace SDP.TaskManagement.UnitTests.Services
 {
@@ -28,13 +29,13 @@ namespace SDP.TaskManagement.UnitTests.Services
             // Setup test directory
             _testBasePath = Path.Combine(Path.GetTempPath(), "FileSystemServiceTests");
             Directory.CreateDirectory(_testBasePath);
-            
+
             // Setup mocks
             _mockEnvironment = new Mock<IWebHostEnvironment>();
             _mockEnvironment.Setup(e => e.ContentRootPath).Returns(_testBasePath);
-            
+
             _mockLogger = new Mock<ILogger<FileSystemService>>();
-            
+
             var options = new FileStorageOptions
             {
                 BasePath = "attachments",
@@ -43,10 +44,10 @@ namespace SDP.TaskManagement.UnitTests.Services
                 ProfilePhotoDirectory = "profile-photos",
                 AttachmentsDirectory = "attachments"
             };
-            
+
             _mockOptions = new Mock<IOptions<FileStorageOptions>>();
             _mockOptions.Setup(o => o.Value).Returns(options);
-            
+
             // Create service
             _fileSystemService = new FileSystemService(
                 _mockEnvironment.Object,
@@ -62,13 +63,23 @@ namespace SDP.TaskManagement.UnitTests.Services
             var fileName = "test-profile.jpg";
             var fileContent = "test file content";
             var mockFile = CreateMockFile(fileName, fileContent);
-            
+
             // Act
             var result = await _fileSystemService.UploadProfilePhotoAsync(userId, mockFile.Object);
-            
+
             // Assert
             result.Should().NotBeNull();
-            result.Should().StartWith("attachments/123/profile-photos/");
+
+            if (OperatingSystem.IsMacOS())
+            {
+                result.Should().StartWith("attachments/123/profile-photos/");
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                result.Should().StartWith("attachments\\123\\profile-photos\\");
+            }
+
             result.Should().EndWith(".jpg");
 
             // Verify file was created
@@ -76,7 +87,7 @@ namespace SDP.TaskManagement.UnitTests.Services
             Directory.Exists(expectedDir).Should().BeTrue();
             Directory.GetFiles(expectedDir).Should().HaveCountGreaterThan(0);
             Directory.GetFiles(expectedDir, "*.jpg").Should().HaveCountGreaterThan(0);
-            
+
             // Cleanup
             Directory.Delete(Path.Combine(_testBasePath, "attachments"), true);
         }
@@ -87,20 +98,20 @@ namespace SDP.TaskManagement.UnitTests.Services
             // Arrange
             long userId = 456;
             var fileName = "profile-to-delete.jpg";
-            
+
             // Create the directory and file first
             var userDir = Path.Combine(_testBasePath, "attachments", userId.ToString(), "profile-photos");
             Directory.CreateDirectory(userDir);
             var filePath = Path.Combine(userDir, fileName);
             File.WriteAllText(filePath, "test content");
-            
+
             // Act
             var result = await _fileSystemService.DeleteProfilePhotoAsync(userId, fileName);
-            
+
             // Assert
             Assert.True(result);
             Assert.False(File.Exists(filePath));
-            
+
             // Cleanup
             Directory.Delete(Path.Combine(_testBasePath, "attachments"), true);
         }
@@ -110,20 +121,20 @@ namespace SDP.TaskManagement.UnitTests.Services
         {
             // Arrange
             long userId = 789;
-            
+
             // Create the directory structure
             var userProfileDir = Path.Combine(_testBasePath, "attachments", userId.ToString(), "profile-photos");
             Directory.CreateDirectory(userProfileDir);
-            
+
             var filePath = Path.Combine(userProfileDir, "valid-file.jpg");
             File.WriteAllText(filePath, "test content");
-            
+
             // Act
             var result = await _fileSystemService.ValidateUserFileAccessAsync(userId, filePath);
-            
+
             // Assert
             Assert.True(result);
-            
+
             // Cleanup
             Directory.Delete(Path.Combine(_testBasePath, "attachments"), true);
         }
@@ -136,19 +147,20 @@ namespace SDP.TaskManagement.UnitTests.Services
             writer.Write(content);
             writer.Flush();
             ms.Position = 0;
-            
+
             mockFile.Setup(f => f.FileName).Returns(fileName);
             mockFile.Setup(f => f.Length).Returns(ms.Length);
             mockFile.Setup(f => f.OpenReadStream()).Returns(ms);
             mockFile.Setup(f => f.ContentDisposition).Returns($"form-data; name=\"file\"; filename=\"{fileName}\"");
-            
+
             mockFile.Setup(f => f.CopyToAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()))
-                .Callback<Stream, CancellationToken>((stream, token) => {
+                .Callback<Stream, CancellationToken>((stream, token) =>
+                {
                     ms.Position = 0;
                     ms.CopyTo(stream);
                 })
                 .Returns(Task.CompletedTask);
-            
+
             return mockFile;
         }
     }
