@@ -2,7 +2,7 @@ namespace SDP.TaskManagement.Application.Dtos;
 
 public class BoardDto
 {
-    public long Id { get; set; }
+    public required long Id { get; set; }
 
     public required string Title { get; set; }
 

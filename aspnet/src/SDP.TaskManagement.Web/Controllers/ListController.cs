@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
 
 using System.Security.Claims;
@@ -40,15 +41,11 @@ public class ListController : ControllerBase
 
         var lists = await _listRepository.GetQueryable()
             .Where(l => l.BoardId == boardId)
+            .Include(l => l.TaskItems)
             .OrderBy(l => l.Position)
             .ToListAsync();
 
-        var listDtos = lists.Select(l => new ListDto
-        {
-            Id = l.Id,
-            Title = l.Title,
-            Position = l.Position
-        }).ToList();
+        var listDtos = lists.Select(l => l.ToDto()).ToList();
 
         return Ok(listDtos);
     }
@@ -58,7 +55,7 @@ public class ListController : ControllerBase
     {
         var userId = GetCurrentUserId();
 
-        var list = await _listRepository.GetByIdAsync(listId);
+        var list = await _listRepository.GetByIdAsyncWithNavigation(listId, l => l.TaskItems!);
 
         if (list == null)
             return NotFound($"List with ID {listId} not found");
@@ -67,12 +64,7 @@ public class ListController : ControllerBase
         if (!await HasBoardAccess(userId, list.BoardId))
             return Forbid("You don't have access to this board");
 
-        var listDto = new ListDto
-        {
-            Id = list.Id,
-            Title = list.Title,
-            Position = list.Position
-        };
+        var listDto = list.ToDto();
 
         return Ok(listDto);
     }

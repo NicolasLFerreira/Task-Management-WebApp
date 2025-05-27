@@ -118,8 +118,6 @@ import {
   postApiCommentsResponseTransformer,
   getApiDashboardRecentActivityResponseTransformer,
   getApiDashboardUpcomingTasksResponseTransformer,
-  getApiListsBoardByBoardIdResponseTransformer,
-  getApiListsByListIdResponseTransformer,
   getApiMessagesResponseTransformer,
   postApiMessagesResponseTransformer,
   getApiMessagesConversationByUserIdResponseTransformer,
@@ -769,7 +767,6 @@ export class ListService {
           type: "apiKey",
         },
       ],
-      responseTransformer: getApiListsBoardByBoardIdResponseTransformer,
       url: "/api/lists/board/{boardId}",
       ...options,
     });
@@ -808,7 +805,6 @@ export class ListService {
           type: "apiKey",
         },
       ],
-      responseTransformer: getApiListsByListIdResponseTransformer,
       url: "/api/lists/{listId}",
       ...options,
     });

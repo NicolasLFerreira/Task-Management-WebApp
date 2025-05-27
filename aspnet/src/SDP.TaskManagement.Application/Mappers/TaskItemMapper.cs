@@ -5,7 +5,7 @@ namespace SDP.TaskManagement.Application.Mappers;
 
 public static class TaskItemMapper
 {
-    public static TaskItemDto ToDto(TaskItem entity)
+    public static TaskItemDto ToDto(this TaskItem entity)
     {
         var dto = new TaskItemDto
         {

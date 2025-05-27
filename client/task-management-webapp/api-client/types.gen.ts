@@ -11,7 +11,7 @@ export type AttachmentDto = {
 };
 
 export type BoardDto = {
-  id?: number;
+  id: number;
   title: string | null;
   description?: string | null;
   createdAt?: Date;
@@ -74,7 +74,7 @@ export type ListDto = {
   id: number;
   title: string | null;
   position: number;
-  taskItemList: Array<TaskItemDto> | null;
+  taskCount: number;
 };
 
 export type LoginDto = {

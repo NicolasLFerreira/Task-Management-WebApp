@@ -37,7 +37,7 @@ export const AttachmentDtoSchema = {
 } as const;
 
 export const BoardDtoSchema = {
-  required: ["ownerUsername", "title"],
+  required: ["id", "ownerUsername", "title"],
   type: "object",
   properties: {
     id: {
@@ -238,7 +238,7 @@ export const ListCreationDtoSchema = {
 } as const;
 
 export const ListDtoSchema = {
-  required: ["id", "position", "taskItemList", "title"],
+  required: ["id", "position", "taskCount", "title"],
   type: "object",
   properties: {
     id: {
@@ -253,12 +253,9 @@ export const ListDtoSchema = {
       type: "integer",
       format: "int32",
     },
-    taskItemList: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/TaskItemDto",
-      },
-      nullable: true,
+    taskCount: {
+      type: "integer",
+      format: "int32",
     },
   },
   additionalProperties: false,
