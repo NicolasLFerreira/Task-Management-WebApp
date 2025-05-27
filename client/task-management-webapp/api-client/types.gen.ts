@@ -71,9 +71,10 @@ export type ListCreationDto = {
 };
 
 export type ListDto = {
-  id?: number;
+  id: number;
   title: string | null;
-  position?: number;
+  position: number;
+  taskItemList: Array<TaskItemDto> | null;
 };
 
 export type LoginDto = {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
@@ -16,7 +17,10 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString(AppConfigurations.Database.DefaultConnection)));
 
         // Add services to the container
-        builder.Services.AddControllers();
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add(new ProducesAttribute("application/json"));
+        });
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerDocumentation();
 

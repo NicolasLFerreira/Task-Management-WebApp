@@ -118,6 +118,8 @@ import {
   postApiCommentsResponseTransformer,
   getApiDashboardRecentActivityResponseTransformer,
   getApiDashboardUpcomingTasksResponseTransformer,
+  getApiListsBoardByBoardIdResponseTransformer,
+  getApiListsByListIdResponseTransformer,
   getApiMessagesResponseTransformer,
   postApiMessagesResponseTransformer,
   getApiMessagesConversationByUserIdResponseTransformer,
@@ -162,7 +164,6 @@ export class AccountService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -186,7 +187,6 @@ export class AccountService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -232,7 +232,6 @@ export class AttachmentService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -253,7 +252,6 @@ export class AttachmentService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -275,7 +273,6 @@ export class AttachmentService {
       ThrowOnError
     >({
       ...formDataBodySerializer,
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -321,7 +318,6 @@ export class BoardService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -384,7 +380,6 @@ export class BoardService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -430,7 +425,6 @@ export class CommentService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -470,7 +464,6 @@ export class CommentService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -514,7 +507,6 @@ export class CommentService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -541,7 +533,6 @@ export class DashboardService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -561,7 +552,6 @@ export class DashboardService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -582,7 +572,6 @@ export class DashboardService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -626,7 +615,6 @@ export class LabelService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -665,7 +653,6 @@ export class LabelService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -708,7 +695,6 @@ export class LabelService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -777,13 +763,13 @@ export class ListService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
           type: "apiKey",
         },
       ],
+      responseTransformer: getApiListsBoardByBoardIdResponseTransformer,
       url: "/api/lists/board/{boardId}",
       ...options,
     });
@@ -816,13 +802,13 @@ export class ListService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
           type: "apiKey",
         },
       ],
+      responseTransformer: getApiListsByListIdResponseTransformer,
       url: "/api/lists/{listId}",
       ...options,
     });
@@ -907,7 +893,6 @@ export class MessageService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -928,7 +913,6 @@ export class MessageService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -953,7 +937,6 @@ export class MessageService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -975,7 +958,6 @@ export class MessageService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1017,7 +999,6 @@ export class NotificationService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1038,7 +1019,6 @@ export class NotificationService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1104,7 +1084,6 @@ export class TaskItemService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1125,7 +1104,6 @@ export class TaskItemService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1169,7 +1147,6 @@ export class TaskItemService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1213,7 +1190,6 @@ export class TaskItemService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1307,7 +1283,6 @@ export class TaskItemSpecialisedService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1328,7 +1303,6 @@ export class TaskItemSpecialisedService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1355,7 +1329,6 @@ export class UserService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1422,7 +1395,6 @@ export class UserService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1445,7 +1417,6 @@ export class UserProfileService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",
@@ -1466,7 +1437,6 @@ export class UserProfileService {
       unknown,
       ThrowOnError
     >({
-      responseType: "text",
       security: [
         {
           name: "Authorization",

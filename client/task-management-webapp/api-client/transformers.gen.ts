@@ -12,6 +12,8 @@ import type {
   PostApiCommentsResponse,
   GetApiDashboardRecentActivityResponse,
   GetApiDashboardUpcomingTasksResponse,
+  GetApiListsBoardByBoardIdResponse,
+  GetApiListsByListIdResponse,
   GetApiMessagesResponse,
   PostApiMessagesResponse,
   GetApiMessagesConversationByUserIdResponse,
@@ -162,6 +164,41 @@ export const getApiDashboardUpcomingTasksResponseTransformer = async (
   return data;
 };
 
+const taskItemDtoSchemaResponseTransformer = (data: any) => {
+  if (data.dueDate) {
+    data.dueDate = new Date(data.dueDate);
+  }
+  if (data.createdAt) {
+    data.createdAt = new Date(data.createdAt);
+  }
+  return data;
+};
+
+const listDtoSchemaResponseTransformer = (data: any) => {
+  if (data.taskItemList) {
+    data.taskItemList = data.taskItemList.map((item: any) => {
+      return taskItemDtoSchemaResponseTransformer(item);
+    });
+  }
+  return data;
+};
+
+export const getApiListsBoardByBoardIdResponseTransformer = async (
+  data: any,
+): Promise<GetApiListsBoardByBoardIdResponse> => {
+  data = data.map((item: any) => {
+    return listDtoSchemaResponseTransformer(item);
+  });
+  return data;
+};
+
+export const getApiListsByListIdResponseTransformer = async (
+  data: any,
+): Promise<GetApiListsByListIdResponse> => {
+  data = listDtoSchemaResponseTransformer(data);
+  return data;
+};
+
 const messageDtoSchemaResponseTransformer = (data: any) => {
   if (data.creationDate) {
     data.creationDate = new Date(data.creationDate);
@@ -226,16 +263,6 @@ export const getApiNotificationsUnreadResponseTransformer = async (
   data = data.map((item: any) => {
     return notificationDtoSchemaResponseTransformer(item);
   });
-  return data;
-};
-
-const taskItemDtoSchemaResponseTransformer = (data: any) => {
-  if (data.dueDate) {
-    data.dueDate = new Date(data.dueDate);
-  }
-  if (data.createdAt) {
-    data.createdAt = new Date(data.createdAt);
-  }
   return data;
 };
 

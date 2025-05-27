@@ -238,7 +238,7 @@ export const ListCreationDtoSchema = {
 } as const;
 
 export const ListDtoSchema = {
-  required: ["title"],
+  required: ["id", "position", "taskItemList", "title"],
   type: "object",
   properties: {
     id: {
@@ -252,6 +252,13 @@ export const ListDtoSchema = {
     position: {
       type: "integer",
       format: "int32",
+    },
+    taskItemList: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/TaskItemDto",
+      },
+      nullable: true,
     },
   },
   additionalProperties: false,
