@@ -12,7 +12,7 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250526101316_InitialMigration")]
+    [Migration("20250527041121_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -54,17 +54,17 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                     b.Property<long>("TaskItemId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("UploadTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("UploadedById")
+                    b.Property<long>("UploadUserId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TaskItemId");
 
-                    b.HasIndex("UploadedById");
+                    b.HasIndex("UploadUserId");
 
                     b.ToTable("Attachments", (string)null);
                 });
@@ -77,15 +77,12 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("LastModifiedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("OwnerId")
                         .HasColumnType("bigint");
@@ -94,6 +91,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -144,7 +144,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("PostedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("TaskItemId")
@@ -229,9 +229,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("boolean");
 
@@ -243,6 +240,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     b.Property<long>("SenderId")
                         .HasColumnType("bigint");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
@@ -269,7 +269,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<DateTime>("CreationDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("EntityId")
@@ -401,9 +401,6 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -413,6 +410,9 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("JoinDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("timestamp with time zone");
@@ -454,15 +454,15 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "UploadedBy")
+                    b.HasOne("SDP.TaskManagement.Domain.Entities.User", "UploadUser")
                         .WithMany()
-                        .HasForeignKey("UploadedById")
+                        .HasForeignKey("UploadUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("TaskItem");
 
-                    b.Navigation("UploadedBy");
+                    b.Navigation("UploadUser");
                 });
 
             modelBuilder.Entity("SDP.TaskManagement.Domain.Entities.Board", b =>
