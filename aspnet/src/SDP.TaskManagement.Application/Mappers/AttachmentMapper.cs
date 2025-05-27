@@ -5,7 +5,7 @@ namespace SDP.TaskManagement.Application.Mappers;
 
 public static class AttachmentMapper
 {
-    public static AttachmentDto ToDto(this Attachment attachment, string? uploaderUsername = null)
+    public static AttachmentDto ToDto(this Attachment attachment)
     {
         return new AttachmentDto
         {
@@ -14,10 +14,8 @@ public static class AttachmentMapper
             FilePath = attachment.FilePath,
             FileSize = attachment.FileSize,
             FileType = attachment.FileType,
-            UploadTime = attachment.UploadTime,
-            TaskItemId = attachment.TaskItemId,
-            UploadedById = attachment.UploadUserId,
-            UploadedByUsername = uploaderUsername ?? attachment.UploadUser?.Username ?? "Unknown",
+            UploadTime = attachment.UploadedAt,
+            UploadUsername = attachment.UploadUser?.Username ?? "",
         };
     }
 }

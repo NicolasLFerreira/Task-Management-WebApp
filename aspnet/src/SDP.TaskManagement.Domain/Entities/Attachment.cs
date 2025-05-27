@@ -12,7 +12,7 @@ public class Attachment : Entity
 
     public long FileSize { get; set; }
 
-    public DateTime UploadTime { get; set; }
+    public DateTime UploadedAt { get; set; }
 
     // Navigation properties
 

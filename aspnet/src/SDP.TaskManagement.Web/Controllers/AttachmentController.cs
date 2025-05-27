@@ -42,7 +42,7 @@ public class AttachmentController : ControllerBase
     public async Task<ActionResult<AttachmentDto>> GetAttachment(long id)
     {
         var userId = GetCurrentUserId();
-        var attachment = await _attachmentRepository.GetByIdAsync(id);
+        var attachment = await _attachmentRepository.GetByIdAsyncWithNavigation(id, a => a.UploadUser!);
         
         if (attachment == null)
             return NotFound();
@@ -72,6 +72,7 @@ public class AttachmentController : ControllerBase
             
         var attachments = await _attachmentRepository.GetQueryable()
             .Where(a => a.TaskItemId == taskId)
+            .Include(a => User)
             .ToListAsync();
         return Ok(attachments.Select(a => a.ToDto()));
     }
@@ -98,13 +99,13 @@ public class AttachmentController : ControllerBase
                 FilePath = filePath,
                 FileSize = file.Length,
                 FileType = Path.GetExtension(file.FileName),
-                UploadTime = DateTime.UtcNow,
+                UploadedAt = DateTime.UtcNow,
                 TaskItemId = taskId,
                 UploadUserId = userId
             };
             
             // Save to database
-            await _attachmentRepository.AddAsync(attachment);
+            var result = await _attachmentRepository.AddAsync(attachment);
             
             _logger.LogInformation("Attachment uploaded: {FileName} for task {TaskId} by user {UserId}", 
                 file.FileName, taskId, userId);
