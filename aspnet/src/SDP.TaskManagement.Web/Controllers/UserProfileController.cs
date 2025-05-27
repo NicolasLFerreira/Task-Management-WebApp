@@ -2,14 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
-using System;
-using System.IO;
+
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SDP.TaskManagement.Web.Controllers;
 

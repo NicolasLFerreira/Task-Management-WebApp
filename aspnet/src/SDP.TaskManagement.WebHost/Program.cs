@@ -20,16 +20,12 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerDocumentation();
 
-        // Configure CORS
+        // Add security services
         builder.Services.ConfigureCors();
-
-        // Add JWT Authentication
-        //builder.Services.AddJwtAuthentication(builder.Configuration);
+        builder.Services.AddJwtAuthentication(builder.Configuration);
 
         // Add dependency injection
         builder.Services.AddDependencyInjection(builder.Configuration);
-        builder.Services.ConfigureCors();
-        builder.Services.AddJwtAuthentication(builder.Configuration);
 
         var app = builder.Build();
 
