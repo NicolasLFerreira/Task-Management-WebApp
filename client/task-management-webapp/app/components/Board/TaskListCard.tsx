@@ -7,8 +7,14 @@ type Props = {
 const TaskList = ({ list }: Props) => {
 	return (
 		<div className="rounded-2xl p-5 bg-teal-600">
-			<p>{list.title}</p>
-			<p>{list.taskCount}</p>
+			<div className="flex justify-between items-center">
+				<h2 className="text-xl font-semibold truncate text-white">
+					{list.title}
+				</h2>
+				<span className="text-base text-blue-200 truncate">
+					{list.taskCount}
+				</span>
+			</div>
 		</div>
 	);
 };
