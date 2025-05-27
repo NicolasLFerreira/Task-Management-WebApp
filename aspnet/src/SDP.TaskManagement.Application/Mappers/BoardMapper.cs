@@ -13,7 +13,7 @@ public static class BoardMapper
             Title = board.Title,
             Description = board.Description,
             CreatedAt = board.CreatedAt,
-            OwnerId = board.OwnerId
+            OwnerUsername = board.Owner?.Username ?? ""
         };
     }
 }

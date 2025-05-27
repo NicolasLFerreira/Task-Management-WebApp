@@ -1,9 +1,6 @@
-using System;
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Application.Dtos;
-
-
 
 public class BoardMemberDto
 {

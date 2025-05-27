@@ -10,7 +10,7 @@ public static class BoardMemberMapper
         return new BoardMemberDto
         {
             Id = entity.Id,
-            MemberId = entity.UserId,
+            UserId = entity.UserId,
             BoardId = entity.BoardId,
             Role = entity.Role,
             UserName = entity.User?.Username ?? "Unknown",
