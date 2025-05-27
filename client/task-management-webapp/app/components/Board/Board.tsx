@@ -34,16 +34,27 @@ const Board = ({ board }: Props) => {
 	}, [board.id]);
 
 	return (
-		<div>
-			<div className="bg-amber-500 p-5">
-				<p>{board.title}</p>
-				<p>{board.description}</p>
-				{isLoading ? (
-					<p className="text-gray-600">Loading task lists...</p>
-				) : error ? (
-					<p className="text-red-600">{error}</p>
+		<div className="w-full h-full min-w-[250px] min-h-[250px] bg-gradient-to-br bg-cyan-900 text-white p-4 rounded-2xl shadow-lg flex flex-col overflow-hidden">
+			<div>
+				<h2 className="text-xl font-semibold truncate">
+					{board.title}
+				</h2>
+				<p className="text-sm text-blue-200 truncate">
+					{board.description}
+				</p>
+			</div>
+
+			<div className="mt-4 flex-1 overflow-auto bg-">
+				{isLoading || error ? (
+					<div className="rounded-2xl flex items-center justify-center h-full">
+						<p
+							className={`text-center font-medium text-2xl ${error ? "text-red-600" : "text-white"}`}
+						>
+							{error ?? "Loading..."}
+						</p>
+					</div>
 				) : (
-					<div className="bg-green-400 p-1">
+					<div className="space-y-2">
 						{taskLists.map((list) => (
 							<TaskList key={list.id} list={list} />
 						))}
