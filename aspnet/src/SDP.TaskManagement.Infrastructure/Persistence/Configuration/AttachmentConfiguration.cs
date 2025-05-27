@@ -11,6 +11,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Attachments");
 
             builder.HasKey(a => a.Id);
+            builder.Property(a => a.Id).ValueGeneratedOnAdd();
 
             builder.Property(a => a.FileName)
                 .IsRequired()
@@ -26,7 +27,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.Property(a => a.FileType)
                 .HasMaxLength(100);
 
-            builder.Property(a => a.UploadTime)
+            builder.Property(a => a.UploadedAt)
                 .IsRequired();
 
             builder.HasOne(a => a.TaskItem)

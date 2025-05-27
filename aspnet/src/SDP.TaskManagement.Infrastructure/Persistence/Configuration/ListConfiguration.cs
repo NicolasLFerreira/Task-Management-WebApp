@@ -13,11 +13,16 @@ public class ListConfiguration : IEntityTypeConfiguration<List>
 
         // PK
         builder.HasKey(l => l.Id);
-        builder.Property(l => l.Id).ValueGeneratedOnAdd();
+        builder.Property(l => l.Id)
+            .ValueGeneratedOnAdd();
 
         // Properties
-        builder.Property(l => l.Title).HasMaxLength(100).IsRequired();
-        builder.Property(l => l.Position).IsRequired();
+        builder.Property(l => l.Title)
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(l => l.Position)
+            .IsRequired();
 
         // Relationships
         builder.HasOne(l => l.Board)

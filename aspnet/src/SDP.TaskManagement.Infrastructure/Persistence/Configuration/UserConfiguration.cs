@@ -11,7 +11,8 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Users");
             
             builder.HasKey(u => u.Id);
-            
+            builder.Property(u => u.Id).ValueGeneratedOnAdd();
+
             builder.Property(u => u.Username)
                 .IsRequired()
                 .HasMaxLength(50);

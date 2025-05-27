@@ -11,6 +11,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Boards");
 
             builder.HasKey(b => b.Id);
+            builder.Property(b => b.Id).ValueGeneratedOnAdd();
 
             builder.Property(b => b.Title)
                 .IsRequired()
@@ -19,7 +20,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.Property(b => b.Description)
                 .HasMaxLength(500);
 
-            builder.Property(b => b.CreationDate)
+            builder.Property(b => b.CreatedAt)
                 .IsRequired();
 
             builder.HasOne(b => b.Owner)

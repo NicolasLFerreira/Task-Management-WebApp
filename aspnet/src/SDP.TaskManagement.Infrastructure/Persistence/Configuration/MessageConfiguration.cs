@@ -11,6 +11,7 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Messages");
 
             builder.HasKey(m => m.Id);
+            builder.Property(m => m.Id).ValueGeneratedOnAdd();
 
             builder.Property(m => m.Content)
                 .IsRequired()
