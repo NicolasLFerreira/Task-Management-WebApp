@@ -8,7 +8,7 @@ type SpecialMessageProps = {
 
 const SpecialMessage = ({ children }: SpecialMessageProps) => {
 	return (
-		<div className="rounded-2xl flex items-center justify-center h-full bg-cyan-800">
+		<div className="rounded-xl h-full flex items-center justify-center bg-cyan-950 bg-opacity-40 text-gray-200 px-4 py-2 text-center">
 			{children}
 		</div>
 	);
@@ -46,28 +46,30 @@ const Board = ({ board }: Props) => {
 	}, [board.id]);
 
 	return (
-		<div className="w-full h-full min-w-[250px] min-h-[250px] bg-gradient-to-br bg-cyan-900 text-white p-4 rounded-2xl shadow-lg flex flex-col overflow-hidden">
-			<div>
-				<h2 className="text-xl font-semibold truncate">
+		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 border border-gray-700 text-white p-4 rounded-xl shadow-md flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-200 m-1 sm:m-2">
+			{/* Header */}
+			<div className="mb-2">
+				<h3 className="text-lg font-semibold truncate">
 					{board.title}
-				</h2>
-				<p className="text-sm text-blue-200 truncate">
+				</h3>
+				<p className="text-sm text-gray-300 truncate">
 					{board.description}
 				</p>
 			</div>
 
-			<div className="mt-4 flex-1 overflow-auto">
+			{/* Content */}
+			<div className="mt-2 flex-1 overflow-y-auto pr-1">
 				{isLoading || error ? (
 					<SpecialMessage>
 						<p
-							className={`text-center font-medium text-2xl ${error ? "text-red-600" : "text-white"}`}
+							className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-200"}`}
 						>
 							{error ?? "Loading..."}
 						</p>
 					</SpecialMessage>
 				) : taskLists.length === 0 ? (
 					<SpecialMessage>
-						<p className="text-center font-medium text-2xl text-white">
+						<p className="text-center font-medium text-base text-gray-300">
 							This board contains no lists
 						</p>
 					</SpecialMessage>
@@ -79,12 +81,10 @@ const Board = ({ board }: Props) => {
 							.map((list) => (
 								<TaskList key={list.id} list={list} />
 							))}
-						{taskLists.slice(3).length > 0 ? (
-							<p className="ml-2">
-								And {taskLists.slice(3).length} more...
+						{taskLists.length > 3 && (
+							<p className="ml-1 text-sm text-gray-400">
+								And {taskLists.length - 3} more...
 							</p>
-						) : (
-							<></>
 						)}
 					</div>
 				)}
