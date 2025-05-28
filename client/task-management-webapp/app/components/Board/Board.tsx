@@ -1,6 +1,18 @@
 import { ListService, type BoardDto, type ListDto } from "api-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import TaskList from "./TaskListCard";
+
+type SpecialMessageProps = {
+	children: React.ReactNode;
+};
+
+const SpecialMessage = ({ children }: SpecialMessageProps) => {
+	return (
+		<div className="rounded-2xl flex items-center justify-center h-full bg-cyan-800">
+			{children}
+		</div>
+	);
+};
 
 type Props = {
 	board: BoardDto;
@@ -44,20 +56,36 @@ const Board = ({ board }: Props) => {
 				</p>
 			</div>
 
-			<div className="mt-4 flex-1 overflow-auto bg-">
+			<div className="mt-4 flex-1 overflow-auto">
 				{isLoading || error ? (
-					<div className="rounded-2xl flex items-center justify-center h-full">
+					<SpecialMessage>
 						<p
 							className={`text-center font-medium text-2xl ${error ? "text-red-600" : "text-white"}`}
 						>
 							{error ?? "Loading..."}
 						</p>
-					</div>
+					</SpecialMessage>
+				) : taskLists.length === 0 ? (
+					<SpecialMessage>
+						<p className="text-center font-medium text-2xl text-white">
+							This board contains no lists
+						</p>
+					</SpecialMessage>
 				) : (
 					<div className="space-y-2">
-						{taskLists.map((list) => (
-							<TaskList key={list.id} list={list} />
-						))}
+						{taskLists
+							.sort((list) => -list.taskCount)
+							.slice(0, 3)
+							.map((list) => (
+								<TaskList key={list.id} list={list} />
+							))}
+						{taskLists.slice(3).length > 0 ? (
+							<p className="ml-2">
+								And {taskLists.slice(3).length} more...
+							</p>
+						) : (
+							<></>
+						)}
 					</div>
 				)}
 			</div>

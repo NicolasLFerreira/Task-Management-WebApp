@@ -46,7 +46,7 @@ const Boards = () => {
 							Boards
 						</h1>
 						<p className="text-gray-600 dark:text-gray-300 mb-4">
-							Manage your project boards here.
+							Below are all the boards you manage or are part of.
 						</p>
 						<button
 							style={{ opacity: "100%" }}
