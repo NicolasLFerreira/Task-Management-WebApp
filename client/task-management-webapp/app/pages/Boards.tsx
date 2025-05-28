@@ -24,6 +24,8 @@ const Boards = () => {
 		getBoards();
 	}, []);
 
+	//#region Modal Stuff
+
 	const openModal = () => {
 		toggleModal(true);
 	};
@@ -32,6 +34,8 @@ const Boards = () => {
 		toggleModal(false);
 		getBoards();
 	};
+
+	//#endregion
 
 	return (
 		<>
