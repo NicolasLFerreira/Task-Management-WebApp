@@ -22,4 +22,8 @@
 		<ProjectReference Include="..\SDP.TaskManagement.Infrastructure\SDP.TaskManagement.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
+
 </Project>

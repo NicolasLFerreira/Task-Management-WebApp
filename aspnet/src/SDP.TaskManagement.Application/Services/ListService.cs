@@ -34,6 +34,11 @@ public class ListService : IListService
 
     public async Task<List<List>?> CreateListRange(List<ListCreationDto> listRange, long userId)
     {
+        if (listRange.Count == 0)
+        {
+            return [];
+        }
+
         var entityList = listRange
             .Select(l => new List
             {
