@@ -126,7 +126,7 @@ public class TaskItemController : ControllerBase
             OwnerUserId = userId,
             ListId = taskDto.ListId,
             Position = maxPosition + 1,
-            CreatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
         };
 
         var result = await _taskRepository.AddAsync(task);
@@ -156,7 +156,7 @@ public class TaskItemController : ControllerBase
         task.DueDate = taskDto.DueDate;
         task.Priority = taskDto.Priority;
         task.ProgressStatus = taskDto.ProgressStatus;
-        task.UpdatedAt = DateTime.Now;
+        task.UpdatedAt = DateTime.UtcNow;
 
         var result = await _taskRepository.UpdateAsync(task);
 

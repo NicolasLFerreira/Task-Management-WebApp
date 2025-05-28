@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace SDP.TaskManagement.WebHost.Middleware;
+namespace SDP.TaskManagement.WebHost.Configuration.Middleware;
 
 public class ExceptionHandlingMiddleware
 {

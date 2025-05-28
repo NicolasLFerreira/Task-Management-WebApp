@@ -5,10 +5,24 @@ type Props = {
 };
 
 const TaskList = ({ list }: Props) => {
+	const hasTasks = list.taskCount > 0;
+
 	return (
-		<div className="bg-lime-300 m-1 p-1">
-			<p>{list.title}</p>
-			<p>{list.taskCount}</p>
+		<div
+			className={`rounded-xl px-4 py-3 ${hasTasks ? "bg-teal-800" : "bg-gray-800/50"} transition-colors`}
+		>
+			<div className="flex justify-between items-center">
+				<h2
+					className={`text-sm font-medium truncate ${hasTasks ? "text-white" : "text-gray-400"}`}
+				>
+					{list.title}
+				</h2>
+				<span
+					className={`text-sm font-semibold ${hasTasks ? "text-gray-300" : "text-gray-500"} truncate`}
+				>
+					{list.taskCount}
+				</span>
+			</div>
 		</div>
 	);
 };

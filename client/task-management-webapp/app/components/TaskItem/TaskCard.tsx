@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { TaskItemDto } from "api-client"
+import { TaskItemPriority, type TaskItemDto } from "api-client"
 import { Calendar, Clock, Tag } from "lucide-react"
 
 interface TaskCardProps {
@@ -11,26 +11,26 @@ interface TaskCardProps {
 const TaskCard = ({ task }: TaskCardProps) => {
   const [expanded, setExpanded] = useState(false)
 
-  const formatDate = (dateString?: string) => {
+  const formatDate = (dateString?: Date) => {
     if (!dateString) return "No date set"
     const date = new Date(dateString)
     return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
   }
 
-  const getPriorityColor = (priority?: string) => {
-    switch (priority?.toLowerCase()) {
-      case "high":
+  const getPriorityColor = (priority: number) => {
+    switch (priority) {
+      case TaskItemPriority._0:
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-      case "medium":
+      case TaskItemPriority._1:
         return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-      case "low":
+      case TaskItemPriority._2:
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
     }
   }
 
-  const isOverdue = (dueDate?: string) => {
+  const isOverdue = (dueDate?: Date) => {
     if (!dueDate) return false
     const due = new Date(dueDate)
     const now = new Date()
@@ -72,7 +72,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           </button>
         )}
 
-        <div className="mt-3 flex flex-wrap gap-1">
+        {/* <div className="mt-3 flex flex-wrap gap-1">
           {task.labels?.map((label, index) => (
             <div
               key={index}
@@ -82,7 +82,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
               {label.name}
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
       <div className="bg-gray-50 dark:bg-gray-700 px-4 py-2 flex justify-between items-center">

@@ -10,6 +10,13 @@ export type AttachmentDto = {
   uploadUsername: string | null;
 };
 
+export type BoardCreationDto = {
+  title: string | null;
+  description: string | null;
+  lists: Array<ListCreationDto> | null;
+  boardMembers: Array<number> | null;
+};
+
 export type BoardDto = {
   id: number;
   title: string | null;
@@ -66,7 +73,7 @@ export type LabelDto = {
 
 export type ListCreationDto = {
   title: string | null;
-  position?: number;
+  position: number;
   boardId?: number;
 };
 
@@ -367,7 +374,7 @@ export type GetApiBoardsResponse =
   GetApiBoardsResponses[keyof GetApiBoardsResponses];
 
 export type PostApiBoardsData = {
-  body?: BoardDto;
+  body?: BoardCreationDto;
   path?: never;
   query?: never;
   url: "/api/boards";

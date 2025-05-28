@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SDP.TaskManagement.WebHost.Swagger;
+namespace SDP.TaskManagement.WebHost.Configuration.Swagger;
 
 /// <summary>
 /// This class ensures that responses from the api only state the response content body as application/json.

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Dtos.AssistanceDtos;
 using SDP.TaskManagement.Domain.Entities;
 
 using System.Security.Claims;
@@ -17,11 +18,13 @@ public class BoardController : ControllerBase
 {
     private readonly IRepository<Board> _boardRepository;
     private readonly IRepository<BoardMember> _boardMemberRepository;
+    private readonly IBoardService _boardService;
 
-    public BoardController(IRepository<Board> boardRepository, IRepository<BoardMember> boardMemberRepository)
+    public BoardController(IRepository<Board> boardRepository, IRepository<BoardMember> boardMemberRepository, IBoardService boardService)
     {
         _boardRepository = boardRepository;
         _boardMemberRepository = boardMemberRepository;
+        _boardService = boardService;
     }
 
     [HttpGet]
@@ -79,7 +82,6 @@ public class BoardController : ControllerBase
         }
 
         var boardDto =
-
             new BoardDto
             {
                 Id = board.Id,
@@ -93,19 +95,11 @@ public class BoardController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateBoard([FromBody] BoardDto boardDto)
+    public async Task<IActionResult> CreateBoard([FromBody] BoardCreationDto boardDto)
     {
         var userId = GetCurrentUserId();
 
-        var board = new Board
-        {
-            Title = boardDto.Title,
-            Description = boardDto.Description,
-            CreatedAt = DateTime.UtcNow,
-            OwnerId = userId
-        };
-
-        var result = await _boardRepository.AddAsync(board);
+        var result = await _boardService.CreateBoard(boardDto, userId);
 
         if (!result)
             return BadRequest("Failed to create board");

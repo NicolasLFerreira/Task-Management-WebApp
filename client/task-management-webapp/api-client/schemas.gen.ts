@@ -36,6 +36,37 @@ export const AttachmentDtoSchema = {
   additionalProperties: false,
 } as const;
 
+export const BoardCreationDtoSchema = {
+  required: ["boardMembers", "description", "lists", "title"],
+  type: "object",
+  properties: {
+    title: {
+      type: "string",
+      nullable: true,
+    },
+    description: {
+      type: "string",
+      nullable: true,
+    },
+    lists: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/ListCreationDto",
+      },
+      nullable: true,
+    },
+    boardMembers: {
+      type: "array",
+      items: {
+        type: "integer",
+        format: "int64",
+      },
+      nullable: true,
+    },
+  },
+  additionalProperties: false,
+} as const;
+
 export const BoardDtoSchema = {
   required: ["id", "ownerUsername", "title"],
   type: "object",
@@ -218,7 +249,7 @@ export const LabelDtoSchema = {
 } as const;
 
 export const ListCreationDtoSchema = {
-  required: ["title"],
+  required: ["position", "title"],
   type: "object",
   properties: {
     title: {

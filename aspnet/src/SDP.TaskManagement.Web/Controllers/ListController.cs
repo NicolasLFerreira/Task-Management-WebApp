@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Dtos.AssistanceDtos;
 using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
 
@@ -214,19 +215,4 @@ public class ListController : ControllerBase
 
         return long.Parse(userIdClaim.Value);
     }
-}
-
-public sealed class ReorderListsDto
-{
-    public long BoardId { get; set; }
-    public List<long> ListIds { get; set; } = [];
-}
-
-public sealed class ListCreationDto
-{
-    public required string Title { get; set; }
-
-    public int Position { get; set; }
-
-    public long BoardId { get; set; }
 }

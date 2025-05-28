@@ -2,7 +2,7 @@ using Microsoft.OpenApi.Models;
 
 using System.Reflection;
 
-namespace SDP.TaskManagement.WebHost.Swagger;
+namespace SDP.TaskManagement.WebHost.Configuration.Swagger;
 
 public static class SwaggerServiceExtensions
 {
@@ -13,6 +13,28 @@ public static class SwaggerServiceExtensions
     {
         services.AddSwaggerGen(options =>
         {
+            options.SwaggerDoc("v1", new() { Title = "API", Version = "v1" });
+
+            // Swagger security
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
+            };
+
+            options.AddSecurityDefinition("Bearer", securityScheme);
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    securityScheme, Array.Empty<string>()
+                }
+            });
+
+            // Document
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
