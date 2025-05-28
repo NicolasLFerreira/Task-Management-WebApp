@@ -134,7 +134,7 @@ public static class ServiceCollectionExtensions
                     // Remove the generic type marker (`n) from the name
                     var index = genericTypeName.IndexOf('`');
                     if (index > 0)
-                        genericTypeName = genericTypeName.Substring(0, index);
+                        genericTypeName = genericTypeName[..index];
 
                     return $"{genericTypeName}Of{string.Join("And", genericArguments)}";
                 }
@@ -149,7 +149,7 @@ public static class ServiceCollectionExtensions
                 return type.Name;
             });
 
-            // Add JWT Authentication to Swagger
+            // Add JWT authentication to Swagger
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",

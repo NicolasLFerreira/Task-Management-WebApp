@@ -62,6 +62,7 @@ public class Program
         app.UseAuthorization();
         app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
+        // Mappings
         app.MapControllers();
 
         // Start app
