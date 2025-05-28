@@ -58,7 +58,9 @@ public class TaskItemController : ControllerBase
         var userId = GetCurrentUserId();
 
         var task = await _taskRepository.GetQueryable()
-            .FirstOrDefaultAsync();
+            .Include(t => t.Labels)
+            .Include(t => t.Assignees)
+            .FirstOrDefaultAsync(t => t.Id == taskId);
 
         if (task == null)
             return NotFound($"Task with ID {taskId} not found");
@@ -110,11 +112,11 @@ public class TaskItemController : ControllerBase
         if (!await HasBoardAccess(userId, list.BoardId))
             return Forbid("You don't have access to this board");
 
-        // Get the highest position in the list
+        // Get the highest position in the list or default to 0 if no tasks exist
         var maxPosition = await _taskRepository.GetQueryable()
             .Where(t => t.ListId == taskDto.ListId)
-            .Select(t => t.Position)
-            .MaxAsync();
+            .Select(t => (int?)t.Position)
+            .MaxAsync() ?? -1;
 
         var task = new TaskItem
         {

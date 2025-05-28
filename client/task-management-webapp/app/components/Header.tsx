@@ -2,12 +2,12 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router"
-import { Bell, Search, User, Menu, X } from "lucide-react"
+import { Bell, Search, User, Menu, X, CheckCircle, MessageSquare, Calendar, Info } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { useTheme } from "./ThemeProvider"
-import { UserService } from "../../api-client"
+import { UserService, NotificationService, type NotificationDto } from "../../api-client"
 import type { UserDtoReadable } from "../../api-client/types.gen"
 
 type HeaderProps = {
@@ -22,12 +22,11 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
-  const [notifications] = useState([
-    { id: 1, text: "New task assigned to you", time: "5 min ago" },
-    { id: 2, text: "Comment on 'Project Plan'", time: "1 hour ago" },
-    { id: 3, text: "Due date approaching for 'Submit Report'", time: "3 hours ago" },
-  ])
+  const [notifications, setNotifications] = useState<NotificationDto[]>([])
+  const [notificationsLoading, setNotificationsLoading] = useState(false)
   const [userProfile, setUserProfile] = useState<UserDtoReadable | null>(null)
+
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -46,6 +45,104 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
     fetchUserProfile()
   }, [isAuthenticated, user])
 
+  useEffect(() => {
+    // Initial fetch of notifications
+    fetchNotifications()
+
+    // Set up polling for notifications
+    pollingIntervalRef.current = setInterval(() => {
+      fetchNotifications(false) // Don't show loading state for polling
+    }, 30000) // Poll every 30 seconds
+
+    // Clean up on unmount
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+    }
+  }, [isAuthenticated])
+
+  const fetchNotifications = async (showLoading = true) => {
+    if (!isAuthenticated) return
+
+    if (showLoading) {
+      setNotificationsLoading(true)
+    }
+
+    try {
+      const response = await NotificationService.getApiNotificationsUnread()
+      setNotifications(response.data || [])
+    } catch (err) {
+      console.error("Error fetching notifications:", err)
+    } finally {
+      if (showLoading) {
+        setNotificationsLoading(false)
+      }
+    }
+  }
+
+  const handleNotificationClick = (notification: NotificationDto) => {
+    // If notification is not read, mark it as read
+    if (!notification.isRead && notification.id) {
+      NotificationService.postApiNotificationsByNotificationIdRead({
+        path: { notificationId: notification.id },
+      }).catch((err) => console.error("Error marking notification as read:", err))
+    }
+
+    // Navigate based on notification type
+    if (notification.actionLink) {
+      // If there's a specific action link, use it
+      navigate(notification.actionLink)
+    } else if (notification.entityType === "TaskItem" && notification.entityId) {
+      // Navigate to the task detail page or board containing the task
+      navigate(`/boards?taskId=${notification.entityId}`)
+    } else if (notification.entityType === "Board" && notification.entityId) {
+      // Navigate to the board
+      navigate(`/boards?boardId=${notification.entityId}`)
+    }
+
+    setShowNotifications(false)
+  }
+
+  const formatDate = (dateString?: Date) => {
+    if (!dateString) return ""
+
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.round(diffMs / 60000)
+    const diffHours = Math.round(diffMs / 3600000)
+    const diffDays = Math.round(diffMs / 86400000)
+
+    if (diffMins < 60) {
+      return `${diffMins} minute${diffMins !== 1 ? "s" : ""} ago`
+    } else if (diffHours < 24) {
+      return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`
+    } else if (diffDays < 7) {
+      return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`
+    } else {
+      return date.toLocaleDateString()
+    }
+  }
+
+  const getNotificationIcon = (type?: number) => {
+    switch (type) {
+      case 0: // TaskAssigned
+        return <CheckCircle size={16} className="text-blue-500" />
+      case 1: // TaskCompleted
+        return <CheckCircle size={16} className="text-green-500" />
+      case 2: // TaskDueSoon
+        return <Calendar size={16} className="text-amber-500" />
+      case 3: // CommentAdded
+        return <MessageSquare size={16} className="text-purple-500" />
+      case 4: // MentionedInComment
+        return <Bell size={16} className="text-pink-500" />
+      case 5: // SystemNotification
+      default:
+        return <Info size={16} className="text-gray-500" />
+    }
+  }
+
   const handleLogout = () => {
     logout()
   }
@@ -53,6 +150,7 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
   const navigateTo = (path: string) => {
     navigate(path)
     setShowUserMenu(false)
+    setShowNotifications(false)
   }
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -71,6 +169,15 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
       return userProfile.fullName || userProfile.username || "User"
     }
     return user?.username || "User"
+  }
+
+  const markAllAsRead = async () => {
+    try {
+      await NotificationService.postApiNotificationsReadAll()
+      setNotifications([]) // Clear notifications after marking all as read
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error)
+    }
   }
 
   return (
@@ -134,7 +241,12 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
 
         <div className="relative">
           <button
-            onClick={() => setShowNotifications(!showNotifications)}
+            onClick={() => {
+              setShowNotifications(!showNotifications)
+              if (!showNotifications) {
+                setShowUserMenu(false)
+              }
+            }}
             className="p-2 rounded-full hover:bg-teal-700 transition-colors relative"
             aria-label="Notifications"
             aria-expanded={showNotifications}
@@ -142,7 +254,7 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
           >
             <Bell size={20} />
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              3
+              {notifications.length}
             </span>
           </button>
 
@@ -153,25 +265,45 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
               aria-orientation="vertical"
               aria-labelledby="notifications-menu"
             >
-              <div className="py-2 px-3 bg-gray-100 border-b border-gray-200">
+              <div className="py-2 px-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center">
                 <h3 className="text-sm font-semibold">Notifications</h3>
+                {notifications.length > 0 && (
+                  <button onClick={markAllAsRead} className="text-xs text-teal-600 hover:text-teal-800">
+                    Mark all as read
+                  </button>
+                )}
               </div>
               <div className="max-h-64 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className="py-2 px-3 hover:bg-gray-50 border-b border-gray-100"
-                    role="menuitem"
-                  >
-                    <p className="text-sm">{notification.text}</p>
-                    <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                  </div>
-                ))}
+                {notificationsLoading && notifications.length === 0 ? (
+                  <div className="py-4 px-3 text-center text-gray-500">Loading...</div>
+                ) : notifications.length === 0 ? (
+                  <div className="py-4 px-3 text-center text-gray-500">No new notifications</div>
+                ) : (
+                  notifications.map((notification) => (
+                    <div
+                      key={notification.id}
+                      className="py-2 px-3 hover:bg-gray-50 border-b border-gray-100 cursor-pointer"
+                      onClick={() => handleNotificationClick(notification)}
+                      role="menuitem"
+                    >
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0 mt-0.5 mr-2">{getNotificationIcon(notification.type)}</div>
+                        <div className="flex-1">
+                          <p className="text-sm">{notification.content}</p>
+                          <p className="text-xs text-gray-500 mt-1">{formatDate(notification.creationDate)}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
               <div className="py-2 px-3 text-center border-t border-gray-100">
                 <button
                   className="text-sm text-teal-600 hover:text-teal-800"
-                  onClick={() => navigateTo("/notifications")}
+                  onClick={() => {
+                    navigateTo("/notifications")
+                    setShowNotifications(false)
+                  }}
                   role="menuitem"
                 >
                   View all notifications
@@ -202,7 +334,12 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
 
         <div className="relative">
           <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
+            onClick={() => {
+              setShowUserMenu(!showUserMenu)
+              if (!showUserMenu) {
+                setShowNotifications(false)
+              }
+            }}
             className="flex items-center space-x-1 focus:outline-none"
             aria-label="User menu"
             aria-expanded={showUserMenu}
