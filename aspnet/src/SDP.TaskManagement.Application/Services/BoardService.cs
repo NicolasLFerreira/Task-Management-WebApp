@@ -22,8 +22,8 @@ public class BoardService : IBoardService
             Title = boardDto.Title,
             Description = boardDto.Description,
             OwnerId = userId,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
         };
 
         var result = await _boardRepository.AddAsync(board);
