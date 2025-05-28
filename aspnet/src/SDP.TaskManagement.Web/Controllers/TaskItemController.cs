@@ -112,11 +112,11 @@ public class TaskItemController : ControllerBase
         if (!await HasBoardAccess(userId, list.BoardId))
             return Forbid("You don't have access to this board");
 
-        // Get the highest position in the list or default to 0 if no tasks exist
+        // Get the highest position in the list
         var maxPosition = await _taskRepository.GetQueryable()
             .Where(t => t.ListId == taskDto.ListId)
-            .Select(t => (int?)t.Position)
-            .MaxAsync() ?? -1;
+            .Select(t => t.Position)
+            .MaxAsync();
 
         var task = new TaskItem
         {
