@@ -34,7 +34,7 @@ public class Repository<TEntity> : IRepository<TEntity>
             return false;
         }
 
-        var a = await Set
+        await Set
             .AddAsync(entity);
 
         var result = await _dbContext
