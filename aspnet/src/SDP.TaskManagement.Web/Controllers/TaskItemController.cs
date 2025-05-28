@@ -116,7 +116,8 @@ public class TaskItemController : ControllerBase
         var maxPosition = await _taskRepository.GetQueryable()
             .Where(t => t.ListId == taskDto.ListId)
             .Select(t => t.Position)
-            .MaxAsync();
+            .OrderByDescending(a => a)
+            .FirstOrDefaultAsync();
 
         var task = new TaskItem
         {
