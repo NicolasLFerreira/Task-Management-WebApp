@@ -108,10 +108,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("InviterId")
                         .HasColumnType("bigint");
@@ -384,10 +381,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.HasKey("TaskItemId", "LabelId");
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SDP.TaskManagement.Domain.Entities;
 
@@ -13,7 +14,9 @@ public class LabelConfiguration : IEntityTypeConfiguration<Label>
 
         // PK
         builder.HasKey(l => l.Id);
-        builder.Property(l => l.Id).ValueGeneratedOnAdd();
+        builder.Property(l => l.Id)
+            .ValueGeneratedOnAdd()
+            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
 
         // Properties
         builder.Property(l => l.Name).HasMaxLength(50).IsRequired();

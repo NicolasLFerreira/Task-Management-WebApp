@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SDP.TaskManagement.Domain.Entities;
 
@@ -11,7 +12,9 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("TaskItems");
 
             builder.HasKey(t => t.Id);
-            builder.Property(t => t.Id).ValueGeneratedOnAdd();
+            builder.Property(t => t.Id)
+                .ValueGeneratedOnAdd()
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
 
             builder.Property(t => t.Title)
                 .IsRequired()

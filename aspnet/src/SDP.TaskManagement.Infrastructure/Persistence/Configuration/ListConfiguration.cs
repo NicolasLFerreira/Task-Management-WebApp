@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration;
@@ -14,7 +16,8 @@ public class ListConfiguration : IEntityTypeConfiguration<List>
         // PK
         builder.HasKey(l => l.Id);
         builder.Property(l => l.Id)
-            .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd()
+            .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
 
         // Properties
         builder.Property(l => l.Title)

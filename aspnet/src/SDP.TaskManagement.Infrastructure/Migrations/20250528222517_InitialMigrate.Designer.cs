@@ -12,8 +12,8 @@ using SDP.TaskManagement.Infrastructure.Persistence;
 namespace SDP.TaskManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250528051336_EntityWideIdConfig")]
-    partial class EntityWideIdConfig
+    [Migration("20250528222517_InitialMigrate")]
+    partial class InitialMigrate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,10 +111,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<long?>("InviterId")
                         .HasColumnType("bigint");
@@ -387,10 +384,7 @@ namespace SDP.TaskManagement.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.HasKey("TaskItemId", "LabelId");
 
