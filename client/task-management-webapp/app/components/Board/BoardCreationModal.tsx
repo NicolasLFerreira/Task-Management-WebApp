@@ -103,17 +103,20 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 
 	return (
 		<div
-			className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+			className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
 			onClick={closeModal}
 			role="dialog"
 			aria-modal="true"
 		>
 			<div
-				className="bg-gray-900 p-6 rounded-md max-w-md w-full text-white flex flex-col gap-6"
+				className="bg-gray-900 border border-gray-800 text-white p-6 rounded-xl w-full max-w-md shadow-xl"
 				onClick={(e) => e.stopPropagation()}
 				ref={modalRef}
 				tabIndex={-1}
 			>
+				<h2 className="text-2xl font-bold mb-4 text-white tracking-tight">
+					New Board
+				</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 					<label className="flex flex-col font-semibold text-sm">
 						Title:
@@ -151,7 +154,7 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 				<button
 					onClick={closeModal}
 					disabled={loading}
-					className="mt-2 text-white underline bg-transparent border-none cursor-pointer disabled:cursor-not-allowed disabled:text-gray-500"
+					className="mt-6 text-sm text-gray-400 hover:text-white transition disabled:cursor-not-allowed disabled:text-gray-600 w-full text-center"
 				>
 					Close
 				</button>

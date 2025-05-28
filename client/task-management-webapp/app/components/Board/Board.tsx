@@ -8,7 +8,7 @@ type SpecialMessageProps = {
 
 const SpecialMessage = ({ children }: SpecialMessageProps) => {
 	return (
-		<div className="rounded-xl h-full flex items-center justify-center bg-cyan-950 bg-opacity-40 text-gray-200 px-4 py-2 text-center">
+		<div className="rounded-xl flex items-center justify-center h-full bg-gray-800/50 px-4 py-2 text-center text-gray-300">
 			{children}
 		</div>
 	);
@@ -46,13 +46,13 @@ const Board = ({ board }: Props) => {
 	}, [board.id]);
 
 	return (
-		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 border border-gray-700 text-white p-4 rounded-xl shadow-md flex flex-col overflow-hidden hover:shadow-xl transition-shadow duration-200 m-1 sm:m-2">
+		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gray-900 border border-gray-800 text-white p-4 rounded-xl shadow-md flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-200 ">
 			{/* Header */}
 			<div className="mb-2">
 				<h3 className="text-lg font-semibold truncate">
 					{board.title}
 				</h3>
-				<p className="text-sm text-gray-300 truncate">
+				<p className="text-sm text-gray-400 truncate">
 					{board.description}
 				</p>
 			</div>
@@ -62,14 +62,14 @@ const Board = ({ board }: Props) => {
 				{isLoading || error ? (
 					<SpecialMessage>
 						<p
-							className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-200"}`}
+							className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-300"}`}
 						>
 							{error ?? "Loading..."}
 						</p>
 					</SpecialMessage>
 				) : taskLists.length === 0 ? (
 					<SpecialMessage>
-						<p className="text-center font-medium text-base text-gray-300">
+						<p className="text-center font-medium text-base text-gray-400">
 							This board contains no lists
 						</p>
 					</SpecialMessage>
@@ -82,7 +82,7 @@ const Board = ({ board }: Props) => {
 								<TaskList key={list.id} list={list} />
 							))}
 						{taskLists.length > 3 && (
-							<p className="ml-1 text-sm text-gray-400">
+							<p className="ml-2 text-sm text-gray-400">
 								And {taskLists.length - 3} more...
 							</p>
 						)}
