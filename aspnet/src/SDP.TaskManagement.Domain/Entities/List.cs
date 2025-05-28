@@ -12,7 +12,7 @@ public class List : Entity
 
     public long BoardId { get; set; }
 
-    public required Board Board { get; set; }
+    public Board? Board { get; set; }
 
     public List<TaskItem>? TaskItems { get; set; }
 }

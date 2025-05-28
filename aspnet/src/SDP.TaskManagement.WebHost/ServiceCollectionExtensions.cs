@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Services;
 using SDP.TaskManagement.Application.Services.Auth;
@@ -13,6 +14,7 @@ using SDP.TaskManagement.Infrastructure.Managers;
 using SDP.TaskManagement.Infrastructure.Persistence;
 using SDP.TaskManagement.Infrastructure.Repository;
 using SDP.TaskManagement.Infrastructure.Services;
+
 using System.Text;
 
 namespace SDP.TaskManagement.WebHost;
@@ -35,31 +37,34 @@ public static class ServiceCollectionExtensions
 
         // Register generic repository for all entity types
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        
+
         // Register specific repositories for all entities
-        services.AddScoped<IRepository<User>, Repository<User>>();
-        services.AddScoped<IRepository<Board>, Repository<Board>>();
-        services.AddScoped<IRepository<List>, Repository<List>>();
-        services.AddScoped<IRepository<TaskItem>, Repository<TaskItem>>();
-        services.AddScoped<IRepository<Label>, Repository<Label>>();
-        services.AddScoped<IRepository<Comment>, Repository<Comment>>();
-        services.AddScoped<IRepository<Attachment>, Repository<Attachment>>();
-        services.AddScoped<IRepository<BoardMember>, Repository<BoardMember>>();
-        services.AddScoped<IRepository<Notification>, Repository<Notification>>();
-        services.AddScoped<IRepository<Message>, Repository<Message>>();
-        services.AddScoped<IRepository<TaskItemLabel>, Repository<TaskItemLabel>>();
-        services.AddScoped<IRepository<TaskAssignee>, Repository<TaskAssignee>>();
-        
+        //services.AddScoped<IRepository<User>, Repository<User>>();
+        //services.AddScoped<IRepository<Board>, Repository<Board>>();
+        //services.AddScoped<IRepository<List>, Repository<List>>();
+        //services.AddScoped<IRepository<TaskItem>, Repository<TaskItem>>();
+        //services.AddScoped<IRepository<Label>, Repository<Label>>();
+        //services.AddScoped<IRepository<Comment>, Repository<Comment>>();
+        //services.AddScoped<IRepository<Attachment>, Repository<Attachment>>();
+        //services.AddScoped<IRepository<BoardMember>, Repository<BoardMember>>();
+        //services.AddScoped<IRepository<Notification>, Repository<Notification>>();
+        //services.AddScoped<IRepository<Message>, Repository<Message>>();
+        //services.AddScoped<IRepository<TaskItemLabel>, Repository<TaskItemLabel>>();
+        //services.AddScoped<IRepository<TaskAssignee>, Repository<TaskAssignee>>();
+
+
         // Register services
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserManager, UserManager>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFileSystemService, FileSystemService>();
-        
+        services.AddScoped<IListService, ListService>();
+        services.AddScoped<IBoardService, BoardService>();
+
         // Register configuration options
         services.Configure<FileStorageOptions>(
             configuration.GetSection(FileStorageOptions.SectionName));
-            
+
         return services;
     }
 
@@ -72,18 +77,18 @@ public static class ServiceCollectionExtensions
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
                       .AllowAnyHeader();
-                      //.WithExposedHeaders("Content-Disposition");
+                //.WithExposedHeaders("Content-Disposition");
             });
         });
 
         return services;
     }
-    
+
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtSettings = configuration.GetSection("Jwt");
         var key = Encoding.ASCII.GetBytes(jwtSettings["Key"] ?? string.Empty);
-        
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,49 +109,49 @@ public static class ServiceCollectionExtensions
                 ClockSkew = TimeSpan.Zero
             };
         });
-        
+
         return services;
     }
-    
+
     public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Task Management API", Version = "v1" });
-            
+
             // Add custom schema ID provider to generate cleaner type names
-            c.CustomSchemaIds(type => 
+            c.CustomSchemaIds(type =>
             {
                 if (type == null)
                     return "Unknown";
-        
+
                 // For generic types, create a more readable name
                 if (type.IsGenericType)
                 {
                     var genericArguments = type.GetGenericArguments()
                         .Select(t => t.Name)
                         .ToArray();
-            
+
                     var genericTypeName = type.Name;
-        
+
                     // Remove the generic type marker (`n) from the name
                     var index = genericTypeName.IndexOf('`');
                     if (index > 0)
                         genericTypeName = genericTypeName.Substring(0, index);
-            
+
                     return $"{genericTypeName}Of{string.Join("And", genericArguments)}";
                 }
-    
+
                 // For nested types, include the parent type name to avoid conflicts
                 if (type.IsNested && type.DeclaringType != null)
                 {
                     return $"{type.DeclaringType.Name}{type.Name}";
                 }
-    
+
                 // For normal types, just use the type name
                 return type.Name;
             });
-            
+
             // Add JWT Authentication to Swagger
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -156,7 +161,7 @@ public static class ServiceCollectionExtensions
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -172,7 +177,7 @@ public static class ServiceCollectionExtensions
                 }
             });
         });
-        
+
         return services;
     }
 }

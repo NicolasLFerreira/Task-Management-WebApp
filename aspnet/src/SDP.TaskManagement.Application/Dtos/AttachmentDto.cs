@@ -1,5 +1,3 @@
-using System;
-
 namespace SDP.TaskManagement.Application.Dtos;
 
 public class AttachmentDto

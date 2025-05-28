@@ -1,5 +1,6 @@
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
+using SDP.TaskManagement.Application.Dtos.AssistanceDtos;
 using SDP.TaskManagement.Application.Mappers;
 using SDP.TaskManagement.Domain.Entities;
 

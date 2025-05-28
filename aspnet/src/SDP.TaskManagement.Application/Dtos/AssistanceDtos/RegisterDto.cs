@@ -1,4 +1,4 @@
-namespace SDP.TaskManagement.Application.Dtos;
+namespace SDP.TaskManagement.Application.Dtos.AssistanceDtos;
 
 public class RegisterDto
 {

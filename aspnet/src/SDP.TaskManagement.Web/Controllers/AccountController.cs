@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 using Microsoft.Extensions.Logging;
+using SDP.TaskManagement.Application.Dtos.AssistanceDtos;
 
 namespace SDP.TaskManagement.Web.Controllers;
 
