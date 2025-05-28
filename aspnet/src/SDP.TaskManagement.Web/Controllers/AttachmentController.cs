@@ -72,7 +72,6 @@ public class AttachmentController : ControllerBase
             
         var attachments = await _attachmentRepository.GetQueryable()
             .Where(a => a.TaskItemId == taskId)
-            .Include(a => User)
             .ToListAsync();
         return Ok(attachments.Select(a => a.ToDto()));
     }
@@ -137,18 +136,18 @@ public class AttachmentController : ControllerBase
         var task = await _taskRepository.GetByIdAsync(attachment.TaskItemId);
         if (task == null || !await CanAccessTaskAsync(task, userId))
             return Forbid();
-            
+        
         // Get file path
         var filePath = _fileSystemService.GetAttachmentPath(userId, attachment.TaskItemId, Path.GetFileName(attachment.FilePath));
         if (filePath == null || !System.IO.File.Exists(filePath))
             return NotFound("File not found on disk");
-            
+        
         // Validate user has access to this file
         if (!await _fileSystemService.ValidateUserFileAccessAsync(userId, filePath))
             return Forbid();
-            
-        var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-        return File(fileStream, GetContentType(attachment.FileType), attachment.FileName);
+    
+        // Use PhysicalFile instead of File to ensure proper file handling
+        return PhysicalFile(filePath, GetContentType(attachment.FileType), attachment.FileName);
     }
 
     [HttpDelete("{id}")]

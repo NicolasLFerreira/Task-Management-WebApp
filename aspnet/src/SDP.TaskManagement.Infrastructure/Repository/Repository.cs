@@ -29,8 +29,16 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async Task<bool> AddAsync(TEntity entity)
     {
-        if (await Exists(entity.Id))
+        // Generate a new ID if it's 0 (default value)
+        if (entity.Id == 0)
         {
+            // Find the maximum ID and add 1, or start with 1 if no entities exist
+            var maxId = await Set.MaxAsync(e => (long?)e.Id) ?? 0;
+            entity.Id = maxId + 1;
+        }
+        else if (await Exists(entity.Id))
+        {
+            // If the ID already exists, return false
             return false;
         }
 
@@ -101,8 +109,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async Task<bool> DeleteAsync(long id)
     {
-
-        if (await Exists(id))
+        if (!await Exists(id))
         {
             return false;
         }

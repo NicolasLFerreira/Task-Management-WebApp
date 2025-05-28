@@ -58,7 +58,9 @@ public class TaskItemController : ControllerBase
         var userId = GetCurrentUserId();
 
         var task = await _taskRepository.GetQueryable()
-            .FirstOrDefaultAsync();
+            .Include(t => t.Labels)
+            .Include(t => t.Assignees)
+            .FirstOrDefaultAsync(t => t.Id == taskId);
 
         if (task == null)
             return NotFound($"Task with ID {taskId} not found");

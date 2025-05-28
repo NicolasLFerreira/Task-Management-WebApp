@@ -74,7 +74,9 @@ public static class ServiceCollectionExtensions
             {
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
-                      .AllowAnyHeader();
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                      .WithExposedHeaders("Content-Disposition");
             });
         });
 
