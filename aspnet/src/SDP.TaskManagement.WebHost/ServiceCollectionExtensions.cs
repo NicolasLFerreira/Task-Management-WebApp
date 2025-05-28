@@ -1,19 +1,17 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Services;
 using SDP.TaskManagement.Application.Services.Auth;
-using SDP.TaskManagement.Domain.Entities;
 using SDP.TaskManagement.Infrastructure.Configuration;
 using SDP.TaskManagement.Infrastructure.Managers;
 using SDP.TaskManagement.Infrastructure.Persistence;
 using SDP.TaskManagement.Infrastructure.Repository;
 using SDP.TaskManagement.Infrastructure.Services;
+using SDP.TaskManagement.WebHost.Configuration;
 
 using System.Text;
 
@@ -77,7 +75,6 @@ public static class ServiceCollectionExtensions
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
                       .AllowAnyHeader();
-                //.WithExposedHeaders("Content-Disposition");
             });
         });
 

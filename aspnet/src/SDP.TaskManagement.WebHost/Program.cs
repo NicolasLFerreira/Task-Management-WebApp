@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Infrastructure.Persistence;
-using SDP.TaskManagement.WebHost.Middleware;
+using SDP.TaskManagement.WebHost.Configuration;
+using SDP.TaskManagement.WebHost.Configuration.Middleware;
 
 namespace SDP.TaskManagement.WebHost;
 
@@ -52,13 +53,14 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
         // Middleware
-
         app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+        // Security
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseCors(AppConfigurations.Cors.DefaultCorsPolicy);
 
         app.MapControllers();
 
