@@ -36,21 +36,6 @@ public static class ServiceCollectionExtensions
         // Register generic repository for all entity types
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-        // Register specific repositories for all entities
-        //services.AddScoped<IRepository<User>, Repository<User>>();
-        //services.AddScoped<IRepository<Board>, Repository<Board>>();
-        //services.AddScoped<IRepository<List>, Repository<List>>();
-        //services.AddScoped<IRepository<TaskItem>, Repository<TaskItem>>();
-        //services.AddScoped<IRepository<Label>, Repository<Label>>();
-        //services.AddScoped<IRepository<Comment>, Repository<Comment>>();
-        //services.AddScoped<IRepository<Attachment>, Repository<Attachment>>();
-        //services.AddScoped<IRepository<BoardMember>, Repository<BoardMember>>();
-        //services.AddScoped<IRepository<Notification>, Repository<Notification>>();
-        //services.AddScoped<IRepository<Message>, Repository<Message>>();
-        //services.AddScoped<IRepository<TaskItemLabel>, Repository<TaskItemLabel>>();
-        //services.AddScoped<IRepository<TaskAssignee>, Repository<TaskAssignee>>();
-
-
         // Register services
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserManager, UserManager>();
@@ -75,7 +60,6 @@ public static class ServiceCollectionExtensions
                 policy.AllowAnyOrigin()
                       .AllowAnyMethod()
                       .AllowAnyHeader()
-                      .AllowCredentials()
                       .WithExposedHeaders("Content-Disposition");
             });
         });
