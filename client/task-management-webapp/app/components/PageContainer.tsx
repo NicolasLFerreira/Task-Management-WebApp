@@ -35,7 +35,7 @@ const PageContainer = ({ children }: PageContainerProps) => {
   }
 
   return (
-    <div className={`min-h-screen ${darkMode ? "dark bg-gray-900" : "bg-gray-100"}`}>
+    <div className={`min-h-screen ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
       <Header toggleSidebarMobile={toggleSidebarMobile} sidebarVisible={sidebarVisible} />
 
       <Sidebar
