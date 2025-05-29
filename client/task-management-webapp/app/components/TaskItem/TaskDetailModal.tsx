@@ -379,7 +379,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, onClose, onTa
                 {isEditing && editedTask ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title *</label>
+                      <label className="flex text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title *</label>
                       <input
                         type="text"
                         value={editedTask.title || ""}
@@ -390,7 +390,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, onClose, onTa
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      <label className="flex text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         Description
                       </label>
                       <textarea
@@ -402,7 +402,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, onClose, onTa
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center">
                         <Calendar size={16} className="mr-1" />
                         Due Date
                       </label>
@@ -416,7 +416,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, onClose, onTa
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center">
+                        <label className="flex text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 items-center">
                           <Tag size={16} className="mr-1" />
                           Priority
                         </label>
