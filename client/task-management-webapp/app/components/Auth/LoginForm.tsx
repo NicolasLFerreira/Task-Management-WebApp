@@ -5,7 +5,6 @@ import { AccountService } from "../../../api-client";
 import { getErrorMessage, logError } from "../../utils/errorHandler";
 import FormInputName from "../Common/FormInputName";
 import FormTitle from "../Common/FormTitle";
-import { FormInput, TableRowsSplit } from "lucide-react";
 
 interface LoginFormProps {
 	onSuccess: (token: string) => void;
