@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, type ChangeEvent } from "react";
 import { AccountService } from "../../../api-client";
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
 import { cn } from "../../lib/utils";
@@ -11,33 +11,38 @@ interface RegisterFormProps {
 	onLoginClick: () => void;
 }
 
+type FormData = {
+	firstName: string;
+	lastName: string;
+	username: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
+};
+
 const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [username, setUsername] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmPassword, setConfirmPassword] = useState("");
+	const [formData, setFormData] = useState<FormData>({
+		firstName: "",
+		lastName: "",
+		username: "",
+		email: "",
+		password: "",
+		confirmPassword: "",
+	});
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [passwordFocused, setPasswordFocused] = useState(false);
 	const [passwordScore, setPasswordScore] = useState(0);
 	const [success, setSuccess] = useState(false);
 
-	// Generate username suggestion from email when email changes
-	useEffect(() => {
-		if (email && !username) {
-			setUsername(email.split("@")[0]);
-		}
-	}, [email, username]);
-
 	const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
 		setError(null);
 
 		// Validate passwords match
-		if (password !== confirmPassword) {
+		if (formData.password !== formData.confirmPassword) {
 			setError("Passwords do not match");
 			return;
 		}
@@ -49,13 +54,13 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 		}
 
 		// Validate email format
-		if (!emailRegex.test(email)) {
+		if (!emailRegex.test(formData.email)) {
 			setError("Please enter a valid email address");
 			return;
 		}
 
 		// Validate username
-		if (!username) {
+		if (!formData.username) {
 			setError("Username is required");
 			return;
 		}
@@ -64,32 +69,24 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 
 		try {
 			// Construct the full name by combining firstName and lastName
-			const name = `${firstName} ${lastName}`.trim();
+			const name = `${formData.firstName} ${formData.lastName}`.trim();
 
 			// Log the exact request body we're sending
 			const requestBody = {
 				name,
-				email,
-				password,
-				username,
-				firstName,
-				lastName,
+				email: formData.email,
+				password: formData.password,
+				username: formData.username,
+				firstName: formData.firstName,
+				lastName: formData.lastName,
 			};
-
-			console.log(
-				"Registration request body:",
-				JSON.stringify(requestBody)
-			);
 
 			const response = await AccountService.register({
 				body: requestBody,
 			});
 
-			console.log("Registration API response:", response);
-
 			if (response.data) {
 				// Registration successful
-				console.log("Registration successful:", response.data);
 				setSuccess(true);
 				setTimeout(() => {
 					onSuccess();
@@ -103,6 +100,11 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
 	const handlePasswordScoreChange = (score: number) => {
@@ -166,7 +168,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 					</div>
 				)}
 
-				<div className="space-y-4">
+				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="grid grid-cols-2 gap-4">
 						<div>
 							<label
@@ -177,9 +179,10 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 							</label>
 							<input
 								id="firstName"
+								name="firstName"
 								type="text"
-								value={firstName}
-								onChange={(e) => setFirstName(e.target.value)}
+								value={formData.firstName}
+								onChange={handleChange}
 								required
 								className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
 								placeholder="First Name"
@@ -194,9 +197,10 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 							</label>
 							<input
 								id="lastName"
+								name="lastName"
 								type="text"
-								value={lastName}
-								onChange={(e) => setLastName(e.target.value)}
+								value={formData.lastName}
+								onChange={handleChange}
 								required
 								className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
 								placeholder="Last Name"
@@ -213,9 +217,10 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 						</label>
 						<input
 							id="username"
+							name="username"
 							type="text"
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
+							value={formData.username}
+							onChange={handleChange}
 							required
 							className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
 							placeholder="Username"
@@ -231,19 +236,21 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 						</label>
 						<input
 							id="email"
+							name="email"
 							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							value={formData.email}
+							onChange={handleChange}
 							required
 							className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-gray-900"
 							placeholder="your@email.com"
 							aria-describedby={
-								!emailRegex.test(email) && email
+								!emailRegex.test(formData.email) &&
+								formData.email
 									? "email-error"
 									: undefined
 							}
 						/>
-						{!emailRegex.test(email) && email && (
+						{!emailRegex.test(formData.email) && formData.email && (
 							<p
 								id="email-error"
 								className="mt-1 text-sm text-red-600"
@@ -262,9 +269,10 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 						</label>
 						<input
 							id="password"
+							name="password"
 							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
+							value={formData.password}
+							onChange={handleChange}
 							onFocus={() => setPasswordFocused(true)}
 							required
 							className={cn(
@@ -275,10 +283,10 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 							)}
 							aria-describedby="password-strength"
 						/>
-						{passwordFocused && password.length > 0 && (
+						{passwordFocused && formData.password.length > 0 && (
 							<div id="password-strength">
 								<PasswordStrengthMeter
-									password={password}
+									password={formData.password}
 									onScoreChange={handlePasswordScoreChange}
 								/>
 							</div>
@@ -294,42 +302,47 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 						</label>
 						<input
 							id="confirmPassword"
+							name="confirmPassword"
 							type="password"
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
+							value={formData.confirmPassword}
+							onChange={handleChange}
 							required
 							className={cn(
 								"w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none text-gray-900",
-								confirmPassword && password === confirmPassword
+								formData.confirmPassword &&
+									formData.password ===
+										formData.confirmPassword
 									? "border-green-500 focus:ring-green-500 focus:border-green-500"
 									: "border-gray-300 focus:ring-teal-500 focus:border-teal-500"
 							)}
 							aria-describedby={
-								confirmPassword && password !== confirmPassword
+								formData.confirmPassword &&
+								formData.password !== formData.confirmPassword
 									? "confirm-password-error"
 									: undefined
 							}
 						/>
-						{confirmPassword && password !== confirmPassword && (
-							<p
-								id="confirm-password-error"
-								className="mt-1 text-sm text-red-600"
-							>
-								Passwords do not match
-							</p>
-						)}
+						{formData.confirmPassword &&
+							formData.password !== formData.confirmPassword && (
+								<p
+									id="confirm-password-error"
+									className="mt-1 text-sm text-red-600"
+								>
+									Passwords do not match
+								</p>
+							)}
 					</div>
 
 					<div>
 						<button
 							disabled={isLoading}
-							onClick={() => handleSubmit()}
+							type="submit"
 							className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50"
 						>
 							{isLoading ? "Creating Account..." : "Register"}
 						</button>
 					</div>
-				</div>
+				</form>
 
 				<div className="mt-6 text-center">
 					<p className="text-sm text-gray-600">
