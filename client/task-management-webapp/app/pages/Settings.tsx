@@ -127,10 +127,14 @@ const Settings = () => {
       // Update user text data
       await UserService.putApiUsersProfile({
         body: {
+          id: userData?.id, // ✅ Required to correctly identify the user on backend
+          username: userData?.username,
           firstName: userData?.firstName,
           lastName: userData?.lastName,
         },
       })
+      const refreshed = await UserProfileService.getApiUserProfile();
+setUserData(refreshed.data);
 
       // Upload photo if changed
       if (profileImage && profileImage.includes("base64")) {
@@ -140,12 +144,20 @@ const Settings = () => {
           const file = new File([blob], "profile-photo.jpg", {
             type: "image/jpeg",
           })
-
+      
           await UserProfileService.postApiUserProfileProfilePhoto({
             body: {
               file: file,
             },
           })
+      
+          // ✅ Re-fetch profile photo after upload
+          const photoResponse = await UserProfileService.getApiUserProfileProfilePhoto({ responseType: "blob" })
+          if (photoResponse.data) {
+            const imageUrl = URL.createObjectURL(photoResponse.data as Blob)
+            setProfileImage(imageUrl)
+          }
+      
         } catch (uploadError) {
           console.error("Error uploading profile photo:", uploadError)
           setSaveError("Failed to upload profile photo. Please try again.")
@@ -359,12 +371,11 @@ const Settings = () => {
                       id="username"
                       name="username"
                       value={userData?.username || ""}
-                      readOnly
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm dark:bg-gray-700 dark:text-white bg-gray-50 cursor-not-allowed"
+                      onChange={handleProfileChange}
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                      placeholder="Enter your username"
                     />
-                    <p className="text-xs text-gray-500 mt-1">Username cannot be changed</p>
                   </div>
-
                   <div className="space-y-2">
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Email Address
