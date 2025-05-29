@@ -28,7 +28,7 @@ const MyTasks = () => {
       // For demo purposes, we'll get the first list from the first board
       // In a real app, you might want to get a specific list or let the user choose
       const boardsResponse = await ListService.getApiListsBoardByBoardId({
-        path: { boardId: 1 }, // Using board ID 1 as default
+        path: { boardId: 2 }, // Using board ID 1 as default
       })
 
       if (boardsResponse.data && boardsResponse.data.length > 0) {
@@ -124,7 +124,7 @@ const MyTasks = () => {
 
       {showTaskModal && defaultList && (
         <TaskCreationModal
-          onClose={() => setShowTaskModal(false)}
+          closeModal={() => setShowTaskModal(false)}
           listDto={defaultList}
           onTaskCreated={() => {
             // Force refresh of task list after creating a new task

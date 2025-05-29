@@ -1,6 +1,7 @@
 import { ListService, type BoardDto, type ListDto } from "api-client";
 import { useEffect, useState, type ComponentType } from "react";
 import TaskList from "./TaskListCard";
+import { Loader2 } from "lucide-react";
 
 type SpecialMessageProps = {
 	children: React.ReactNode;
@@ -46,7 +47,7 @@ const Board = ({ board }: Props) => {
 	}, [board.id]);
 
 	return (
-		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gray-900 border border-gray-800 text-white p-4 rounded-xl shadow-md flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-200 ">
+		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gray-800 border border-gray-800 text-white p-4 rounded-lg shadow-md flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-200 ">
 			{/* Header */}
 			<div className="mb-2">
 				<h3 className="text-lg font-semibold truncate">
@@ -64,7 +65,14 @@ const Board = ({ board }: Props) => {
 						<p
 							className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-300"}`}
 						>
-							{error ?? "Loading..."}
+							{error ?? (
+								<div className="flex justify-center py-12">
+									<Loader2
+										size={32}
+										className="animate-spin text-teal-500"
+									/>
+								</div>
+							)}
 						</p>
 					</SpecialMessage>
 				) : taskLists.length === 0 ? (

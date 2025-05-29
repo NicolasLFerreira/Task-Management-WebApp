@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, type FormEvent } from "react";
 import { BoardService, type BoardCreationDto } from "api-client";
+import { X } from "lucide-react";
+import FormInputName from "../Common/FormInputName";
 
 type Props = { closeModal: () => void };
 
@@ -10,9 +12,21 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 		title: "",
 		description: "",
 	});
-	const [loading, setLoading] = useState(false);
+	const [isLoading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const modalRef = useRef<HTMLDivElement>(null);
+
+	const handleSoftClose = () => {
+		var response = true;
+
+		if (formData.title !== "" || formData.description !== "") {
+			response = confirm(
+				"You have unsaved changes, do you wish to proceed?"
+			);
+		}
+
+		if (response) closeModal();
+	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -38,7 +52,7 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 			};
 
 			await BoardService.postApiBoards({ body: board });
-			closeModal();
+			handleSoftClose();
 		} catch {
 			setError("Failed to create board. Try again.");
 		} finally {
@@ -46,19 +60,19 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 		}
 	};
 
-	// Close on ESC
+	// close on escape
 	useEffect(() => {
 		const onKeyDown = (e: KeyboardEvent) => {
 			if (e.key === "Escape") {
 				e.preventDefault();
-				closeModal();
+				handleSoftClose();
 			}
 		};
 		document.addEventListener("keydown", onKeyDown);
 		return () => document.removeEventListener("keydown", onKeyDown);
 	}, [closeModal]);
 
-	// Focus trap
+	// focus to modal
 	useEffect(() => {
 		const focusableSelectors = [
 			"a[href]",
@@ -103,61 +117,81 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 
 	return (
 		<div
-			className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-			onClick={closeModal}
+			className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+			onClick={handleSoftClose}
 			role="dialog"
 			aria-modal="true"
 		>
 			<div
-				className="bg-gray-900 border border-gray-800 text-white p-6 rounded-xl w-full max-w-md shadow-xl"
+				className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
 				onClick={(e) => e.stopPropagation()}
 				ref={modalRef}
 				tabIndex={-1}
 			>
-				<h2 className="text-2xl font-bold mb-4 text-white tracking-tight">
-					New Board
-				</h2>
-				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
-					<label className="flex flex-col font-semibold text-sm">
-						Title:
+				<div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+					<h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+						Create New Board
+					</h2>
+					<button
+						onClick={handleSoftClose}
+						className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+					>
+						<X size={20} />
+					</button>
+				</div>
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-4 p-4"
+				>
+					{/* <label className="flex flex-col font-semibold text-sm"> */}
+						<FormInputName name="title">Title *</FormInputName>
 						<input
+							id="title"
 							type="text"
 							name="title"
 							value={formData.title}
 							onChange={handleChange}
-							className="mt-1 p-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-							required
-							disabled={loading}
+							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+							disabled={isLoading}
+							placeholder="Board title"
 							autoFocus
+							required
 						/>
-					</label>
+					{/* </label> */}
 					<label className="flex flex-col font-semibold text-sm">
-						Description:
+						<FormInputName name="description">
+							Description *
+						</FormInputName>
 						<input
 							type="text"
 							name="description"
 							value={formData.description}
 							onChange={handleChange}
-							className="mt-1 p-2 rounded bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-							disabled={loading}
+							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+							disabled={isLoading}
+							placeholder="Board description"
+							required
 						/>
 					</label>
 					{error && <p className="text-red-500 text-xs">{error}</p>}
-					<button
-						type="submit"
-						disabled={loading}
-						className={`py-2 font-bold rounded ${loading ? "bg-gray-700 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
-					>
-						{loading ? "Submitting..." : "Submit"}
-					</button>
+					<div className="flex justify-end space-x-3 mt-6">
+						<button
+							type="button"
+							onClick={handleSoftClose}
+							className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-gray-800"
+							disabled={isLoading}
+						>
+							Cancel
+						</button>
+						<button
+							type="submit"
+							className="px-4 py-2 bg-teal-600 border border-transparent rounded-md text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-gray-800 disabled:opacity-50"
+							disabled={isLoading}
+						>
+							{isLoading ? "Creating..." : "Create Board"}
+						</button>
+					</div>
 				</form>
-				<button
-					onClick={closeModal}
-					disabled={loading}
-					className="mt-6 text-sm text-gray-400 hover:text-white transition disabled:cursor-not-allowed disabled:text-gray-600 w-full text-center"
-				>
-					Close
-				</button>
 			</div>
 		</div>
 	);

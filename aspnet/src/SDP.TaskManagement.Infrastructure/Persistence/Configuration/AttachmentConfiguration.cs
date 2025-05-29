@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
@@ -11,7 +13,9 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Attachments");
 
             builder.HasKey(a => a.Id);
-            builder.Property(a => a.Id).ValueGeneratedOnAdd();
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd()
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
 
             builder.Property(a => a.FileName)
                 .IsRequired()

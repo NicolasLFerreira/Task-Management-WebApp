@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using SDP.TaskManagement.Domain.Entities;
 
 namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
@@ -11,7 +13,10 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Comments");
 
             builder.HasKey(c => c.Id);
-            builder.Property(c => c.Id).ValueGeneratedOnAdd();
+            builder.Property(c => c.Id)
+                .ValueGeneratedOnAdd()
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
+
 
             builder.Property(c => c.Content)
                 .IsRequired()

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SDP.TaskManagement.Domain.Entities;
 
@@ -11,7 +12,9 @@ namespace SDP.TaskManagement.Infrastructure.Persistence.Configuration
             builder.ToTable("Messages");
 
             builder.HasKey(m => m.Id);
-            builder.Property(m => m.Id).ValueGeneratedOnAdd();
+            builder.Property(m => m.Id)
+                .ValueGeneratedOnAdd()
+                .Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
 
             builder.Property(m => m.Content)
                 .IsRequired()
