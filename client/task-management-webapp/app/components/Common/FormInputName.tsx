@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
+
 type Props = {
 	name: string;
-	children: React.ReactNode;
+	children: ReactNode;
 	extraStyle?: string;
 };
 
