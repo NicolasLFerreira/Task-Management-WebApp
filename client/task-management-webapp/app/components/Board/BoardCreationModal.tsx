@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, type FormEvent } from "react";
 import { BoardService, type BoardCreationDto } from "api-client";
 import { X } from "lucide-react";
 import FormInputName from "../Common/FormInputName";
+import FormInputField from "../Common/FormInputField";
+import FormTitle from "../Common/FormTitle";
 
 type Props = { closeModal: () => void };
 
@@ -52,7 +54,7 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 			};
 
 			await BoardService.postApiBoards({ body: board });
-			handleSoftClose();
+			closeModal();
 		} catch {
 			setError("Failed to create board. Try again.");
 		} finally {
@@ -129,9 +131,7 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 				tabIndex={-1}
 			>
 				<div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
-					<h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-						Create New Board
-					</h2>
+					<FormTitle content="Create New Board" />
 					<button
 						onClick={handleSoftClose}
 						className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -144,35 +144,24 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 					className="flex flex-col gap-4 p-4"
 				>
 					{/* <label className="flex flex-col font-semibold text-sm"> */}
-						<FormInputName name="title">Title *</FormInputName>
-						<input
-							id="title"
-							type="text"
-							name="title"
-							value={formData.title}
-							onChange={handleChange}
-							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-							disabled={isLoading}
-							placeholder="Board title"
-							autoFocus
-							required
-						/>
+					<FormInputField
+						name="title"
+						placeHolder="Board title"
+						property={formData.title}
+						handleChange={handleChange}
+						autoFocus={""}
+					>
+						Title
+					</FormInputField>
 					{/* </label> */}
-					<label className="flex flex-col font-semibold text-sm">
-						<FormInputName name="description">
-							Description *
-						</FormInputName>
-						<input
-							type="text"
-							name="description"
-							value={formData.description}
-							onChange={handleChange}
-							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
-							disabled={isLoading}
-							placeholder="Board description"
-							required
-						/>
-					</label>
+					<FormInputField
+						name="description"
+						placeHolder="Board description"
+						property={formData.description}
+						handleChange={handleChange}
+					>
+						Description
+					</FormInputField>
 					{error && <p className="text-red-500 text-xs">{error}</p>}
 					<div className="flex justify-end space-x-3 mt-6">
 						<button
