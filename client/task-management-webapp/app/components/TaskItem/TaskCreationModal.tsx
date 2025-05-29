@@ -210,7 +210,10 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 			className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
 			onClick={handleSoftClose}
 		>
-			<div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+			<div
+				className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+				onClick={(e) => e.stopPropagation()}
+			>
 				<div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
 					<h2 className="text-xl font-semibold text-gray-800 dark:text-white">
 						Create New Task
