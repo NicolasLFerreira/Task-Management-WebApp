@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { TaskItemService, LabelService, TaskItemPriority, TaskItemStatus, type ListDto } from "api-client"
+import { TaskItemService, LabelService, TaskItemPriority, TaskItemStatus, type ListDto, type TaskItemCreationDto } from "api-client"
 import { X, Calendar, Tag, AlertCircle } from "lucide-react"
 import LabelSelector from "../Label/LabelSelector"
 
@@ -12,13 +12,24 @@ interface TaskCreationModalProps {
   onTaskCreated?: () => void
 }
 
+type TaskItemForm = {
+  title: string;
+  description: string;
+  dueDate: string;
+  priority: TaskItemPriority;
+  status: TaskItemStatus;
+  selectedLabelIds: number[];
+}
+
 const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto, onTaskCreated }) => {
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [dueDate, setDueDate] = useState<string>("")
-  const [priority, setPriority] = useState<TaskItemPriority>(TaskItemPriority._0) // Default to Low
-  const [status, setStatus] = useState<TaskItemStatus>(TaskItemStatus._0) // Default to Todo
-  const [selectedLabelIds, setSelectedLabelIds] = useState<number[]>([])
+  const [formData, setFormData] = useState<TaskItemForm>({
+    title: "",
+    description: "",
+    dueDate: "",
+    priority: TaskItemPriority._0,
+    status: TaskItemStatus._0,
+    selectedLabelIds: []
+  });
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showLabelSelector, setShowLabelSelector] = useState(false)
@@ -26,12 +37,17 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
   // Get boardId from the list's board
   // For now, we'll need to pass boardId separately or fetch it
   // Since ListDto doesn't have board property, we'll use a default
-  const boardId = 1 // Using boardId 1 
+  const boardId = 2 // Using boardId 1 
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement>) => {
+		const { name, value,  } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!title.trim()) {
+    if (!formData.title.trim()) {
       setError("Title is required")
       return
     }
@@ -40,27 +56,29 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
     setError(null)
 
     try {
+      const requestBody: TaskItemCreationDto = {
+        title: formData.title,
+        description: formData.description,
+        dueDate: new Date(formData.dueDate),
+        priority: formData.priority,
+        progressStatus: formData.status,
+        listId: listDto.id
+      }
+      
       // First create the task
       const taskResponse = await TaskItemService.postApiTasks({
-        body: {
-          title,
-          description: description || null,
-          dueDate: dueDate ? new Date(dueDate) : null,
-          priority: priority,
-          progressStatus: status,
-          listId: listDto.id,
-        },
+        body: requestBody
       })
 
       // If we have labels to add and the task was created successfully
-      if (selectedLabelIds.length > 0 && taskResponse.data) {
+      if (formData.selectedLabelIds.length > 0 && taskResponse.data) {
         const taskId = taskResponse.data?.id
         if (!taskId) {
           throw new Error("Task created but no ID returned")
         }
 
         // Add each label to the task
-        for (const labelId of selectedLabelIds) {
+        for (const labelId of formData.selectedLabelIds) {
           await LabelService.postApiLabelsTaskByTaskIdAddByLabelId({
             path: { taskId, labelId },
           })
@@ -84,10 +102,16 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
   }
 
   const handleLabelToggle = (labelId: number, isSelected: boolean) => {
-    if (isSelected) {
-      setSelectedLabelIds((prev) => [...prev, labelId])
+    // if (isSelected) {
+    //   setFormData((prev) => [...prev, labelId])
+    // } else {
+    //   setSelectedLabelIds((prev) => prev.filter((id) => id !== labelId))
+    // }
+
+    if (isSelected){
+      setFormData((prev) => {return {...prev, selectedLabelIds: [...prev.selectedLabelIds, labelId]}});
     } else {
-      setSelectedLabelIds((prev) => prev.filter((id) => id !== labelId))
+      setFormData((prev) => {return {...prev, selectedLabelIds: prev.selectedLabelIds.filter((id) => id !== labelId)}})
     }
   }
 
@@ -118,9 +142,10 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
             </label>
             <input
               id="title"
+              name="title"
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={formData.title}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
               placeholder="Task title"
               required
@@ -133,11 +158,13 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
             </label>
             <textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
               placeholder="Task description"
               rows={3}
+              required
             />
           </div>
 
@@ -151,10 +178,12 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
             </label>
             <input
               id="dueDate"
+              name="dueDate"
+              value={formData.dueDate}
               type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
+              onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+              required
             />
           </div>
 
@@ -169,9 +198,11 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
               </label>
               <select
                 id="priority"
-                value={priority}
-                onChange={(e) => setPriority(Number(e.target.value) as TaskItemPriority)}
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+                required
               >
                 <option value={TaskItemPriority._0}>Low</option>
                 <option value={TaskItemPriority._1}>Medium</option>
@@ -186,9 +217,11 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
               </label>
               <select
                 id="status"
-                value={status !== undefined ? status : TaskItemStatus._0}
-                onChange={(e) => setStatus(Number(e.target.value) as TaskItemStatus)}
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
+                required
               >
                 <option value={TaskItemStatus._0}>To Do</option>
                 <option value={TaskItemStatus._1}>In Progress</option>
@@ -215,16 +248,16 @@ const TaskCreationModal: React.FC<TaskCreationModalProps> = ({ onClose, listDto,
               <div className="mt-2 border border-gray-200 dark:border-gray-700 rounded-md p-2 max-h-40 overflow-y-auto">
                 <LabelSelector
                   boardId={boardId}
-                  selectedLabelIds={selectedLabelIds}
+                  selectedLabelIds={formData.selectedLabelIds}
                   onLabelToggle={handleLabelToggle}
                 />
               </div>
             )}
 
-            {selectedLabelIds.length > 0 && (
+            {formData.selectedLabelIds.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1">
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  {selectedLabelIds.length} label{selectedLabelIds.length !== 1 ? "s" : ""} selected
+                  {formData.selectedLabelIds.length} label{formData.selectedLabelIds.length !== 1 ? "s" : ""} selected
                 </span>
               </div>
             )}
