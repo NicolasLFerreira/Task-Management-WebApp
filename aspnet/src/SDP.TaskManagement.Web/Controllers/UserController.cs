@@ -73,6 +73,9 @@ public class UserController : ControllerBase
             
         if (!string.IsNullOrEmpty(profileDto.Email))
             user.Email = profileDto.Email;
+        
+        if (!string.IsNullOrEmpty(profileDto.Username))
+            user.Username = profileDto.Username;
             
         var result = await _userRepository.UpdateAsync(user);
         
@@ -147,6 +150,7 @@ public class UpdateProfileDto
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? Username { get; set; }
 }
 
 public class ChangePasswordDto
