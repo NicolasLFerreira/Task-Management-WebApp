@@ -253,9 +253,11 @@ const Header = ({ toggleSidebarMobile, sidebarVisible }: HeaderProps) => {
             aria-haspopup="true"
           >
             <Bell size={20} />
-            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-              {notifications.length}
-            </span>
+            {notifications.length > 0 && (
+              <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {notifications.length}
+              </span>
+)}
           </button>
 
           {showNotifications && (
