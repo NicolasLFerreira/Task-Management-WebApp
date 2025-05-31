@@ -2,35 +2,33 @@
 
 import type React from "react"
 import { useState, useEffect, useRef, type FormEvent } from "react"
-import { BoardService, type BoardCreationDto } from "api-client"
+import { BoardService, type BoardDto } from "api-client"
 import { X } from "lucide-react"
 import FormInputField from "../Common/FormInputField"
 import FormTitle from "../Common/FormTitle"
 
-type Props = { closeModal: () => void }
+type Props = {
+  board: BoardDto
+  closeModal: () => void
+}
 
-type BoardForm = { title: string; description: string }
-
-const BoardCreationModal = ({ closeModal }: Props) => {
-  const [formData, setFormData] = useState<BoardForm>({
-    title: "",
-    description: "",
+const BoardEditModal = ({ board, closeModal }: Props) => {
+  const [formData, setFormData] = useState({
+    title: board.title || "",
+    description: board.description || "",
   })
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const modalRef = useRef<HTMLDivElement>(null)
 
-  const handleSoftClose = () => {
-    let response = true
+  useEffect(() => {
+    setFormData({
+      title: board.title || "",
+      description: board.description || "",
+    })
+  }, [board])
 
-    if (formData.title !== "" || formData.description !== "") {
-      response = confirm("You have unsaved changes, do you wish to proceed?")
-    }
-
-    if (response) closeModal()
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
@@ -46,36 +44,35 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 
     setLoading(true)
     try {
-      const board: BoardCreationDto = {
+      const updatedBoardData: BoardDto = {
+        ...board, // Spread existing board data
         title: formData.title.trim(),
         description: formData.description.trim(),
-        boardMembers: [],
-        lists: [],
       }
 
-      await BoardService.postApiBoards({ body: board })
+      await BoardService.putApiBoardsByBoardId({
+        path: { boardId: board.id },
+        body: updatedBoardData,
+      })
       closeModal()
-    } catch {
-      setError("Failed to create board. Try again.")
+    } catch (err) {
+      console.error("Failed to update board:", err)
+      setError("Failed to update board. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
-  // close on escape
+  // Close on escape key & focus trap (similar to BoardCreationModal)
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault()
-        handleSoftClose()
+        closeModal()
       }
     }
     document.addEventListener("keydown", onKeyDown)
-    return () => document.removeEventListener("keydown", onKeyDown)
-  }, [closeModal])
 
-  // focus to modal
-  useEffect(() => {
     const focusableSelectors = [
       "a[href]",
       "button:not([disabled])",
@@ -92,10 +89,10 @@ const BoardCreationModal = ({ closeModal }: Props) => {
 
     const firstEl = focusableElements[0]
     const lastEl = focusableElements[focusableElements.length - 1]
+    firstEl.focus()
 
     const trapFocus = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return
-
       if (e.shiftKey) {
         if (document.activeElement === firstEl) {
           e.preventDefault()
@@ -108,71 +105,78 @@ const BoardCreationModal = ({ closeModal }: Props) => {
         }
       }
     }
-
     modal.addEventListener("keydown", trapFocus)
-    firstEl.focus()
 
-    return () => modal.removeEventListener("keydown", trapFocus)
-  }, [])
+    return () => {
+      document.removeEventListener("keydown", onKeyDown)
+      modal.removeEventListener("keydown", trapFocus)
+    }
+  }, [closeModal])
 
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={handleSoftClose}
+      onClick={closeModal}
       role="dialog"
       aria-modal="true"
+      aria-labelledby="edit-board-title"
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
+        className="bg-white dark:bg-slate-800 rounded-lg shadow-xl w-full max-w-md overflow-hidden"
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         tabIndex={-1}
       >
-        <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
-          <FormTitle content="Create New Board" />
+        <div className="flex justify-between items-center p-4 border-b dark:border-slate-700">
+          <FormTitle content="Edit Board" id="edit-board-title" />
           <button
-            onClick={handleSoftClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            onClick={closeModal}
+            className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            aria-label="Close modal"
           >
             <X size={20} />
           </button>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
-          {/* <label className="flex flex-col font-semibold text-sm"> */}
           <FormInputField
             name="title"
             placeHolder="Board title"
             property={formData.title}
             handleChange={handleChange}
-            autoFocus={""}
+            autoFocus
           >
             Title
           </FormInputField>
-          {/* </label> */}
-          <FormInputField
-            name="description"
-            placeHolder="Board description"
-            property={formData.description}
-            handleChange={handleChange}
-          >
-            Description
-          </FormInputField>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Board description (optional)"
+              rows={3}
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-50 placeholder-slate-400 dark:placeholder-slate-500"
+            />
+          </div>
           {error && <p className="text-red-500 text-xs">{error}</p>}
           <div className="flex justify-end space-x-3 mt-6">
             <button
               type="button"
-              onClick={handleSoftClose}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-gray-800"
+              onClick={closeModal}
+              className="px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-md text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-800"
               disabled={isLoading}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-teal-600 border border-transparent rounded-md text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-gray-800 disabled:opacity-50"
+              className="px-4 py-2 bg-teal-600 border border-transparent rounded-md text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 dark:focus:ring-offset-slate-800 disabled:opacity-50"
               disabled={isLoading}
             >
-              {isLoading ? "Creating..." : "Create Board"}
+              {isLoading ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
@@ -181,4 +185,4 @@ const BoardCreationModal = ({ closeModal }: Props) => {
   )
 }
 
-export default BoardCreationModal
+export default BoardEditModal

@@ -662,6 +662,10 @@ export const UpdateProfileDtoSchema = {
       type: "string",
       nullable: true,
     },
+    username: {
+      type: "string",
+      nullable: true,
+    },
   },
   additionalProperties: false,
 } as const;

@@ -204,11 +204,10 @@ export type UpcomingTaskDto = {
 };
 
 export type UpdateProfileDto = {
-  id?: number | null;
-  username?: string | null;
   firstName?: string | null;
   lastName?: string | null;
   email?: string | null;
+  username?: string | null;
 };
 
 export type UserDtoReadable = {
@@ -578,6 +577,20 @@ export type GetApiDashboardUpcomingTasksResponses = {
 export type GetApiDashboardUpcomingTasksResponse =
   GetApiDashboardUpcomingTasksResponses[keyof GetApiDashboardUpcomingTasksResponses];
 
+export type GetHealthData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/Health";
+};
+
+export type GetHealthResponses = {
+  /**
+   * OK
+   */
+  200: unknown;
+};
+
 export type GetApiHealthData = {
   body?: never;
   path?: never;
@@ -678,6 +691,25 @@ export type PostApiLabelsResponses = {
 
 export type PostApiLabelsResponse =
   PostApiLabelsResponses[keyof PostApiLabelsResponses];
+
+export type GetApiLabelsTaskByTaskIdData = {
+  body?: never;
+  path: {
+    taskId: number;
+  };
+  query?: never;
+  url: "/api/labels/task/{taskId}";
+};
+
+export type GetApiLabelsTaskByTaskIdResponses = {
+  /**
+   * OK
+   */
+  200: Array<LabelDto>;
+};
+
+export type GetApiLabelsTaskByTaskIdResponse =
+  GetApiLabelsTaskByTaskIdResponses[keyof GetApiLabelsTaskByTaskIdResponses];
 
 export type PostApiLabelsTaskByTaskIdAddByLabelIdData = {
   body?: never;

@@ -40,6 +40,7 @@ import type {
   GetApiDashboardRecentActivityResponse,
   GetApiDashboardUpcomingTasksData,
   GetApiDashboardUpcomingTasksResponse,
+  GetHealthData,
   GetApiHealthData,
   GetApiLabelsBoardByBoardIdData,
   GetApiLabelsBoardByBoardIdResponse,
@@ -49,6 +50,8 @@ import type {
   PutApiLabelsByLabelIdData,
   PostApiLabelsData,
   PostApiLabelsResponse,
+  GetApiLabelsTaskByTaskIdData,
+  GetApiLabelsTaskByTaskIdResponse,
   PostApiLabelsTaskByTaskIdAddByLabelIdData,
   PostApiLabelsTaskByTaskIdRemoveByLabelIdData,
   GetApiListsBoardByBoardIdData,
@@ -584,6 +587,25 @@ export class DashboardService {
 }
 
 export class HealthService {
+  public static getHealth<ThrowOnError extends boolean = false>(
+    options?: Options<GetHealthData, ThrowOnError>,
+  ) {
+    return (options?.client ?? _heyApiClient).get<
+      unknown,
+      unknown,
+      ThrowOnError
+    >({
+      security: [
+        {
+          name: "Authorization",
+          type: "apiKey",
+        },
+      ],
+      url: "/Health",
+      ...options,
+    });
+  }
+
   public static getApiHealth<ThrowOnError extends boolean = false>(
     options?: Options<GetApiHealthData, ThrowOnError>,
   ) {
@@ -705,6 +727,25 @@ export class LabelService {
         "Content-Type": "application/json",
         ...options?.headers,
       },
+    });
+  }
+
+  public static getApiLabelsTaskByTaskId<ThrowOnError extends boolean = false>(
+    options: Options<GetApiLabelsTaskByTaskIdData, ThrowOnError>,
+  ) {
+    return (options.client ?? _heyApiClient).get<
+      GetApiLabelsTaskByTaskIdResponse,
+      unknown,
+      ThrowOnError
+    >({
+      security: [
+        {
+          name: "Authorization",
+          type: "apiKey",
+        },
+      ],
+      url: "/api/labels/task/{taskId}",
+      ...options,
     });
   }
 
