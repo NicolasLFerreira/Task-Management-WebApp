@@ -10,7 +10,7 @@
   --muted-foreground: #6b7280;
   --card-background: #f3f4f6;
   --card-foreground: #1a1a1a;
-  --sidebar-background: #1e293b; /* Keep sidebar dark in both modes */
+  --sidebar-background: #1e293b;
   --sidebar-foreground: white;
 }
 
@@ -56,15 +56,3 @@ html:not(.dark) h5,
 html:not(.dark) h6 {
   color: var(--foreground);
 }
-/* 
-Ensure proper contrast for light mode
-html:not(.dark) .text-white,
-html:not(.dark) .text-gray-100,
-html:not(.dark) .text-gray-200 {
-  color: var(--foreground);
-}
-
-html:not(.dark) .text-gray-400,
-html:not(.dark) .text-gray-500 {
-  color: var(--muted-foreground);
-} */

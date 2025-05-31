@@ -5,6 +5,7 @@ import { AccountService } from "../../../api-client";
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
 import { cn } from "../../lib/utils";
 import { getErrorMessage, logError } from "../../utils/errorHandler";
+import FormInputName from "../Common/FormInputName";
 
 interface RegisterFormProps {
 	onSuccess: () => void;
@@ -90,7 +91,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 				setSuccess(true);
 				setTimeout(() => {
 					onSuccess();
-				}, 2000);
+				}, 2000000);
 			} else {
 				setError("Registration failed");
 			}
@@ -114,7 +115,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 	if (success) {
 		return (
 			<div className="w-full max-w-md mx-auto">
-				<div className="bg-white p-8 rounded-lg shadow-md">
+				<div className="dark:bg-gray-800 bg-white p-8 rounded-lg shadow-md">
 					<div className="text-center py-6">
 						<div className="mx-auto mb-4 h-16 w-16 text-green-500 flex items-center justify-center">
 							<span className="text-4xl" aria-hidden="true">
@@ -142,20 +143,20 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 
 	return (
 		<div className="w-full max-w-md mx-auto">
-			<div className="bg-white p-8 rounded-lg shadow-md">
+			<div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
 				<div className="flex items-center gap-2 mb-6">
 					<div className="bg-teal-500 rounded-full w-10 h-10 flex items-center justify-center text-white font-bold">
 						TW
 					</div>
-					<h2 className="text-2xl font-bold text-gray-800">
+					<h2 className="text-2xl font-bold dark:text-white">
 						Tickaway
 					</h2>
 				</div>
 
-				<h2 className="text-2xl font-bold text-gray-800 mb-2">
+				<h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
 					Create an Account
 				</h2>
-				<p className="text-gray-600 mb-6">
+				<p className="text-gray-600 dark:text-gray-300 mb-6">
 					Enter your information to create an account
 				</p>
 
@@ -171,12 +172,9 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="grid grid-cols-2 gap-4">
 						<div>
-							<label
-								htmlFor="firstName"
-								className="block text-sm font-medium text-gray-700 mb-1"
-							>
+							<FormInputName name="firstName">
 								First Name
-							</label>
+							</FormInputName>
 							<input
 								id="firstName"
 								name="firstName"
@@ -189,12 +187,9 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 							/>
 						</div>
 						<div>
-							<label
-								htmlFor="lastName"
-								className="block text-sm font-medium text-gray-700 mb-1"
-							>
+							<FormInputName name="lastName">
 								Last Name
-							</label>
+							</FormInputName>
 							<input
 								id="lastName"
 								name="lastName"
@@ -209,12 +204,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 					</div>
 
 					<div>
-						<label
-							htmlFor="username"
-							className="block text-sm font-medium text-gray-700 mb-1"
-						>
-							Username
-						</label>
+						<FormInputName name="username">Username</FormInputName>
 						<input
 							id="username"
 							name="username"
@@ -228,12 +218,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 					</div>
 
 					<div>
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium text-gray-700 mb-1"
-						>
-							Email
-						</label>
+						<FormInputName name="email">Email</FormInputName>
 						<input
 							id="email"
 							name="email"
@@ -261,12 +246,7 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 					</div>
 
 					<div>
-						<label
-							htmlFor="password"
-							className="block text-sm font-medium text-gray-700 mb-1"
-						>
-							Password
-						</label>
+						<FormInputName name="password">Password</FormInputName>
 						<input
 							id="password"
 							name="password"
@@ -294,12 +274,9 @@ const RegisterForm = ({ onSuccess, onLoginClick }: RegisterFormProps) => {
 					</div>
 
 					<div>
-						<label
-							htmlFor="confirmPassword"
-							className="block text-sm font-medium text-gray-700 mb-1"
-						>
+						<FormInputName name="password">
 							Confirm Password
-						</label>
+						</FormInputName>
 						<input
 							id="confirmPassword"
 							name="confirmPassword"
