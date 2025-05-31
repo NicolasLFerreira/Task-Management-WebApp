@@ -47,21 +47,22 @@ const Board = ({ board, onDelete, canDelete }: Props) => {
 	}, [board.id]);
 
 	return (
-		<div className="group w-full h-full min-w-[250px] min-h-[250px] bg-gray-800 border border-gray-800 text-white p-4 rounded-lg shadow-md flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-200">
+		<div className="bg-gray-300 dark:bg-gray-800 border border-gray-800 text-white group w-full h-full min-w-[250px] min-h-[250px] p-4 rounded-lg shadow-md flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-200">
 			{/* Header */}
 			<div className="mb-2 flex justify-between items-start">
 				<div>
-					<h3 className="text-lg font-semibold truncate">{board.title}</h3>
-					<p className="text-sm text-gray-400 truncate">{board.description}</p>
+					<h3 className="text-lg font-semibold truncate">
+						{board.title}
+					</h3>
+					<p className="text-sm text-gray-400 truncate">
+						{board.description}
+					</p>
 				</div>
 
 				{/* Delete button if owner */}
 				{canDelete && onDelete && (
 					<button
-						onClick={() => {
-							const confirmed = window.confirm("Are you sure you want to delete this board?");
-							if (confirmed) onDelete(board.id);
-						}}
+						onClick={() => onDelete(board.id)}
 						title="Delete Board"
 						className="text-sm text-red-400 hover:text-red-600 transition-colors"
 					>
@@ -74,19 +75,24 @@ const Board = ({ board, onDelete, canDelete }: Props) => {
 			<div className="mt-2 flex-1 overflow-y-auto pr-1">
 				{isLoading || error ? (
 					<SpecialMessage>
-						<p className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-300"}`}>
+						<div
+							className={`text-center font-medium text-base ${error ? "text-red-500" : "text-gray-300"}`}
+						>
 							{error ?? (
 								<div className="flex justify-center py-12">
-									<Loader2 size={32} className="animate-spin text-teal-500" />
+									<Loader2
+										size={32}
+										className="animate-spin text-teal-500"
+									/>
 								</div>
 							)}
-						</p>
+						</div>
 					</SpecialMessage>
 				) : taskLists.length === 0 ? (
 					<SpecialMessage>
-						<p className="text-center font-medium text-base text-gray-400">
+						<div className="text-center font-medium text-base text-gray-400">
 							This board contains no lists
-						</p>
+						</div>
 					</SpecialMessage>
 				) : (
 					<div className="space-y-2">

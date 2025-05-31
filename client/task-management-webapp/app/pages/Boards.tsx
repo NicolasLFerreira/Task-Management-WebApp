@@ -51,7 +51,7 @@ const Boards = () => {
 
 	const closeModal = () => {
 		toggleModal(false);
-		getBoards(); // Refresh list
+		getBoards();
 	};
 
 	//#endregion
@@ -61,10 +61,8 @@ const Boards = () => {
 			{isModalOpen && <BoardCreationModal closeModal={closeModal} />}
 
 			<div className="p-4">
-				<h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-					Boards
-				</h1>
-				<p className="text-gray-600 dark:text-gray-300 mb-4">
+				<h1 className="text-2xl font-bold mb-6">Boards</h1>
+				<p className="mb-4 font-medium tex-gray-800">
 					Below are all the boards you manage or are part of.
 				</p>
 				<button

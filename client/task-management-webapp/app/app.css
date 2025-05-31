@@ -47,6 +47,7 @@ html:not(.dark) [class*="activity-container"] {
 }
 
 /* Ensure text is visible in light mode */
+html:not(.dark) p,
 html:not(.dark) h1,
 html:not(.dark) h2,
 html:not(.dark) h3,
@@ -55,8 +56,8 @@ html:not(.dark) h5,
 html:not(.dark) h6 {
   color: var(--foreground);
 }
-
-/* Ensure proper contrast for light mode */
+/* 
+Ensure proper contrast for light mode
 html:not(.dark) .text-white,
 html:not(.dark) .text-gray-100,
 html:not(.dark) .text-gray-200 {
@@ -66,4 +67,4 @@ html:not(.dark) .text-gray-200 {
 html:not(.dark) .text-gray-400,
 html:not(.dark) .text-gray-500 {
   color: var(--muted-foreground);
-}
+} */
