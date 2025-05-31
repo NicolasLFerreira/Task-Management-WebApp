@@ -10,7 +10,7 @@ import {
 } from "api-client";
 import { AlertCircle, Calendar, Tag, X } from "lucide-react";
 import type React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type ChangeEvent } from "react";
 import FormInputName from "../Common/FormInputName";
 import LabelSelector from "../Label/LabelSelector";
 
@@ -64,15 +64,18 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 	// Since ListDto doesn't have board property, we'll use a default
 	const boardId = 2; // Using boardId 1
 
-	const handleChange = (
-		e: React.ChangeEvent<
-			HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
-		>
+	const handleChangeText = (
+		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
+	const handleChangeNumber = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: Number(value) }));
+	};
+	
 	// close on escape
 	useEffect(() => {
 		const onKeyDown = (e: KeyboardEvent) => {
@@ -244,7 +247,7 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 							name="title"
 							type="text"
 							value={formData.title}
-							onChange={handleChange}
+							onChange={handleChangeText}
 							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
 							placeholder="Task title"
 							autoFocus
@@ -260,7 +263,7 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 							id="description"
 							name="description"
 							value={formData.description}
-							onChange={handleChange}
+							onChange={handleChangeText}
 							className="placeholder-white/50 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
 							placeholder="Task description"
 							rows={3}
@@ -278,7 +281,7 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 							name="dueDate"
 							value={formData.dueDate}
 							type="date"
-							onChange={handleChange}
+							onChange={handleChangeText}
 							className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
 							required
 						/>
@@ -294,7 +297,7 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 								id="priority"
 								name="priority"
 								value={formData.priority}
-								onChange={handleChange}
+								onChange={handleChangeNumber}
 								className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
 								required
 							>
@@ -317,7 +320,7 @@ const TaskCreationModal = ({ closeModal, listDto, onTaskCreated }: Props) => {
 								id="status"
 								name="status"
 								value={formData.status}
-								onChange={handleChange}
+								onChange={handleChangeNumber}
 								className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 dark:bg-gray-700 dark:text-white"
 								required
 							>
