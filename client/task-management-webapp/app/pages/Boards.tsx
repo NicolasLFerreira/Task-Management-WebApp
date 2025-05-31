@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 import { BoardService, type BoardDto } from "api-client";
 import Board from "~/components/Board/Board";
 import BoardCreationModal from "~/components/Board/BoardCreationModal";
-import { useAuth } from "../contexts/AuthContext"; // ✅ Import auth context
+import { useAuth } from "../contexts/AuthContext";
 
 const Boards = () => {
-	const { user } = useAuth(); // ✅ Get current user
+	const { user } = useAuth();
 	const [boards, setBoards] = useState<BoardDto[]>([]);
 	const [isModalOpen, toggleModal] = useState<boolean>(false);
 
@@ -21,14 +21,16 @@ const Boards = () => {
 		}
 	};
 
-	// ✅ Delete board function
+	// Board deletion
 	const handleDelete = async (boardId: number) => {
-		const confirmed = window.confirm("Are you sure you want to delete this board?");
+		const confirmed = window.confirm(
+			"Are you sure you want to delete this board?"
+		);
 		if (!confirmed) return;
 
 		try {
 			await BoardService.deleteApiBoardsByBoardId({
-				path: { boardId }
+				path: { boardId },
 			});
 			setBoards((prev) => prev.filter((b) => b.id !== boardId));
 		} catch (err) {
@@ -49,7 +51,7 @@ const Boards = () => {
 
 	const closeModal = () => {
 		toggleModal(false);
-		getBoards(); // Refresh list
+		getBoards();
 	};
 
 	//#endregion
@@ -59,10 +61,8 @@ const Boards = () => {
 			{isModalOpen && <BoardCreationModal closeModal={closeModal} />}
 
 			<div className="p-4">
-				<h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-					Boards
-				</h1>
-				<p className="text-gray-600 dark:text-gray-300 mb-4">
+				<h1 className="text-2xl font-bold mb-6">Boards</h1>
+				<p className="mb-4 font-medium tex-gray-800">
 					Below are all the boards you manage or are part of.
 				</p>
 				<button
@@ -78,7 +78,7 @@ const Boards = () => {
 							key={board.id}
 							board={board}
 							onDelete={handleDelete}
-							canDelete={board.ownerUsername === user?.username} // ✅ Only show delete for owner
+							canDelete={board.ownerUsername === user?.username}
 						/>
 					))}
 				</div>

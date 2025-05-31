@@ -30,7 +30,7 @@ const Auth = () => {
         <meta name="description" content="Login or create an account for Tickway Task Manager." />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h1 className="text-center text-3xl font-extrabold text-teal-600">Tickway</h1>
           <p className="mt-2 text-center text-sm text-gray-600">Task Management Made Simple</p>

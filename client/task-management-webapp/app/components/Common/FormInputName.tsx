@@ -1,13 +1,16 @@
+import type { ReactNode } from "react";
+
 type Props = {
 	name: string;
-	children: React.ReactNode;
+	children: ReactNode;
+	extraStyle?: string;
 };
 
-const FormInputName = ({ name, children }: Props) => {
+const FormInputName = ({ name, children, extraStyle }: Props) => {
 	return (
 		<label
 			htmlFor={name}
-			className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+			className={`flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 ${extraStyle ?? ""}`}
 		>
 			{children}
 		</label>
