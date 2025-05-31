@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, type ChangeEvent } from "react";
+import React, { useState, type ChangeEvent } from "react";
 import { AccountService } from "../../../api-client";
 import { PasswordStrengthMeter } from "./PasswordStrengthMeter";
 import { cn } from "../../lib/utils";

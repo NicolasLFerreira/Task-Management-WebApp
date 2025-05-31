@@ -2,152 +2,122 @@
 
 import { useState, useEffect } from "react"
 import PageContainer from "../components/PageContainer"
-import { ListService, type ListDto } from "api-client"
-import { Plus, Loader2, AlertCircle } from "lucide-react"
-import TaskCreationModal from "../components/TaskItem/TaskCreationModal"
+import TaskCard from "../components/TaskItem/TaskCard"
 import TaskDetailModal from "../components/TaskItem/TaskDetailModal"
-import TaskListViewer from "../components/TaskList/TaskListViewer"
+import { TaskItemSpecialisedService } from "api-client" 
+import type { TaskItemDto, FilterTaskItemInputDto } from "api-client"
+import { Loader2, AlertTriangle, Inbox } from "lucide-react"
 
 const MyTasks = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error] = useState<string | null>(null)
-  const [showTaskModal, setShowTaskModal] = useState(false)
+  const [tasks, setTasks] = useState<TaskItemDto[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null)
-  const [defaultList, setDefaultList] = useState<ListDto | null>(null)
-  const [isLoadingList, setIsLoadingList] = useState(false)
-  const [showTaskList, setShowTaskList] = useState(true) // Set to true to show task list by default
+  const [showModal, setShowModal] = useState(false)
 
-  useEffect(() => {
-    fetchDefaultList()
-  }, [])
-
-  const fetchDefaultList = async () => {
-    setIsLoadingList(true)
-
+  const fetchTasks = async () => {
+    setLoading(true)
+    setError(null)
     try {
-      // For demo purposes, we'll get the first list from the first board
-      // In a real app, you might want to get a specific list or let the user choose
-      const boardsResponse = await ListService.getApiListsBoardByBoardId({
-        path: { boardId: 2 }, // Using board ID 1 as default
+      // Using postApiTasksQuerying with an empty filter to get all tasks
+      const emptyFilter: FilterTaskItemInputDto = {}
+      const response = await TaskItemSpecialisedService.postApiTasksQuerying({
+        body: emptyFilter,
       })
-
-      if (boardsResponse.data && boardsResponse.data.length > 0) {
-        setDefaultList(boardsResponse.data[0])
-      } else {
-        // Create a mock list for testing if no lists are found
-        setDefaultList({
-          id: 1,
-          title: "To Do",
-          position: 0,
-          taskCount: 0,
-        })
-      }
+      setTasks(response.data || [])
     } catch (err) {
-      console.error("Error fetching default list:", err)
-      // Create a mock list for testing if API fails
-      setDefaultList({
-        id: 1,
-        title: "To Do",
-        position: 0,
-        taskCount: 0,
-      })
+      console.error("Error fetching tasks:", err)
+      setError("Failed to load tasks. Please try again.")
+      setTasks([])
     } finally {
-      setIsLoadingList(false)
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
-  const handleTaskClick = (taskId: number) => {
-    setSelectedTaskId(taskId)
+  useEffect(() => {
+    fetchTasks()
+  }, [])
+
+  const handleTaskClick = (task: TaskItemDto) => {
+    if (!task.id) {
+      setError("Task data is incomplete (missing ID). Cannot open details.")
+      return
+    }
+    setSelectedTaskId(task.id)
+    setShowModal(true)
+    setError(null) // Clear previous errors
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(false)
+    setSelectedTaskId(null)
+  }
+
+  const handleTaskUpdated = () => {
+    fetchTasks() // Refetch tasks to reflect updates
+    // Modal might close itself, or you can explicitly close it:
+    // handleCloseModal();
+  }
+
+  const handleTaskDeleted = () => {
+    fetchTasks() // Refetch tasks
+    handleCloseModal() // Ensure modal is closed
+  }
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-teal-500" />
+          <p className="ml-2 text-gray-600 dark:text-gray-400">Loading tasks...</p>
+        </div>
+      </PageContainer>
+    )
   }
 
   return (
     <PageContainer>
-      <div className="p-4 max-w-4xl mx-auto">
+      <div className="p-4 md:p-6">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-gray-800 dark:text-white">My Tasks</h1>
-
-          <div className="flex space-x-2">
-            {defaultList ? (
-              <button
-                onClick={() => setShowTaskModal(true)}
-                className="flex items-center px-3 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition-colors"
-                disabled={isLoadingList}
-              >
-                {isLoadingList ? (
-                  <Loader2 size={18} className="mr-1 animate-spin" />
-                ) : (
-                  <Plus size={18} className="mr-1" />
-                )}
-                New Task
-              </button>
-            ) : isLoadingList ? (
-              <button
-                disabled
-                className="flex items-center px-3 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed"
-              >
-                <Loader2 size={18} className="mr-1 animate-spin" />
-                Loading...
-              </button>
-            ) : null}
-
-            <button
-              onClick={() => setShowTaskList(!showTaskList)}
-              className="px-3 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              {showTaskList ? "Hide Task List" : "Show Task List"}
-            </button>
-          </div>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 rounded-md flex items-start">
-            <AlertCircle size={18} className="mr-2 mt-0.5 flex-shrink-0" />
+          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-md flex items-center">
+            <AlertTriangle size={20} className="mr-2 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Task List Section */}
-        {showTaskList && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Tasks in List 1</h2>
-            {isLoading ? (
-              <div className="flex justify-center py-12">
-                <Loader2 size={32} className="animate-spin text-teal-500" />
-              </div>
-            ) : (
-              <TaskListViewer listId={1} onTaskClick={handleTaskClick} />
-            )}
+        {tasks.length === 0 && !loading && !error && (
+          <div className="text-center text-gray-500 dark:text-gray-400 py-12">
+            <Inbox size={48} className="mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+            <p className="text-xl mb-2">No tasks found.</p>
+            <p>Looks like your task list is empty. Create some tasks on your boards!</p>
+          </div>
+        )}
+
+        {tasks.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {tasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                id={task.id!} // Required by TaskCard for dnd-kit
+                onClick={() => handleTaskClick(task)}
+              />
+            ))}
           </div>
         )}
       </div>
 
-      {showTaskModal && defaultList && (
-        <TaskCreationModal
-          closeModal={() => setShowTaskModal(false)}
-          listDto={defaultList}
-          onTaskCreated={() => {
-            // Force refresh of task list after creating a new task
-            setShowTaskList(false)
-            setTimeout(() => setShowTaskList(true), 100)
-          }}
-        />
-      )}
-
-      {selectedTaskId && (
+      {showModal && selectedTaskId !== null && (
         <TaskDetailModal
           taskId={selectedTaskId}
-          onClose={() => setSelectedTaskId(null)}
-          onTaskUpdated={() => {
-            // Force refresh of task list after updating a task
-            setShowTaskList(false)
-            setTimeout(() => setShowTaskList(true), 100)
-          }}
-          onTaskDeleted={() => {
-            // Force refresh of task list after deleting a task
-            setShowTaskList(false)
-            setTimeout(() => setShowTaskList(true), 100)
-          }}
+          onClose={handleCloseModal}
+          onTaskUpdated={handleTaskUpdated}
+          onTaskDeleted={handleTaskDeleted}
         />
       )}
     </PageContainer>
