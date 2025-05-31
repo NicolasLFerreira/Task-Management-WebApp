@@ -226,6 +226,37 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 		});
 	};
 
+	const getDaysRemaining = (dueDateString?: Date): string => {
+		if (!dueDateString) return ""; // Return empty string if no due date
+
+		const dueDate = new Date(dueDateString);
+		const today = new Date();
+
+		// Normalize dates to midnight to compare day differences accurately
+		const dueDateNormalized = new Date(
+			dueDate.getFullYear(),
+			dueDate.getMonth(),
+			dueDate.getDate()
+		);
+		const todayNormalized = new Date(
+			today.getFullYear(),
+			today.getMonth(),
+			today.getDate()
+		);
+
+		const diffTime =
+			dueDateNormalized.getTime() - todayNormalized.getTime();
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+		if (diffDays < 0) {
+			return `Overdue by ${Math.abs(diffDays)} day${Math.abs(diffDays) > 1 ? "s" : ""}`;
+		} else if (diffDays === 0) {
+			return "Due today";
+		} else {
+			return `${diffDays} day${diffDays > 1 ? "s" : ""} left`;
+		}
+	};
+
 	const getPriorityLabel = (priority?: TaskItemPriority) => {
 		switch (priority) {
 			case TaskItemPriority._0:
@@ -692,6 +723,13 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 														{formatDate(
 															task.dueDate
 														)}
+														<span className="ml-1 font-semibold">
+															(
+															{getDaysRemaining(
+																task.dueDate
+															)}
+															)
+														</span>
 													</span>
 												)}
 											</div>

@@ -7,10 +7,32 @@ import { Calendar, Clock } from "lucide-react";
 interface TaskCardProps {
 	task: TaskItemDto;
 	onClick?: () => void;
+	onViewClick?: () => void;
 }
 
-const TaskCard = ({ task, onClick }: TaskCardProps) => {
+const TaskCard = ({ task, onClick, onViewClick }: TaskCardProps) => {
 	const [expanded, setExpanded] = useState(false);
+
+	const calculateDiffDays = (dueDateString?: Date) => {
+		if (!dueDateString) return null;
+		const dueDate = new Date(dueDateString);
+		const today = new Date();
+		const dueDateNormalized = new Date(
+			dueDate.getFullYear(),
+			dueDate.getMonth(),
+			dueDate.getDate()
+		);
+		const todayNormalized = new Date(
+			today.getFullYear(),
+			today.getMonth(),
+			today.getDate()
+		);
+		const diffTime =
+			dueDateNormalized.getTime() - todayNormalized.getTime();
+		return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	};
+
+	const diffDays = task.dueDate ? calculateDiffDays(task.dueDate) : null;
 
 	const formatDate = (dateString?: Date) => {
 		if (!dateString) return "No date set";
@@ -52,11 +74,35 @@ const TaskCard = ({ task, onClick }: TaskCardProps) => {
 		}
 	};
 
-	const isOverdue = (dueDate?: Date) => {
-		if (!dueDate) return false;
-		const due = new Date(dueDate);
-		const now = new Date();
-		return due < now;
+	const getDaysRemaining = (dueDateString?: Date): string => {
+		if (!dueDateString) return ""; // Return empty string if no due date
+
+		const dueDate = new Date(dueDateString);
+		const today = new Date();
+
+		// Normalize dates to midnight to compare day differences accurately
+		const dueDateNormalized = new Date(
+			dueDate.getFullYear(),
+			dueDate.getMonth(),
+			dueDate.getDate()
+		);
+		const todayNormalized = new Date(
+			today.getFullYear(),
+			today.getMonth(),
+			today.getDate()
+		);
+
+		const diffTime =
+			dueDateNormalized.getTime() - todayNormalized.getTime();
+		const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+		if (diffDays < 0) {
+			return ` (Overdue by ${Math.abs(diffDays)} day${Math.abs(diffDays) > 1 ? "s" : ""})`;
+		} else if (diffDays === 0) {
+			return " (Due today)";
+		} else {
+			return ` (${diffDays} day${diffDays > 1 ? "s" : ""} left)`;
+		}
 	};
 
 	return (
@@ -83,13 +129,25 @@ const TaskCard = ({ task, onClick }: TaskCardProps) => {
 						<Calendar size={14} className="mr-1" />
 						<span
 							className={
-								isOverdue(task.dueDate)
-									? "text-red-500 dark:text-red-400"
-									: ""
+								diffDays !== null && diffDays < 0
+									? "text-red-500 dark:text-red-400 font-semibold"
+									: diffDays !== null && diffDays === 0
+										? "text-orange-500 dark:text-orange-400 font-semibold"
+										: "text-green-600 dark:text-green-400"
 							}
 						>
 							{formatDate(task.dueDate)}
-							{isOverdue(task.dueDate) && " (Overdue)"}
+							<span
+								className={
+									diffDays !== null && diffDays < 0
+										? "text-red-500 dark:text-red-400 font-semibold"
+										: diffDays !== null && diffDays === 0
+											? "text-orange-500 dark:text-orange-400 font-semibold"
+											: "text-green-600 dark:text-green-400"
+								}
+							>
+								{getDaysRemaining(task.dueDate)}
+							</span>
 						</span>
 					</div>
 				)}
@@ -129,7 +187,11 @@ const TaskCard = ({ task, onClick }: TaskCardProps) => {
 					className="text-teal-600 dark:text-teal-400 text-sm hover:underline"
 					onClick={(e) => {
 						e.stopPropagation();
-						if (onClick) onClick();
+						if (onViewClick) {
+							onViewClick();
+						} else if (onClick) {
+							onClick();
+						}
 					}}
 				>
 					View
