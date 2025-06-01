@@ -60,7 +60,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
         foreach (var expression in expressions)
         {
-            query.Include(expression);
+            query = query.Include(expression); // CORRECTED: Reassign the result of Include
         }
 
         return await query
@@ -82,7 +82,7 @@ public class Repository<TEntity> : IRepository<TEntity>
             return false;
         }
 
-        Set
+        _dbContext
             .Entry(entity)
             .CurrentValues
             .SetValues(item);

@@ -5,8 +5,6 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import {
-	LayoutDashboard,
-	Kanban,
 	CheckSquare,
 	Bell,
 	Search,
@@ -17,12 +15,8 @@ import {
 	Moon,
 	Sun,
 	Users,
-	LayoutDashboardIcon,
 	ChartNoAxesColumn,
 	LucideTable,
-	PanelsLeftBottomIcon,
-	PanelsLeftRight,
-	TableOfContents,
 } from "lucide-react";
 
 type SidebarProps = {
