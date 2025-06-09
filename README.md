@@ -17,8 +17,7 @@ A comprehensive web application designed for efficient task and project manageme
 *   **"My Tasks" Page:** A personalized view for users to see all tasks assigned to them.
 *   **User Authentication:** Secure login and registration system.
 *   **Real-time Updates:** Changes made by users are reflected across the application in real-time.
-*   **Notifications:** (If applicable, based on `NotificationController.cs`) Keep users informed about important updates.
-*   **Team Collaboration:** (If applicable, based on `Team.tsx`, `BoardMemberDto.cs`) Features to support team-based project management.
+*   **Notifications:**  Keep users informed about important updates.
 *  **User Profiles:**
      * View and update user profiles.
      * Upload and manage profile pictures.
@@ -33,14 +32,14 @@ A comprehensive web application designed for efficient task and project manageme
 *   **Frontend:** React, TypeScript, Vite
 *   **Database:** PostgreSQL (managed with Docker)
 *   **API:** RESTful API for communication between frontend and backend.
-*   **Styling:** (Likely Tailwind CSS or a similar utility-first CSS framework, given modern React practices, but not explicitly stated in file names)
+*   **Styling:** ( Tailwind CSS)
 
 ## Getting Started
 
 ### Prerequisites
 
-*   [.NET SDK](https://dotnet.microsoft.com/download) (Specify version if known, e.g., .NET 8.0)
-*   [Node.js and npm](https://nodejs.org/) (Specify version if known, e.g., LTS)
+*   [.NET SDK](https://dotnet.microsoft.com/download)
+*   [npm](https://www.npmjs.com/) 
 *   [Docker and Docker Compose](https://www.docker.com/products/docker-desktop/) (for running the database)
 
 ---
@@ -122,8 +121,8 @@ TaskManagementWebAppmain/
 
 ##  Scripts
 
-*   `run.sh` / `run.ps1`: (If these scripts orchestrate the startup of multiple services, describe their usage here).
-*   `make-executable.sh`: (Describe its purpose, likely for `run.sh`).
+*   `run.sh` / `run.ps1`: (These scripts initialize and run the entire application stack. Use run.sh for macOS/Linux and run.ps1 for Windows (PowerShell). The script will automatically generate all necessary files, such as the .env configuration, and set up the full environment required to run the application).
+*   `make-executable.sh`: (it makes the script executable for run.sh).
 
 | Script               | Description |
 |----------------------|-------------|
@@ -171,16 +170,6 @@ chmod +x run.sh
 ``` 
 
 --- 
-
-## Contributing
-* You are so welcome to contribute to this project! Here will be the steps to contribute to the project:
-1. Fork the repository
-2. Create a branch: `git checkout -b feat/feature-name`
-3. Commit: `git commit -m "feat: add feature"`
-4. Push: `git push origin feat/feature-name`
-5. Create a PR
-
----
 
 ##  Future Improvements
 
