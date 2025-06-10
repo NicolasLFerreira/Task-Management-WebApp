@@ -1,56 +1,31 @@
-# PowerShell script for orchestrating the Task Management Web App on Windows
-# Save this file as run.ps1 in the root directory of your project
-
-# Colors for output
-$Green = "Green"
-$Yellow = "Yellow"
-$Red = "Red"
-$Blue = "Cyan"
-
-# Function to print section headers
-function Print-Header($text) {
-    Write-Host "`n=== $text ===`n" -ForegroundColor $Blue
+function Write-Color {
+    param([string]$Text, [string]$Color)
+    Write-Host $Text -ForegroundColor $Color
 }
 
-# Function to print success messages
-function Print-Success($text) {
-    Write-Host "✓ $text" -ForegroundColor $Green
-}
+function Print-Header { param($Text); Write-Color "`n=== $Text ===`n" "Cyan" }
+function Print-Success { param($Text); Write-Color "SUCCESS: $Text" "Green" }
+function Print-Warning { param($Text); Write-Color "WARNING: $Text" "Yellow" }
+function Print-Error { param($Text); Write-Color "ERROR: $Text" "Red" }
 
-# Function to print warning messages
-function Print-Warning($text) {
-    Write-Host "⚠ $text" -ForegroundColor $Yellow
-}
-
-# Function to print error messages
-function Print-Error($text) {
-    Write-Host "✗ $text" -ForegroundColor $Red
-}
-
-# Function to check if Docker is running
 function Check-Docker {
     Print-Header "Checking Docker"
-    try {
-        docker info | Out-Null
-        Print-Success "Docker is running"
-    } catch {
-        Print-Error "Docker is not running. Please start Docker Desktop and try again."
+    docker info > $null 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Print-Error "Docker is not running. Please start Docker and try again."
         exit 1
     }
+    Print-Success "Docker is running"
 }
 
-# Function to create .env file if it doesn't exist
 function Create-EnvFile {
     Print-Header "Checking Environment Configuration"
-    
-    $EnvFile = "docker-scripts\.env"
-    
-    if (Test-Path $EnvFile) {
-        Print-Success "Environment file exists at $EnvFile"
+    $envFile = "docker-scripts\.env"
+    if (Test-Path $envFile) {
+        Print-Success ".env file exists at $envFile"
     } else {
-        Print-Warning "Environment file not found. Creating default .env file..."
-        
-        $EnvContent = @"
+        Print-Warning ".env file not found. Creating default .env file..."
+        @'
 # Database Configuration
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
@@ -69,28 +44,20 @@ JWT_KEY=Must_Be_Changed_In_Prod
 JWT_ISSUER=TaskManagementApp
 JWT_AUDIENCE=TaskManagementUsers
 JWT_LIFETIME=60
-"@
-        
-        New-Item -Path $EnvFile -ItemType File -Force | Out-Null
-        Set-Content -Path $EnvFile -Value $EnvContent
-        
-        Print-Success "Default .env file created at $EnvFile"
+'@ | Set-Content $envFile
+        Print-Success "Default .env file created at $envFile"
         Print-Warning "Please review the default values in the .env file and adjust as needed"
     }
 }
 
-# Function to check if init.sql exists, create if not
-function Check-InitSql {
+function Check-InitSQL {
     Print-Header "Checking Database Initialization Script"
-    
-    $InitSql = "docker-scripts\init.sql"
-    
-    if (Test-Path $InitSql) {
-        Print-Success "Database initialization script exists at $InitSql"
+    $initSQL = "docker-scripts\init.sql"
+    if (Test-Path $initSQL) {
+        Print-Success "init.sql exists at $initSQL"
     } else {
-        Print-Warning "Database initialization script not found. Creating default init.sql..."
-        
-        $SqlContent = @"
+        Print-Warning "init.sql not found. Creating default init.sql..."
+        @'
 -- This script is executed when the PostgreSQL container is created
 -- It can be used to create initial database objects or seed data
 
@@ -98,302 +65,165 @@ function Check-InitSql {
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Add any additional initialization SQL here
-"@
-        
-        New-Item -Path $InitSql -ItemType File -Force | Out-Null
-        Set-Content -Path $InitSql -Value $SqlContent
-        
-        Print-Success "Default init.sql created at $InitSql"
+'@ | Set-Content $initSQL
+        Print-Success "Default init.sql created at $initSQL"
     }
 }
 
-# Function to create favicon files to prevent 404 errors
 function Create-FaviconFiles {
     Print-Header "Checking Favicon Files"
-    
-    $FaviconDir = "docker-scripts\favicon"
-    
-    if (Test-Path $FaviconDir) {
-        Print-Success "Favicon directory exists at $FaviconDir"
-    } else {
+    $dir = "docker-scripts\favicon"
+    if (!(Test-Path $dir)) {
         Print-Warning "Favicon directory not found. Creating default favicon files..."
-        
-        New-Item -Path $FaviconDir -ItemType Directory -Force | Out-Null
-        
-        # Create empty favicon files to prevent 404 errors
-        New-Item -Path "$FaviconDir\favicon.ico" -ItemType File -Force | Out-Null
-        New-Item -Path "$FaviconDir\apple-touch-icon.png" -ItemType File -Force | Out-Null
-        New-Item -Path "$FaviconDir\apple-touch-icon-precomposed.png" -ItemType File -Force | Out-Null
-        
-        Print-Success "Default favicon files created at $FaviconDir"
+        New-Item -ItemType Directory -Path $dir | Out-Null
+        New-Item -ItemType File -Path "$dir\favicon.ico" | Out-Null
+        New-Item -ItemType File -Path "$dir\apple-touch-icon.png" | Out-Null
+        New-Item -ItemType File -Path "$dir\apple-touch-icon-precomposed.png" | Out-Null
+        Print-Success "Default favicon files created at $dir"
+    } else {
+        Print-Success "Favicon directory exists at $dir"
     }
 }
 
-# Function to start the application
 function Start-Application {
     Print-Header "Starting Application"
-    
-    Push-Location docker-scripts
-    
-    # Pull latest images
+    Push-Location "docker-scripts"
     Print-Warning "Pulling latest images..."
     docker-compose pull db
-    
-    # Build and start containers
     Print-Warning "Building and starting containers..."
-    
-    # First, try to build just the backend to catch any build errors
-    $backendBuild = docker-compose build backend
+    docker-compose build backend
     if ($LASTEXITCODE -ne 0) {
-        Print-Error "Failed to build backend. Check the error message above."
+        Print-Error "Failed to build backend."
         Pop-Location
         exit 1
     }
-    
-    # Then build and start all services
-    $startResult = docker-compose up -d --build
+    docker-compose up -d --build
     if ($LASTEXITCODE -eq 0) {
         Print-Success "Application started successfully"
         Print-Header "Application URLs"
-        
-        # Get port values from .env file
-        $envContent = Get-Content .env
-        $frontendPort = ($envContent | Where-Object { $_ -match "FRONTEND_PORT" } | ForEach-Object { $_ -replace ".*=", "" }).Trim()
-        $backendPort = ($envContent | Where-Object { $_ -match "BACKEND_PORT" } | ForEach-Object { $_ -replace ".*=", "" }).Trim()
-        $postgresPort = ($envContent | Where-Object { $_ -match "POSTGRES_PORT" } | ForEach-Object { $_ -replace ".*=", "" }).Trim()
-        
-        if (-not $frontendPort) { $frontendPort = "3000" }
-        if (-not $backendPort) { $backendPort = "7200" }
-        if (-not $postgresPort) { $postgresPort = "5432" }
-        
-        Write-Host "Frontend: " -NoNewline
-        Write-Host "http://localhost:$frontendPort" -ForegroundColor $Green
-        
-        Write-Host "Backend API: " -NoNewline
-        Write-Host "http://localhost:$backendPort" -ForegroundColor $Green
-        
-        Write-Host "Backend Swagger: " -NoNewline
-        Write-Host "http://localhost:$backendPort/swagger" -ForegroundColor $Green
-        
-        Write-Host "Database: " -NoNewline
-        Write-Host "localhost:$postgresPort" -ForegroundColor $Green
-        
-        # Wait for services to be ready
+
+        $envLines = Get-Content ".env" | Where-Object { $_ -match "=" }
+        $envMap = @{}
+        foreach ($line in $envLines) {
+            $parts = $line -split "=", 2
+            if ($parts.Length -eq 2) {
+                $envMap[$parts[0]] = $parts[1]
+            }
+        }
+
+        $frontendPort = $envMap["FRONTEND_PORT"]
+        $backendPort = $envMap["BACKEND_PORT"]
+        $dbPort = $envMap["POSTGRES_PORT"]
+
+        Write-Color "Frontend: http://localhost:$frontendPort" "Green"
+        Write-Color "Backend API: http://localhost:$backendPort" "Green"
+        Write-Color "Backend Swagger: http://localhost:$backendPort/swagger" "Green"
+        Write-Color "Database: localhost:$dbPort" "Green"
+
         Print-Warning "Waiting for services to be ready..."
         Start-Sleep -Seconds 10
-        
-        # Check if services are running
-        $psResult = docker-compose ps
-        if ($psResult -match "Up") {
+
+        if ((docker-compose ps) -match "Up") {
             Print-Success "All services are running"
         } else {
-            Print-Warning "Some services may not be running. Check logs with '.\run.ps1 logs'"
+            Print-Warning "Some services may not be running. Check logs with 'run.ps1 logs'"
         }
     } else {
         Print-Error "Failed to start application"
-        Pop-Location
-        exit 1
     }
-    
     Pop-Location
 }
 
-# Function to stop the application
 function Stop-Application {
     Print-Header "Stopping Application"
-    
-    Push-Location docker-scripts
+    Push-Location "docker-scripts"
     docker-compose down
-    
     if ($LASTEXITCODE -eq 0) {
         Print-Success "Application stopped successfully"
     } else {
         Print-Error "Failed to stop application"
-        exit 1
     }
-    
     Pop-Location
 }
 
-# Function to show logs
-function Show-Logs {
-    Print-Header "Application Logs"
-    
-    Push-Location docker-scripts
-    docker-compose logs -f
-    Pop-Location
-}
-
-# Function to show frontend logs only
-function Show-FrontendLogs {
-    Print-Header "Frontend Logs"
-    
-    Push-Location docker-scripts
-    docker-compose logs -f frontend
-    Pop-Location
-}
-
-# Function to show backend logs only
-function Show-BackendLogs {
-    Print-Header "Backend Logs"
-    
-    Push-Location docker-scripts
-    docker-compose logs -f backend
-    Pop-Location
-}
-
-# Function to show database logs only
-function Show-DbLogs {
-    Print-Header "Database Logs"
-    
-    Push-Location docker-scripts
-    docker-compose logs -f db
-    Pop-Location
-}
-
-# Function to restart a specific service
-function Restart-Service($service) {
-    Print-Header "Restarting $service"
-    
-    Push-Location docker-scripts
-    docker-compose restart $service
-    
+function Restart-Service($Service) {
+    Print-Header "Restarting $Service"
+    Push-Location "docker-scripts"
+    docker-compose restart $Service
     if ($LASTEXITCODE -eq 0) {
-        Print-Success "$service restarted successfully"
+        Print-Success "$Service restarted successfully"
     } else {
-        Print-Error "Failed to restart $service"
-        exit 1
+        Print-Error "Failed to restart $Service"
     }
-    
     Pop-Location
 }
 
-# Function to check service health
+function Show-Logs { docker-compose -f "docker-scripts\docker-compose.yml" logs -f }
+function Show-FrontendLogs { docker-compose -f "docker-scripts\docker-compose.yml" logs -f frontend }
+function Show-BackendLogs { docker-compose -f "docker-scripts\docker-compose.yml" logs -f backend }
+function Show-DBLogs { docker-compose -f "docker-scripts\docker-compose.yml" logs -f db }
+
 function Check-Health {
     Print-Header "Checking Service Health"
-    
-    Push-Location docker-scripts
-    
-    # Check database
-    $dbHealth = docker-compose exec db pg_isready -U postgres 2>$null
-    if ($LASTEXITCODE -eq 0) {
-        Print-Success "Database is healthy"
-    } else {
-        Print-Warning "Database may not be healthy. Check logs with '.\run.ps1 db-logs'"
+    Push-Location "docker-scripts"
+    docker-compose exec db pg_isready -U postgres > $null 2>&1
+    if ($LASTEXITCODE -eq 0) { Print-Success "Database is healthy" } else { Print-Warning "Database may not be healthy." }
+
+    docker-compose exec backend curl -s http://localhost:80/health > $null 2>&1
+    if ($LASTEXITCODE -eq 0) { Print-Success "Backend is healthy" } else { Print-Warning "Backend may not be healthy." }
+
+    $envLines = Get-Content ".env" | Where-Object { $_ -match "=" }
+    $envMap = @{}
+    foreach ($line in $envLines) {
+        $parts = $line -split "=", 2
+        if ($parts.Length -eq 2) {
+            $envMap[$parts[0]] = $parts[1]
+        }
     }
-    
-    # Check backend
-    $backendHealth = docker-compose exec backend curl -s http://localhost:80/health 2>$null
-    if ($LASTEXITCODE -eq 0) {
-        Print-Success "Backend is healthy"
-    } else {
-        Print-Warning "Backend may not be healthy. Check logs with '.\run.ps1 backend-logs'"
-    }
-    
-    # Get frontend port from .env file
-    $envContent = Get-Content .env
-    $frontendPort = ($envContent | Where-Object { $_ -match "FRONTEND_PORT" } | ForEach-Object { $_ -replace ".*=", "" }).Trim()
-    if (-not $frontendPort) { $frontendPort = "3000" }
-    
-    # Check frontend
-    try {
-        $frontendResponse = Invoke-WebRequest -Uri "http://localhost:$frontendPort" -UseBasicParsing -TimeoutSec 5 -ErrorAction SilentlyContinue
-        Print-Success "Frontend is healthy"
-    } catch {
-        Print-Warning "Frontend may not be healthy. Check logs with '.\run.ps1 frontend-logs'"
-    }
-    
+    $frontendPort = $envMap["FRONTEND_PORT"]
+    curl -s "http://localhost:$frontendPort" > $null 2>&1
+    if ($LASTEXITCODE -eq 0) { Print-Success "Frontend is healthy" } else { Print-Warning "Frontend may not be healthy." }
+
     Pop-Location
 }
 
-# Function to clean up unused Docker resources
-function Cleanup-DockerResources {
+function Cleanup {
     Print-Header "Cleaning Up Docker Resources"
-    
-    # Remove unused containers
     Print-Warning "Removing unused containers..."
     docker container prune -f
-    
-    # Remove unused images
     Print-Warning "Removing unused images..."
     docker image prune -f
-    
-    # Remove unused volumes (be careful with this one)
     Print-Warning "Removing unused volumes..."
     docker volume prune -f
-    
     Print-Success "Cleanup completed"
 }
 
-# Main script execution
+# ========== ENTRY POINT ==========
+param(
+    [string]$Command = "start"
+)
+
 Check-Docker
 Create-EnvFile
-Check-InitSql
+Check-InitSQL
 Create-FaviconFiles
 
-# Process command line arguments
-$command = $args[0]
-
-switch ($command) {
-    "start" {
-        Start-Application
-    }
-    "stop" {
-        Stop-Application
-    }
-    "restart" {
-        Stop-Application
-        Start-Application
-    }
-    "restart-frontend" {
-        Restart-Service "frontend"
-    }
-    "restart-backend" {
-        Restart-Service "backend"
-    }
-    "restart-db" {
-        Restart-Service "db"
-    }
-    "logs" {
-        Show-Logs
-    }
-    "frontend-logs" {
-        Show-FrontendLogs
-    }
-    "backend-logs" {
-        Show-BackendLogs
-    }
-    "db-logs" {
-        Show-DbLogs
-    }
-    "health" {
-        Check-Health
-    }
-    "cleanup" {
-        Cleanup-DockerResources
-    }
+switch ($Command.ToLower()) {
+    "start"           { Start-Application }
+    "stop"            { Stop-Application }
+    "restart"         { Stop-Application; Start-Application }
+    "restart-frontend"{ Restart-Service "frontend" }
+    "restart-backend" { Restart-Service "backend" }
+    "restart-db"      { Restart-Service "db" }
+    "logs"            { Show-Logs }
+    "frontend-logs"   { Show-FrontendLogs }
+    "backend-logs"    { Show-BackendLogs }
+    "db-logs"         { Show-DBLogs }
+    "health"          { Check-Health }
+    "cleanup"         { Cleanup }
     default {
-        Print-Header "Task Management Web App Orchestration Script"
-        Write-Host "Usage: .\run.ps1 [command]"
-        Write-Host ""
-        Write-Host "Commands:"
-        Write-Host "  start           - Start the application"
-        Write-Host "  stop            - Stop the application"
-        Write-Host "  restart         - Restart the application"
-        Write-Host "  restart-frontend - Restart only the frontend service"
-        Write-Host "  restart-backend - Restart only the backend service"
-        Write-Host "  restart-db      - Restart only the database service"
-        Write-Host "  logs            - Show all application logs"
-        Write-Host "  frontend-logs   - Show only frontend logs"
-        Write-Host "  backend-logs    - Show only backend logs"
-        Write-Host "  db-logs         - Show only database logs"
-        Write-Host "  health          - Check the health of all services"
-        Write-Host "  cleanup         - Clean up unused Docker resources"
-        Write-Host ""
-        Write-Host "If no command is provided, the application will be started."
-        Write-Host ""
-        
-        # Default action is to start the application
+        Print-Header "Usage"
+        Write-Host "run.ps1 [start|stop|restart|restart-frontend|restart-backend|restart-db|logs|frontend-logs|backend-logs|db-logs|health|cleanup]"
         Start-Application
     }
 }
