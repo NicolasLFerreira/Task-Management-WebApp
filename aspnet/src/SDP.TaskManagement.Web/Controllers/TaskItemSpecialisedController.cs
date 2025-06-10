@@ -17,12 +17,10 @@ namespace SDP.TaskManagement.Web.Controllers;
 [Authorize]
 public class TaskItemSpecialisedController : ControllerBase
 {
-    private readonly IRepository<TaskItem> _repository;
     private readonly ITaskItemService _taskItemService;
 
-    public TaskItemSpecialisedController(IRepository<TaskItem> repository, ITaskItemService taskItemService)
+    public TaskItemSpecialisedController(ITaskItemService taskItemService)
     {
-        _repository = repository;
         _taskItemService = taskItemService;
     }
 
