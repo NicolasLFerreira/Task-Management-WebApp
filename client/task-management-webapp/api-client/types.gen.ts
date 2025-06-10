@@ -577,20 +577,6 @@ export type GetApiDashboardUpcomingTasksResponses = {
 export type GetApiDashboardUpcomingTasksResponse =
   GetApiDashboardUpcomingTasksResponses[keyof GetApiDashboardUpcomingTasksResponses];
 
-export type GetHealthData = {
-  body?: never;
-  path?: never;
-  query?: never;
-  url: "/Health";
-};
-
-export type GetHealthResponses = {
-  /**
-   * OK
-   */
-  200: unknown;
-};
-
 export type GetApiHealthData = {
   body?: never;
   path?: never;

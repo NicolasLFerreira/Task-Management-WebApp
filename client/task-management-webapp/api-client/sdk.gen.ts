@@ -40,7 +40,6 @@ import type {
   GetApiDashboardRecentActivityResponse,
   GetApiDashboardUpcomingTasksData,
   GetApiDashboardUpcomingTasksResponse,
-  GetHealthData,
   GetApiHealthData,
   GetApiLabelsBoardByBoardIdData,
   GetApiLabelsBoardByBoardIdResponse,
@@ -587,25 +586,6 @@ export class DashboardService {
 }
 
 export class HealthService {
-  public static getHealth<ThrowOnError extends boolean = false>(
-    options?: Options<GetHealthData, ThrowOnError>,
-  ) {
-    return (options?.client ?? _heyApiClient).get<
-      unknown,
-      unknown,
-      ThrowOnError
-    >({
-      security: [
-        {
-          name: "Authorization",
-          type: "apiKey",
-        },
-      ],
-      url: "/Health",
-      ...options,
-    });
-  }
-
   public static getApiHealth<ThrowOnError extends boolean = false>(
     options?: Options<GetApiHealthData, ThrowOnError>,
   ) {

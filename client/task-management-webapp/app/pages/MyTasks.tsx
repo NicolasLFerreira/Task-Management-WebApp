@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ChangeEvent } from "react";
 import PageContainer from "../components/PageContainer";
 import TaskCard from "../components/TaskItem/TaskCard";
 import TaskDetailModal from "../components/TaskItem/TaskDetailModal";
-import { TaskItemSpecialisedService } from "api-client";
+import {
+	TaskItemPriority,
+	TaskItemSpecialisedService,
+	TaskItemStatus,
+} from "api-client";
 import type { TaskItemDto, FilterTaskItemInputDto } from "api-client";
 import { Loader2, AlertTriangle, Inbox } from "lucide-react";
 
@@ -22,11 +26,9 @@ const MyTasks = () => {
 		setLoading(true);
 		setError(null);
 		try {
-			// Using postApiTasksQuerying with an empty filter to get all tasks
-			const emptyFilter: FilterTaskItemInputDto = {};
 			const response =
 				await TaskItemSpecialisedService.postApiTasksQuerying({
-					body: emptyFilter,
+					body: filters,
 				});
 			setTasks(response.data || []);
 		} catch (err) {
@@ -38,9 +40,10 @@ const MyTasks = () => {
 		}
 	};
 
+	// Re-fetch tasks when filters change
 	useEffect(() => {
 		fetchTasks();
-	}, []);
+	}, [filters.priority, filters.status]);
 
 	const handleTaskClick = (task: TaskItemDto) => {
 		if (!task.id) {
@@ -51,7 +54,14 @@ const MyTasks = () => {
 		}
 		setSelectedTaskId(task.id);
 		setShowModal(true);
-		setError(null); // Clear previous errors
+		setError(null);
+	};
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "Enter") {
+			event.preventDefault();
+			fetchTasks();
+		}
 	};
 
 	const handleCloseModal = () => {
@@ -60,14 +70,24 @@ const MyTasks = () => {
 	};
 
 	const handleTaskUpdated = () => {
-		fetchTasks(); // Refetch tasks to reflect updates
-		// Modal might close itself, or you can explicitly close it:
-		// handleCloseModal();
+		fetchTasks();
 	};
 
 	const handleTaskDeleted = () => {
-		fetchTasks(); // Refetch tasks
-		handleCloseModal(); // Ensure modal is closed
+		fetchTasks();
+		handleCloseModal();
+	};
+
+	const handleChangeText = (
+		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
+		const { name, value } = e.target;
+		setFilters((prev) => ({ ...prev, [name]: value }));
+	};
+
+	const handleChangeNumber = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setFilters((prev) => ({ ...prev, [name]: Number(value) }));
 	};
 
 	if (loading) {
@@ -90,6 +110,59 @@ const MyTasks = () => {
 					<h1 className="text-2xl font-bold text-gray-800 dark:text-white">
 						My Tasks
 					</h1>
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+					<input
+						id="title"
+						name="title"
+						type="text"
+						placeholder="Filter by Title"
+						value={filters.title ?? ""}
+						onChange={handleChangeText}
+						onKeyDown={handleKeyDown}
+						className="px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+					/>
+
+					<input
+						id="description"
+						name="description"
+						type="text"
+						value={filters.description ?? undefined}
+						onChange={handleChangeText}
+						onKeyDown={handleKeyDown}
+						placeholder="Filter by Description"
+						className="px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+					/>
+
+					<select
+						id="status"
+						name="status"
+						value={filters.status}
+						onChange={handleChangeNumber}
+						className="px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+					>
+						<option value={undefined}>ignored</option>
+						<option value={TaskItemStatus._0}>To Do</option>
+						<option value={TaskItemStatus._1}>In Progress</option>
+						<option value={TaskItemStatus._2}>In Review</option>
+						<option value={TaskItemStatus._3}>Completed</option>
+						<option value={TaskItemStatus._4}>Archived</option>
+					</select>
+
+					<select
+						id="priority"
+						name="priority"
+						value={filters.priority}
+						onChange={handleChangeNumber}
+						className="px-3 py-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+					>
+						<option value={undefined}>ignored</option>
+						<option value={TaskItemPriority._0}>Low</option>
+						<option value={TaskItemPriority._1}>Medium</option>
+						<option value={TaskItemPriority._2}>High</option>
+						<option value={TaskItemPriority._3}>Critical</option>
+					</select>
 				</div>
 
 				{error && (
@@ -122,7 +195,7 @@ const MyTasks = () => {
 							<TaskCard
 								key={task.id}
 								task={task}
-								id={task.id!} // Required by TaskCard for dnd-kit
+								id={task.id!}
 								onClick={() => handleTaskClick(task)}
 							/>
 						))}
