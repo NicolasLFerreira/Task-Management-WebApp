@@ -88,19 +88,24 @@ public class TaskItemServiceTests
     [Fact]
     public async Task SearchByTitle_ReturnsMatchingTasks()
     {
+        // user
         long userId = 1;
-        var tasks = new List<TaskItem>
-    {
-        new() { Title = "Fix bug", Description = "", OwnerUserId = userId },
-        new() { Title = "Fix UI", Description = "", OwnerUserId = userId },
-        new() { Title = "Review code", Description = "", OwnerUserId = userId },
-        new() { Title = "Fix database", Description = "", OwnerUserId = 2L }
-    };
 
+        // mock the data
+        var tasks = new List<TaskItem>
+        {
+            new() { Title = "Fix bug", Description = "", OwnerUserId = userId },
+            new() { Title = "Fix UI", Description = "", OwnerUserId = userId },
+            new() { Title = "Review code", Description = "", OwnerUserId = userId },
+            new() { Title = "Fix database", Description = "", OwnerUserId = 2L }
+        };
+
+        // runs 
         _taskRepoMock.Setup(r => r.GetQueryable()).Returns(new TestAsyncEnumerable<TaskItem>(tasks));
 
         var result = await _service.SearchByTitle(userId, "Fix");
 
+        // validate resulst
         Assert.Equal(2, result.Count);
         Assert.All(result, t => Assert.Contains("Fix", t.Title));
     }
