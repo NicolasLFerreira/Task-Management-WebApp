@@ -29,10 +29,6 @@ public class TaskItemSpecialisedController : ControllerBase
     [HttpGet("{titlePattern}")]
     public async Task<ActionResult<List<TaskItemDto>>> SearchByTitle(string titlePattern)
     {
-        //var result = await _repository.GetQueryable()
-        //    .Where(e => e.Title.Contains(titlePattern))
-        //    .ToListAsync();
-
         var userId = GetCurrentUserId();
 
         var result = await _taskItemService.SearchByTitle(userId, titlePattern);
@@ -43,14 +39,6 @@ public class TaskItemSpecialisedController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<List<TaskItemDto>>> FilterByProperty([FromBody] FilterTaskItemInputDto input)
     {
-        //var result = await _repository.GetQueryable()
-        //    .Where(e => e.OwnerUserId == 1)
-        //    .WhereIf(input.Title != null, e => e.Title.Contains(input.Title!))
-        //    .WhereIf(input.Description != null, e => e.Description != null && e.Description.Contains(input.Description!))
-        //    .WhereIf(input.Status != null, e => e.ProgressStatus == input.Status)
-        //    .WhereIf(input.Priority != null, e => e.Priority == input.Priority)
-        //    .ToListAsync();
-
         var userId = GetCurrentUserId();
 
         var result = await _taskItemService.FilterByProperty(userId, input);
