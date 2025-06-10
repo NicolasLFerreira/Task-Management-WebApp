@@ -17,35 +17,78 @@ public class TaskItemServiceTests
     }
 
     [Fact]
-    public async Task FilterByProperty_FiltersTasksCorrectly()
+    public async Task FilterByProperty_FiltersSingleTaskCorrectly()
     {
-        var userId = 1L;
-        var tasks = new List<TaskItem>
-    {
-        new() { Title = "Important Task", Description = "Something", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = userId },
-        new() { Title = "Other Task", Description = "None", ProgressStatus = TaskItemStatus.InProgress, Priority = TaskItemPriority.Medium, OwnerUserId = userId },
-        new() { Title = "Wrong User", Description = "Nope", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = 2L }
-    };
+        // user defined
+        long userId = 1;
 
+        // mock data
+        var tasks = new List<TaskItem>
+        {
+            new() { Title = "Correct User", Description = "Something", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = userId },
+            new() { Title = "Other Task", Description = "None", ProgressStatus = TaskItemStatus.InProgress, Priority = TaskItemPriority.Medium, OwnerUserId = userId },
+            new() { Title = "Wrong User", Description = "Nope", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = 2L }
+        };
+
+        // configures the mock repo
         _taskRepoMock.Setup(r => r.GetQueryable()).Returns(new TestAsyncEnumerable<TaskItem>(tasks));
 
+        // mock input
         var input = new FilterTaskItemInputDto
         {
-            Title = "Important",
+            Title = "User",
             Status = TaskItemStatus.Todo,
             Priority = TaskItemPriority.High
         };
 
+        // invokes the filtering method
         var result = await _service.FilterByProperty(userId, input);
 
+        // verifies results
         Assert.Single(result);
-        Assert.Equal("Important Task", result[0].Title);
+        Assert.Equal("Correct User", result[0].Title);
+    }
+
+    [Fact]
+    public async Task FilterByProperty_FiltersMultipleTasksCorrectly()
+    {
+        // user defined
+        long userId = 1;
+
+        // mock data
+        var tasks = new List<TaskItem>
+        {
+            new() { Title = "Correct Task 1", Description = "not same", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = userId },
+            new() { Title = "Correct Task 2", Description = "", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.Medium, OwnerUserId = userId },
+            new() { Title = "Correct Task 3", Description = "Something", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.Low, OwnerUserId = userId },
+            new() { Title = "Other Task", Description = "None", ProgressStatus = TaskItemStatus.InProgress, Priority = TaskItemPriority.Medium, OwnerUserId = userId },
+            new() { Title = "Wrong User", Description = "Nope", ProgressStatus = TaskItemStatus.Todo, Priority = TaskItemPriority.High, OwnerUserId = 2L }
+        };
+
+        // configures the mock repo
+        _taskRepoMock.Setup(r => r.GetQueryable()).Returns(new TestAsyncEnumerable<TaskItem>(tasks));
+
+        // mock input
+        var input = new FilterTaskItemInputDto
+        {
+            Status = TaskItemStatus.Todo
+        };
+
+        // invokes the filtering method
+        var result = await _service.FilterByProperty(userId, input);
+
+        // expected
+        string[] expectedTitles = ["Correct Task 1", "Correct Task 2", "Correct Task 3"];
+
+        // verifies result
+        Assert.Equal(3, result.Count);
+        Assert.All(expectedTitles, title => Assert.Contains(result, r => r.Title == title));
     }
 
     [Fact]
     public async Task SearchByTitle_ReturnsMatchingTasks()
     {
-        var userId = 1L;
+        long userId = 1;
         var tasks = new List<TaskItem>
     {
         new() { Title = "Fix bug", Description = "", OwnerUserId = userId },
