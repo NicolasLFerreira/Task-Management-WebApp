@@ -43,6 +43,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IFileSystemService, FileSystemService>();
         services.AddScoped<IListService, ListService>();
         services.AddScoped<IBoardService, BoardService>();
+        services.AddScoped<ITaskItemService, TaskItemService>();
 
         // Register configuration options
         services.Configure<FileStorageOptions>(

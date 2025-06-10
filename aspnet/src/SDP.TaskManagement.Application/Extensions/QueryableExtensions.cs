@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace SDP.TaskManagement.Infrastructure.Extensions;
+namespace SDP.TaskManagement.Application.Extensions;
 
 public static class QueryableExtensions
 {
