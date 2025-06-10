@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 using SDP.TaskManagement.Application.Abstractions;
 using SDP.TaskManagement.Application.Dtos;
 using SDP.TaskManagement.Application.Dtos.AssistanceDtos;
-using SDP.TaskManagement.Application.Extensions;
-using SDP.TaskManagement.Domain.Entities;
 
 using System.Security.Claims;
 
